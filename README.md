@@ -11,7 +11,7 @@ EatTrack merupakan sebuah sistem reservasi tempat makan berbasi web yang berfoku
     - Search Page
     - Profile Page
     - Application View Page
-- Publisher
+- Owner
     - Landing Page
     - Search Page
     - Profile Page
