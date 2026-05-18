@@ -3,10 +3,8 @@
 EatTrack merupakan sebuah sistem reservasi tempat makan berbasi web yang berfokus untuk memberikan informasi tempat makan terdekat di lokasi anda. Informasi yang diberikan berupa jam buka tempat makan, foto tempat makan, list menunya, dan sebagainya. Tidak hanya memberikan informasi, anda juga dapat melakukan reservasi tempat makan sesuai pilihan anda. Diharapkan dengan adanya sistem ini, akan membuat pengguna dapat lebih mudah mencari informasi terkait tempat makan terdekat di lokasi anda berada.
 
 ## Team Roles & Responsibilities
-Ketua: Azizurrifki (Backend)
-
-Anggota 1: Muhammad Tegar Bijanta (UI/UX Designer, Front End)
-
+Ketua: Azizurrifki (Backend) <br>
+Anggota 1: Muhammad Tegar Bijanta (UI/UX Designer, Front End)<br>
 Anggota 2: Muhammad Izzul Islam (Front End)
 
 ## Alamat
