@@ -36,7 +36,12 @@ Anggota 2: Muhammad Izzul Islam (Front End)
 ```
 
 ## TechStack
-HTML, PHP, CSS, Javascript, MySQL
+- Frontend : HTML, JavaScript, CSS Tailwind
+- Backend : Laravel
+- Database : MySQL
+- Local Server : XAMPP
+- Design Support : Figma
+- Version control : Git / Github
 
 ## Requirement
 Untuk menggunakan EatTrack ini, anda harus menginstall dan konfigurasi berikut:
