@@ -4,7 +4,9 @@ EatTrack merupakan sebuah sistem reservasi tempat makan berbasi web yang berfoku
 
 ## Team Roles & Responsibilities
 Ketua: Azizurrifki (Backend)
+
 Anggota 1: Muhammad Tegar Bijanta (UI/UX Designer, Front End)
+
 Anggota 2: Muhammad Izzul Islam (Front End)
 
 ## Alamat
