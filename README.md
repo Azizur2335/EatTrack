@@ -41,7 +41,7 @@ Anggota 2: Muhammad Izzul Islam (Front End)
 - Database : MySQL
 - Local Server : XAMPP
 - Design Support : Figma
-- Version control : Git / Github
+- Version Control : Git / Github
 
 ## Requirement
 Untuk menggunakan EatTrack ini, anda harus menginstall dan konfigurasi berikut:
