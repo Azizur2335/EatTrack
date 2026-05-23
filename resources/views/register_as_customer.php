@@ -3,21 +3,25 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Login Page</title>
+	<title>Document</title>
 </head>
 <body>
 	<div>
 		<div>
 			<form action="">
-				<label for="">Username/Email</label>
+				<label for="">Nama Lengkap</label>
 				<input type="text">
+				<label for="">Email</label>
+				<input type="email">
+				<label for="">Nomoe HP/ Telepon</label>
+				<input type="tel">
 				<label for="">Password</label>
 				<input type="password">
-				<a href="">Lupa Password?</a>
-				<a href="Customer/Beranda_Customer.php">Login</a>
+				<label for="">Konfirmasi Password</label>
+				<input type="password">
+				<button>Daftar</button>
 				<div>Atau</div>
 				<button>Lanjutkan dengan Google</button>
-				<div>Belum ada akun? <a href="register_page.php">Daftar Sekarang</a></div>
 			</form>
 		</div>
 		<div></div>

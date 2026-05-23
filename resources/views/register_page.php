@@ -11,7 +11,7 @@
 			<form action="">
 				<label for="">Daftar akun sebagai:</label>
 				<button>Owner</button>
-				<button>Customer</button>
+				<a href="register_as_customer.php">Customer</a>
 				<div>Sudah memiliki akun? <a href="login_page.php">Login</a></div>
 			</form>
 		</div>
