@@ -15,7 +15,7 @@
   </a>
   <div class="nav-links" id="nav-links">
     <a href="#">Daftar</a>
-    <a class="btn-login" href="#">Login</a>
+    <a class="btn-login" href="resources/views/login_page.php">Login</a>
   </div>
 </nav>
 
