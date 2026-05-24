@@ -61,7 +61,7 @@
 
     <!-- Hero image -->
     <div class="h-80 overflow-hidden">
-      <img src="/assets/foto_makan_bareng.jpg" alt="Foto makan bareng" class="w-full h-full object-cover"/>
+      <img src="img/foto_makan_bareng.jpg" alt="Foto makan bareng" class="w-full h-full object-cover"/>
     </div>
 
     <!-- Hero content -->
