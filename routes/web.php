@@ -5,3 +5,23 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/loginPage', function () {
+    return view('login_page');
+});
+
+Route::get('/register_page', function () {
+    return view('register_page');
+});
+
+Route::get('/register_as_customer', function () {
+    return view('register_as_customer');
+});
+
+Route::get('/register_as_customer', function () {
+    return view('register_as_customer');
+});
+
+Route::get('/coba', function () {
+    return view('coba');
+});

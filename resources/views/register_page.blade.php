@@ -9,6 +9,8 @@
 	<div>
 		<div>
 			<form action="">
+				<div>EatTrack</div>
+				<div>Daftar</div>
 				<label for="">Daftar akun sebagai:</label>
 				<button>Owner</button>
 				<a href="register_as_customer.php">Customer</a>
