@@ -49,8 +49,8 @@
       </div>
     </div>
     <div class="flex items-center gap-4">
-      <a href="/coba" class="px-5 py-2 rounded-full text-gray-700 text-sm hover:bg-gray-200">Daftar</a>
-      <a href="/loginPage" class="text-white text-sm font-medium px-5 py-2 rounded-full bg-orange-700 hover:bg-orange-800">
+      <a href="/map" class="px-5 py-2 rounded-full text-gray-700 text-sm hover:bg-gray-200">Daftar</a>
+      <a href="/beranda" class="text-white text-sm font-medium px-5 py-2 rounded-full bg-orange-700 hover:bg-orange-800">
         Login
       </a>
     </div>

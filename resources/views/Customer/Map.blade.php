@@ -8,17 +8,17 @@
 </head>
 <body>
 	<x-navbar></x-navbar>
-	<div>
+	<div class="flex">
 		<div>
 			<input type="text">
-			<p>Ditemukan {{}} restoran</p>
+			<p>Ditemukan restoran</p>
 			<div>
 				<div class="flex">
 					<div></div>
 					<div>
-						<h3>{{nama restoran}}</h3>
-						<p>{{deskripsi}}</p>
-						<div class="bg-orange-200">{{buka}}</div>
+						<h3></h3>
+						<p>deskripsi</p>
+						<div class="bg-orange-200">buka</div>
 						<div>
 							<div></div>
 							<p>0,3 km</p>
@@ -31,7 +31,8 @@
 				</div>
 			</div>
 		</div>
-		<div></div>
+		<div class="bg-red-700">
+		</div>
 	</div>
 </body>
 </html>

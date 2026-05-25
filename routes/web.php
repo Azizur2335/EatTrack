@@ -18,7 +18,10 @@ Route::get('/register_as_customer', function () {
     return view('register_as_customer');
 });
 
+Route::get('/map', function () {
+    return view('Customer/Map');
+});
 
-Route::get('/coba', function () {
-    return view('coba');
+Route::get('/beranda', function () {
+    return view('Customer/Beranda_Customer');
 });
