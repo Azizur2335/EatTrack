@@ -6,12 +6,7 @@
 	<title>Document</title>
 </head>
 <body>
-	<header>
-		<a href="">Beranda</a>
-		<a href="">Map</a>
-		<a href="">Reservasi</a>
-		<div></div>
-	</header>
+	<x-navbar></x-navbar>
 	<section>
 		<div>
 			<div>Reservasi Saya</div>
@@ -23,15 +18,15 @@
 				<table>
 					<tr>
 						<td>Tanggal</td>
-						<td>Tanggal</td>
-						<td>Tanggal</td>
-						<td>Tanggal</td>
+						<td>Waktu</td>
+						<td>Tamu</td>
+						<td>Meja</td>
 					</tr>
 					<tr>
 						<td>21</td>
-						<td>Tanggal</td>
-						<td>Tanggal</td>
-						<td>Tanggal</td>
+						<td>18.00</td>
+						<td>2</td>
+						<td>No.2</td>
 					</tr>
 				</table>
 			</div>

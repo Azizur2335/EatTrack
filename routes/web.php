@@ -25,3 +25,6 @@ Route::get('/map', function () {
 Route::get('/beranda', function () {
     return view('Customer/Beranda_Customer');
 });
+Route::get('/reservasi', function () {
+    return view('Customer/Reservasi');
+});
