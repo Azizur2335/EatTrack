@@ -88,7 +88,7 @@
         <!-- Daftar -->
         <p class="text-center text-sm text-gray-700 mt-1">
           Belum punya akun?
-          <a href="/register" class="text-orange-700 font-medium hover:underline">Daftar Sekarang</a>
+          <a href="/register_page" class="text-orange-700 font-medium hover:underline">Daftar Sekarang</a>
         </p>
 
       </form>

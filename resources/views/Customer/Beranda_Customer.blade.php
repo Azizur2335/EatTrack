@@ -6,12 +6,7 @@
 	<title>Document</title>
 </head>
 <body>
-	<header>
-		<a href="">Beranda</a>
-		<a href="">Map</a>
-		<a href="Reservasi.php">Reservasi</a>
-		<div></div>
-	</header>
+	<x-navbar></x-navbar>
 	<section>
 		<div>
 			<div></div>
