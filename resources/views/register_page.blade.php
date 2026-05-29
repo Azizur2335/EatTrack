@@ -18,8 +18,8 @@
 <body class="h-screen m-0 overflow-hidden">
 	<div class="flex w-screen h-screen">
 		<div class="md:w-1/2 flex flex-col px-12 py-10 h-full">
-			<div class="pt-4 pb-4">
-				<img src="img/frame 1.png" alt="" class="w-60">
+			<div class="pb-4">
+				<img src="img/frame 1.png" alt="" class="w-50">
 			</div>
 			<hr class="border-gray-300 mb-8">
 			<h1 class="text-3xl text-red-700 mb-16">Daftar</h1>

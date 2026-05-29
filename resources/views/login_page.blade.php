@@ -21,19 +21,16 @@
     <div class="w-full md:w-1/2 bg-gray-100 flex flex-col px-12 py-10">
 
       <!-- Logo -->
-      <div class="flex items-center gap-3 mb-6">
-        <img src="/assets/logoWEB.png" alt="EatTrack" class="h-12 w-auto">
-        <span class="text-2xl font-bold">
-          <span class="text-orange-700">Eat</span><span class="text-yellow-500">Track</span>
-        </span>
-      </div>
+      <div class="pb-4">
+				<img src="img/frame 1.png" alt="" class="w-50">
+			</div>
 
       <!-- Divider -->
       <hr class="border-gray-300 mb-8">
 
       <!-- Judul -->
-      <h1 class="text-4xl font-bold text-orange-700 mb-2">Login</h1>
-      <p class="text-gray-500 text-sm mb-8">Masuk ke akun EatTrack anda</p>
+      <h1 class="text-3xl font-bold text-orange-700 mb-2">Login</h1>
+      <p class="text-gray-500 text-sm mb-6">Masuk ke akun EatTrack anda</p>
 
       <!-- Form -->
       <form action="/login" method="POST" class="flex flex-col gap-5">
