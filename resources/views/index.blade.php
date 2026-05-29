@@ -1,102 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
-  <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  * {
-    font-family: 'Inter', sans-serif;
-  }
+    <title>EatTrack</title>
 
-  </style>
-  <title>Eattrack</title>
-  <style>
-    h1, h1 span{
-      font-family: "Unbounded", sans-serif;
-      font-weight: 700;
-    }
-    .stat-num {
-      display: block;
-      font-family: "Unbounded", sans-serif;
-      font-size: 3rem;
-      font-weight: bold;
-      color: #eab308;
-      line-height: 1;
-    }
-    .stat-label {
-      display: block;
-      font-family: "Unbounded", sans-serif;
-      font-size: 1rem;
-      font-weight: bold;
-      color: white;
-      margin-top: 6px;
-    }
-  </style>
-</head>
-<body class="m-0 p-0">
+    <!-- TAILWIND -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-  <!-- ══════════════ NAV ══════════════ -->
-  <nav class="px-6 py-3 bg-white flex justify-between items-center border-b border-gray-200">
-    <div class="flex items-center gap-2">
-      <div class="w-35">
-        <img src="img/frame 1.png" alt="">
+    <!-- FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- UNBOUNDED -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- INTER -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: "Inter", sans-serif;
+      }
+
+      h1,
+      h1 span {
+        font-family: "Unbounded", sans-serif;
+        font-weight: 700;
+      }
+
+      .stat-num {
+        display: block;
+        font-family: "Unbounded", sans-serif;
+        font-size: 3rem;
+        font-weight: bold;
+        color: #facc15;
+        line-height: 1;
+      }
+
+      .stat-label {
+        display: block;
+        font-family: "Unbounded", sans-serif;
+        font-size: 1rem;
+        font-weight: bold;
+        color: white;
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+
+  <body class="m-0 p-0 bg-orange-700">
+    <!-- NAVBAR -->
+    <nav class="px-6 py-4 bg-white flex justify-between items-center">
+      <!-- LOGO -->
+      <div class="flex items-center">
+        <img
+          src="{{ asset('assets/Frame 1.png') }}"
+          alt="EatTrack Logo"
+          class="h-12 object-contain"
+        />
       </div>
-    </div>
-    <div class="flex items-center gap-4">
-      <a href="/register_page" class="px-5 py-2 rounded-full text-gray-700 text-sm hover:bg-gray-200">Daftar</a>
-      <a href="/loginPage" class="text-white text-sm font-medium px-5 py-2 rounded-full bg-orange-700 hover:bg-orange-800">
-        Login
-      </a>
-    </div>
-  </nav>
 
-  <!-- ══════════════ HOME ══════════════ -->
-  <div id="page-home">
+      <!-- MENU -->
+      <div class="flex items-center gap-4">
+        <a
+          href="signup.html"
+          class="px-5 py-2 rounded-full text-gray-700 text-sm hover:bg-gray-100 transition"
+        >
+          Daftar
+        </a>
 
-    <!-- Hero image -->
+        <a
+          href="login.html"
+          class="text-white text-sm font-medium px-5 py-2 rounded-full bg-orange-700 hover:bg-orange-800 transition"
+        >
+          Login
+        </a>
+      </div>
+    </nav>
+
+    <!-- HERO IMAGE -->
     <div class="h-80 overflow-hidden">
-      <img src="img/foto_makan_bareng.jpg" alt="Foto makan bareng" class="w-full h-full object-cover"/>
+      <img
+        src="{{ asset('assets/foto_makan_bareng.jpg') }}"
+        alt="Foto makan bareng"
+        class="w-full h-full object-cover"
+      />
     </div>
 
-    <!-- Hero content -->
-    <section class="bg-orange-700 pt-12 pb-16 px-6">
-      <h1 class="text-4xl md:text-5xl text-white text-center leading-tight mb-6">
-        Temukan dan Booking<br>
+    <!-- CONTENT -->
+    <section class="bg-orange-700 pt-14 pb-20 px-6">
+      <!-- TITLE -->
+      <h1
+        class="text-4xl md:text-5xl text-white text-center leading-tight mb-6"
+      >
+        Temukan dan Booking <br />
         <span class="text-yellow-400">Tempat Makan</span> Favoritmu
       </h1>
-      <p class="text-white text-center opacity-80 mb-14">Track ribuan tempat makan terdekat dari lokasimu</p>
 
-      <!-- Stats -->
-      <div class="flex justify-between max-w-5xl mx-auto">
+      <!-- SUBTITLE -->
+      <p class="text-white text-center opacity-80 mb-16">
+        Track ribuan tempat makan terdekat dari lokasimu
+      </p>
+
+      <!-- STATS -->
+      <div class="flex justify-center gap-24 flex-wrap">
         <div class="text-center">
-          <span class="stat-num">30K</span>
+          <span class="stat-num">77K</span>
           <span class="stat-label">Pengguna</span>
         </div>
+
         <div class="text-center">
-          <span class="stat-num">80K</span>
+          <span class="stat-num">77K</span>
           <span class="stat-label">Tempat Makan</span>
         </div>
+
         <div class="text-center">
-          <span class="stat-num">4,8</span>
+          <span class="stat-num">7,7</span>
           <span class="stat-label">Rating</span>
         </div>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-white py-8 flex justify-center gap-10">
-      <a href="/reservasi" class="text-gray-500 text-sm hover:text-gray-700">Help</a>
-      <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Privasi</a>
-      <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Syarat</a>
-      <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Kontak</a>
-    </footer>
-  </div>
+    <!-- FOOTER -->
+    <footer class="bg-white py-8 flex justify-center gap-10 flex-wrap">
+      <a href="#" class="text-gray-500 text-sm hover:text-gray-700 transition">
+        Bantuan
+      </a>
 
-</body>
+      <a href="#" class="text-gray-500 text-sm hover:text-gray-700 transition">
+        Tentang
+      </a>
+
+      <a href="#" class="text-gray-500 text-sm hover:text-gray-700 transition">
+        Kontak
+      </a>
+    </footer>
+  </body>
 </html>
