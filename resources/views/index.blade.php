@@ -44,13 +44,13 @@
   <!-- ══════════════ NAV ══════════════ -->
   <nav class="px-6 py-3 bg-white flex justify-between items-center border-b border-gray-200">
     <div class="flex items-center gap-2">
-      <div class="text-xl font-medium">
-        <span class="text-orange-700">Eat</span><span class="text-yellow-500">Track</span>
+      <div class="w-35">
+        <img src="img/frame 1.png" alt="">
       </div>
     </div>
     <div class="flex items-center gap-4">
-      <a href="/map" class="px-5 py-2 rounded-full text-gray-700 text-sm hover:bg-gray-200">Daftar</a>
-      <a href="/beranda" class="text-white text-sm font-medium px-5 py-2 rounded-full bg-orange-700 hover:bg-orange-800">
+      <a href="/register_page" class="px-5 py-2 rounded-full text-gray-700 text-sm hover:bg-gray-200">Daftar</a>
+      <a href="/loginPage" class="text-white text-sm font-medium px-5 py-2 rounded-full bg-orange-700 hover:bg-orange-800">
         Login
       </a>
     </div>
