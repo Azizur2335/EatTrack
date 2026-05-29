@@ -91,7 +91,7 @@
 
     <!-- Footer -->
     <footer class="bg-white py-8 flex justify-center gap-10">
-      <a href="" class="text-gray-500 text-sm hover:text-gray-700">Help</a>
+      <a href="/reservasi" class="text-gray-500 text-sm hover:text-gray-700">Help</a>
       <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Privasi</a>
       <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Syarat</a>
       <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Kontak</a>
