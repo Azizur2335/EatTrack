@@ -10,11 +10,20 @@
 		<div>
 			<form action="/register" method="POST">
 				@csrf
+				@if ($errors->any())
+					<div style="color:red">
+						<ul>
+							@foreach ($errors->all() as $error)
+								<li>{{ $error }}</li>
+							@endforeach
+						</ul>
+					</div>
+				@endif
 				<input type="hidden" name="role" value="customer">
 				<label for="">Nama Lengkap</label>
 				<input type="text" name="name" placeholder="Nama Lengkap">
 				<label for="">Email</label>
-				<input type="email" name="emai" placeholder="Email">
+				<input type="email" name="email" placeholder="Email">
 				<label for="">Nomoe HP/Telepon</label>
 				<input type="tel" name="phone" placeholder="Nomor HP">
 				<label for="">Password</label>

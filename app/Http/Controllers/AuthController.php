@@ -11,6 +11,13 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
+        if(auth()->check()){
+            return match (auth()->user()->role){
+                'owner' => redirect('/dashboard_owner'),
+                'admin' => redirect('/dashboard_admin'),
+                default => redirect('/beranda'),
+            };
+        }
         return view('login_page');
     }
     
@@ -42,11 +49,17 @@ class AuthController extends Controller
 
     public function showRegister()
     {
+        if(auth()->check()){
+            return redirect('/beranda');
+        }
         return view('register_page');
     }
 
     public function showRegisterCustomer()
     {
+        if(auth()->check()){
+            return redirect('/beranda');
+        }
         return view('register_as_customer');
     }
 
