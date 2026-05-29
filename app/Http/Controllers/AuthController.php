@@ -6,5 +6,77 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    public function showLogin()
+    {
+        return view('login_page');
+    }
     
+    public function login(Request $request)
+    {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+
+        $loginField = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+        
+        $credentials = [
+            $loginField => $request->username, 'password' => $request->password,
+        ];
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return match(Auth::user()->role){
+                'owner' => redirect('/dashboard_owner'),
+                'admin' => redirect('/dashboard_admin'),
+                default => redirect('/beranda'),
+            };
+            return back()->withErrors([
+                'username' => 'Username/email atau password salah.',
+            ])->withInput();
+        }
+    }
+
+    public function showRegister()
+    {
+        return view('register_page');
+    }
+
+    public function showRegisterCustomer()
+    {
+        return view('register_as_customer');
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users',
+            'phone'    => 'required|string|max:15',
+            'password' => 'required|min:8|confirmed',
+            'role'     => 'required|in:customer, owner',
+        ]);
+
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'phone'    => $request->phone,
+            'password' => Hash::make($request->password),
+            'role'     => $reuqest->role,
+        ]);
+
+        Auth::login($user);
+        return match($user->role){
+            'owner' => redirect('/dashboard_owner'),
+            default => redirect('/beranda'), 
+        };
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->validate();
+        $request->session()->regenerateToken();
+        return redirect('/login_page');
+    }
 }

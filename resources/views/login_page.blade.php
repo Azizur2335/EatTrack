@@ -37,7 +37,14 @@
 
       <!-- Form -->
       <form action="/login" method="POST" class="flex flex-col gap-5">
-
+        @csrf   {{-- ← tambahkan ini --}}
+    
+        <!-- tampilkan error kalau login gagal -->
+        @if ($errors->any())
+            <div class="text-red-500 text-sm">
+                {{ $errors->first() }}
+            </div>
+        @endif
         <!-- Username -->
         <div>
           <label class="block text-sm font-bold text-gray-800 mb-2">Username atau Email</label>

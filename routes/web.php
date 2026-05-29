@@ -1,43 +1,41 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\AdminController;
+
+// Public
 
 Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/loginPage', function () {
-    return view('login_page');
+// Auth
+Route::get('/loginPage', [AuthController::class, 'showLogin']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/register_page', [AuthController::class, 'showRegister']);
+Route::get('/register_as_customer', [AuthController::class, 'showRegisterCustomer']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout']);
+
+
+// Customer
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::get('/beranda', [CustomerController::class, 'beranda']);
+    Route::get('/map', [CustomerController::class, 'map']);
+    Route::get('/reservasi', [CustomerController::class, 'reservasi']);
 });
 
-Route::get('/register_page', function () {
-    return view('register_page');
+// Owner
+Route::middleware(['auth', 'role:owner'])->group(function () {
+    Route::get('/dashboard_owner', [OwnerController::class, 'beranda']);
+    Route::get('/kelola_menu', [OwnerController::class, 'kelolaMenu']);
 });
 
-Route::get('/register_as_customer', function () {
-    return view('register_as_customer');
+// ADMIN
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/dashboard_admin', [AdminController::class, 'beranda']);
 });
 
-Route::get('/map', function () {
-    return view('Customer/Map');
-});
-
-Route::get('/beranda', function () {
-    return view('Customer/Beranda_Customer');
-});
-
-Route::get('/reservasi', function () {
-    return view('Customer/Reservasi');
-});
-
-Route::get('/dashboard_owner', function () {
-    return view('Owner/beranda_owner');
-});
-
-Route::get('/dashboard_admin', function () {
-    return view('Admin/beranda_admin');
-});
-
-Route::get('/kelola_menu', function () {
-    return view('Owner/kelola_menu');
-});
