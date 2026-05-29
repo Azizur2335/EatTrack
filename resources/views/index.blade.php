@@ -62,7 +62,7 @@
       <!-- LOGO -->
       <div class="flex items-center">
         <img
-          src="assets/Frame 1.png"
+          src="{{ asset('assets/Frame 1.png') }}"
           alt="EatTrack Logo"
           class="h-12 object-contain"
         />
@@ -89,7 +89,7 @@
     <!-- HERO IMAGE -->
     <div class="h-80 overflow-hidden">
       <img
-        src="assets/foto_makan_bareng.jpg"
+        src="{{ asset('assets/foto_makan_bareng.jpg') }}"
         alt="Foto makan bareng"
         class="w-full h-full object-cover"
       />
