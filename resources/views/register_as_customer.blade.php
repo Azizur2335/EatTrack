@@ -13,7 +13,7 @@
 				<input type="text">
 				<label for="">Email</label>
 				<input type="email">
-				<label for="">Nomoe HP/ Telepon</label>
+				<label for="">Nomoe HP/Telepon</label>
 				<input type="tel">
 				<label for="">Password</label>
 				<input type="password">
