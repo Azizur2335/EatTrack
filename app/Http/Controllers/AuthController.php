@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -31,10 +34,10 @@ class AuthController extends Controller
                 'admin' => redirect('/dashboard_admin'),
                 default => redirect('/beranda'),
             };
-            return back()->withErrors([
-                'username' => 'Username/email atau password salah.',
-            ])->withInput();
         }
+        return back()->withErrors([
+            'username' => 'Username/email atau password salah.',
+        ])->withInput();
     }
 
     public function showRegister()
@@ -54,7 +57,7 @@ class AuthController extends Controller
             'email'    => 'required|email|unique:users',
             'phone'    => 'required|string|max:15',
             'password' => 'required|min:8|confirmed',
-            'role'     => 'required|in:customer, owner',
+            'role'     => 'required|in:customer,owner',
         ]);
 
         $user = User::create([
@@ -62,7 +65,7 @@ class AuthController extends Controller
             'email'    => $request->email,
             'phone'    => $request->phone,
             'password' => Hash::make($request->password),
-            'role'     => $reuqest->role,
+            'role'     => $request->role,
         ]);
 
         Auth::login($user);
@@ -75,8 +78,8 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-        $request->session()->validate();
+        $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login_page');
+        return redirect('/loginPage');
     }
 }
