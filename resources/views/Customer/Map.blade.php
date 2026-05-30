@@ -218,6 +218,40 @@
 			// Refresh peta biar tidak glitch
 			setTimeout(() => { map.invalidateSize(); }, 310);
 		}
+
+		// Debounce geocoding saat ketik di search
+		let geocodeTimer = null;
+
+		document.getElementById('searchInput').addEventListener('input', function() {
+			const keyword = this.value.toLowerCase();
+
+			// ... kode search filter yang udah ada ...
+
+			// Geocoding: kalau keyword >= 3 karakter
+			clearTimeout(geocodeTimer);
+			if (this.value.trim().length >= 3) {
+				geocodeTimer = setTimeout(() => {
+					geocodeAndFit(this.value.trim());
+				}, 600); // tunggu 600ms setelah berhenti ngetik
+			}
+		});
+
+		function geocodeAndFit(query) {
+			fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`)
+				.then(res => res.json())
+				.then(data => {
+					if (data && data.length > 0) {
+						const place = data[0];
+						const bbox = place.boundingbox;
+						// boundingbox: [south, north, west, east]
+						map.fitBounds([
+							[parseFloat(bbox[0]), parseFloat(bbox[2])],
+							[parseFloat(bbox[1]), parseFloat(bbox[3])]
+						]);
+					}
+				})
+				.catch(err => console.error('Geocode error:', err));
+		}
     </script>
 
 </body>
