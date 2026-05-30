@@ -84,10 +84,9 @@
         </div>
 
         <!-- Google -->
-        <button
-          type="button" class="w-full py-3 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 flex items-center justify-center gap-3 text-sm font-medium text-gray-700 transition-colors">
-          Lanjutkan dengan Google
-        </button>
+        <a href="/auth/google" class="w-full py-3 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 flex items-center justify-center gap-3 text-sm font-medium text-gray-700 transition-colors">
+            Lanjutkan dengan Google
+        </a>
 
         <!-- Daftar -->
         <p class="text-center text-sm text-gray-700 mt-1">

@@ -13,7 +13,7 @@ Route::get('/', function () {
 });
 
 // Auth
-Route::get('/loginPage', [AuthController::class, 'showLogin']);
+Route::get('/loginPage', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register_page', [AuthController::class, 'showRegister']);
 Route::get('/register_as_customer', [AuthController::class, 'showRegisterCustomer']);
