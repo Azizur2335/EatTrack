@@ -19,7 +19,8 @@ Route::get('/register_page', [AuthController::class, 'showRegister']);
 Route::get('/register_as_customer', [AuthController::class, 'showRegisterCustomer']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
-
+Route::get('/auth/google', [AuthController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
 // Customer
 Route::middleware(['auth', 'role:customer'])->group(function () {

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -94,5 +95,34 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/loginPage');
+    }
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        $googleUser = Socialite::driver('google')->user();
+        $user = User::where('email', $googleUser->email)->first();
+
+        if (!$user){
+            $user = User::create([
+                'name'     => $googleUser->name,
+                'email'    => $googleUser->email,
+                'password' => Hash::make(str()->random(16)),
+                'role'     => 'customer',
+                'phone'    => null,
+            ]);
+        }
+
+        Auth::login($user);
+
+        return match($user->role){
+            'owner' => redirect('/dashboard_owner'),
+            'admin' => redirect('/dashboard_admin'),
+            default => redirect('/beranda'),
+        };
     }
 }

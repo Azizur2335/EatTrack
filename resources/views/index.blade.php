@@ -71,14 +71,14 @@
       <!-- MENU -->
       <div class="flex items-center gap-4">
         <a
-          href="signup.html"
+          href="/register_page"
           class="px-5 py-2 rounded-full text-gray-700 text-sm hover:bg-gray-100 transition"
         >
           Daftar
         </a>
 
         <a
-          href="login.html"
+          href="/loginPage"
           class="text-white text-sm font-medium px-5 py-2 rounded-full bg-orange-700 hover:bg-orange-800 transition"
         >
           Login

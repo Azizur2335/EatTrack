@@ -47,10 +47,9 @@
 				<span class="text-sm text-gray-400">Atau</span>
 				<hr class="flex-1 border-gray-300">
 				</div>
-				<button
-				type="button" class="w-full py-3 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 flex items-center justify-center gap-3 text-sm font-medium text-gray-700 transition-colors mb-4">
-				Lanjutkan dengan Google
-				</button>
+				<a href="/auth/google" class="w-full py-3 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 flex items-center justify-center gap-3 text-sm font-medium text-gray-700 transition-colors mb-4">
+					Lanjutkan dengan Google
+				</a>
 			</form>
 			<a href="/register_page" class="text-gray-700">
 				< Kembali
