@@ -17,6 +17,7 @@ Route::get('/loginPage', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register_page', [AuthController::class, 'showRegister']);
 Route::get('/register_as_customer', [AuthController::class, 'showRegisterCustomer']);
+Route::get('/register_as_owner', [AuthController::class, 'showRegisterOwner']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle']);

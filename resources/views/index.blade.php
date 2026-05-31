@@ -131,7 +131,7 @@
 
     <!-- FOOTER -->
     <footer class="bg-white py-8 flex justify-center gap-10 flex-wrap">
-      <a href="#" class="text-gray-500 text-sm hover:text-gray-700 transition">
+      <a href="/beranda" class="text-gray-500 text-sm hover:text-gray-700 transition">
         Bantuan
       </a>
 

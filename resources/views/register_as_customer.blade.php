@@ -55,7 +55,14 @@
 				< Kembali
 			</a>
 		</div>
-		<div></div>
+		<div class="hidden md:block w-1/2">
+		<img
+			src="/assets/foto_makan_bareng.jpg"
+			alt="Restoran"
+			class="w-full h-full object-cover"
+			onerror="this.parentElement.style.background='#c0391b'"
+		>
+		</div>
 	</div>
 </body>
 </html>

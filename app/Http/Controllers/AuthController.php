@@ -64,6 +64,14 @@ class AuthController extends Controller
         return view('register_as_customer');
     }
 
+    public function showRegisterOwner()
+    {
+        if(auth()->check()){
+            return redirect('/beranda');
+        }
+        return view('register_as_owner');
+    }
+
     public function register(Request $request)
     {
         $request->validate([

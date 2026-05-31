@@ -24,9 +24,7 @@
 			<hr class="border-gray-300 mb-8">
 			<h1 class="text-3xl text-red-700 mb-16">Daftar</h1>
 			<div class="text-center justify-center mb-4">Daftar akun sebagai:</div>
-			<div class="bg-red-700 rounded-lg w-full pt-3 pb-3 text-center mb-4 hover:bg-red-900">
-				<a href="" class="text-lg font-bold text-white ">Owner</a>
-			</div>
+			<a href="/register_as_owner" class="text-lg font-bold text-white bg-red-700 rounded-lg w-full pt-3 pb-3 text-center mb-4 hover:bg-red-900">Owner</a>
 			<a href="/register_as_customer" class="text-lg font-bold text-black bg-yellow-400 rounded-lg w-full pt-3 pb-3 text-center mb-4 hover:bg-yellow-700">Customer</a>
 			<div class="mt-8">Sudah memiliki akun? <a href="/loginPage" class="text-red-700 hover:underline">Login</a></div>
 		</div>
