@@ -73,7 +73,7 @@
           type="submit"
           class="w-full py-3 rounded-lg bg-red-700 hover:bg-red-800 text-white font-bold text-base transition-colors"
         >
-          Login
+          Daftar Sebagai Customer
         </button>
 
         <!-- Atau -->
@@ -85,7 +85,7 @@
 
         <!-- Google -->
         <a href="/auth/google" class="w-full py-3 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 flex items-center justify-center gap-3 text-sm font-medium text-gray-700 transition-colors">
-            Lanjutkan dengan Google
+            <img src="img/google.png" alt="" class="h-5 w-5"> Lanjutkan dengan Google
         </a>
 
         <!-- Daftar -->
@@ -108,7 +108,6 @@
     </div>
 
   </div>
-
 
 </body>
 </html>

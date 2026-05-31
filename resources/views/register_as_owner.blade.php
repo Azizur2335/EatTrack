@@ -17,154 +17,117 @@
   </style>
 </head>
 <body>
-
+	
 	<div class="w-full md:w-1/2 bg-gray-100 flex flex-col px-12 py-10">
-		
+		<div class="pb-4">
+					<img src="img/frame 1.png" alt="" class="w-50">
+				</div>
+
+		<!-- Divider -->
+		<hr class="border-gray-300 mb-8">
+
 		<div class="text-2xl text-red-700">
 			<h1>Registrasi Owner</h1>
 		</div>
 
-		<div class="flex">
+		<div class="flex items-center justify-center">
 
-			<div class="flex m-4">
-				<div class="w-6 h-6 rounded-full bg-red-700 text-center text-white" id="circle1">1</div>
-				<span class="px-4">Data Owner</span>
+			<div class="flex items-center m-4">
+				<div class="flex items-center justify-center w-8 h-8 rounded-full bg-red-700 text-white text-sm font-bold leading-none">1</div>
+				<span class="pl-4 font-bold text-red-700">Data Owner</span>
 			</div>
 
-			<div class="w-16 h-0.5 align-center bg-gray-300"></div>
+			<div class="w-10 h-0.5 bg-gray-300"></div>
 
-			<div class="flex m-4">
-				<div class="w-6 h-6 rounded-full bg-red-700 text-center text-white" id="circle2">2</div>
-				<span class="px-4">Data Restoran</span>
+			<div class="flex items-center m-4">
+				<div class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-300 text-center text-white leading-none">2</div>
+				<span class="pl-4">Data Restoran</span>
 			</div>
 
 		</div>
 
 		<!-- STEP 1 -->
-		<div id="step1" class="form-section">
+		<div id="step1">
 
-			<div class="form-grid">
+			<form action="">
+				<label class="block text-sm font-bold text-gray-800 mb-2">Nama Lengkap</label>
+				<input type="text" required placeholder="Masukkan Nama Lengkap" class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+				<label class="block text-sm font-bold text-gray-800 mb-2">Username</label>
+				<input type="text" required placeholder="Masukkan Nama Lengkap" class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+				<label class="block text-sm font-bold text-gray-800 mb-2">Email</label>
+				<input type="email" required placeholder="Masukkan Nama Lengkap" class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+				<label class="block text-sm font-bold text-gray-800 mb-2">Nomor HP</label>
+				<input type="text" required placeholder="Masukkan Nama Lengkap" class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+				<label class="block text-sm font-bold text-gray-800 mb-2">Password</label>
+				<input type="password" required placeholder="Masukkan Nama Lengkap" class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+				<label class="block text-sm font-bold text-gray-800 mb-2">Konfirmasi Password</label>
+				<input type="password" required placeholder="Masukkan Nama Lengkap" class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+			</form>
 
-				<div class="form-group">
-					<label>Nama Lengkap</label>
-					<input type="text" required>
-				</div>
-
-				<div class="form-group">
-					<label>Username</label>
-					<input type="text" required>
-				</div>
-
-				<div class="form-group">
-					<label>Email</label>
-					<input type="email" required>
-				</div>
-
-				<div class="form-group">
-					<label>Nomor HP</label>
-					<input type="text" required>
-				</div>
-
-				<div class="form-group">
-					<label>Password</label>
-					<input type="password" required>
-				</div>
-
-				<div class="form-group">
-					<label>Konfirmasi Password</label>
-					<input type="password" required>
-				</div>
-
-			</div>
-
-			<div class="btn-container">
-				<div></div>
-				<button class="btn btn-primary" onclick="nextStep()">
+			<div class="flex justify-between">
+				<a href="/register_page" class="font-semibold text-sm text-gray-700">
+					< Kembali
+				</a>
+				<button class="bg-red-700 hover:bg-red-900 text-white font-semibold text-sm px-8 py-3 rounded-xl cursor-pointer transition-colors" onclick="nextStep()">
 					Lanjutkan
 				</button>
 			</div>
-
 		</div>
 
-		<!-- STEP 2 -->
-		<div id="step2" class="form-section">
 
-			<div class="form-grid">
+		<div class="hidden" id="step2">
 
-				<div class="form-group">
-					<label>Nama Restoran</label>
-					<input type="text">
+			<form action="" class="form-grid">
+				<label class="block text-sm font-bold text-gray-800 mb-2">Nama Restoran</label>
+				<input type="text"class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+				<label class="block text-sm font-bold text-gray-800 mb-2">Kota / Kecamatan</label>
+				<input type="text"class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+				<label class="block text-sm font-bold text-gray-800 mb-2">Alamat Restoran</label>
+				<textarea class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4"></textarea>
+				<label class="block text-sm font-bold text-gray-800 mb-2">Link Google Maps (Opsional)</label>
+				<input type="url" class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+				<div class="flex gap-4">
+				<div class="flex-1">
+						<label class="block text-sm font-bold text-gray-800 mb-2">Jam Buka</label>
+						<input type="time" class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+					</div>
+					<div class="flex-1">
+						<label class="block text-sm font-bold text-gray-800 mb-2">Jam Tutup</label>
+						<input type="time" class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+					</div>
 				</div>
 
-				<div class="form-group">
-					<label>Kota / Kecamatan</label>
-					<input type="text">
+				<div class="flex gap-4">
+					<div class="flex-1">
+						<label class="block text-sm font-bold text-gray-800 mb-2">Kategori Restoran</label>
+						<select class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+							<option class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 hover:bg-gray-800 bg-white mb-4">Cafe</option>
+						</select>
+					</div>
+					<div class="flex-1">
+						<label class="block text-sm font-bold text-gray-800 mb-2">Kapasitas Meja</label>
+						<input type="number" placeholder="Contoh: 20" class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
+					</div>
 				</div>
+				<label class="block text-sm font-bold text-gray-800 mb-2">Deskripsi Restoran</label>
+				<textarea class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4"></textarea>
+				<label class="block text-sm font-bold text-gray-800 mb-2">Foto Restoran / Logo</label>
+				<input type="file" class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-orange-400 bg-white mb-4">
 
-				<div class="form-group full">
-					<label>Alamat Restoran</label>
-					<textarea></textarea>
-				</div>
+			</form>
 
-				<div class="form-group full">
-					<label>Link Google Maps (Opsional)</label>
-					<input type="url">
-				</div>
+			<div class="flex justify-between">
 
-				<div class="form-group">
-					<label>Jam Buka</label>
-					<input type="time">
-				</div>
-
-				<div class="form-group">
-					<label>Jam Tutup</label>
-					<input type="time">
-				</div>
-
-				<div class="form-group">
-					<label>Kategori Restoran</label>
-					<select>
-						<option>Cafe</option>
-						<option>Seafood</option>
-						<option>Ayam Geprek</option>
-						<option>Japanese Food</option>
-						<option>Fast Food</option>
-					</select>
-				</div>
-
-				<div class="form-group">
-					<label>Kapasitas Meja</label>
-					<input type="number" placeholder="Contoh: 20">
-				</div>
-
-				<div class="form-group full">
-					<label>Deskripsi Restoran</label>
-					<textarea></textarea>
-				</div>
-
-				<div class="form-group full">
-					<label>Foto Restoran / Logo</label>
-					<input type="file">
-				</div>
-
-			</div>
-
-			<div class="btn-container">
-
-				<button class="btn btn-secondary" onclick="prevStep()">
+				<button class="text-sm border-2 border-gray rounded-xl font-semibold px-8 py-3 hover:border-2 hover:border-red-700 hover:text-red-700 cursor-pointer" onclick="prevStep()">
 					Kembali
 				</button>
 
-				<button class="btn btn-primary">
+				<button class="text-sm bg-red-700 hover:bg-red-900 text-white font-semibold text-sm px-8 py-3 rounded-xl cursor-pointer transition-colors" onclick="nextStep()">
 					Daftar Sebagai Owner
 				</button>
-
 			</div>
-
 		</div>
-
 	</div>
-
 <script>
 
 function nextStep(){
