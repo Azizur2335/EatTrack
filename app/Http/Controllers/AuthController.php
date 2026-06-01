@@ -97,6 +97,71 @@ class AuthController extends Controller
         };
     }
 
+    public function registerOwner(Request $request)
+    {
+        $request->validate([
+            'name'            => 'required|string|max:255',
+            'email'           => 'required|email|unique:users',
+            'phone'           => 'required|string|max:15',
+            'password'        => 'required|min:8|confirmed',
+            'restaurant_name' => 'required|string|max:255',
+            'address'         => 'required|string',
+            'category'        => 'required|string',
+        ]);
+
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'phone'    => $request->phone,
+            'password' => Hash::make($request->password),
+            'role'     => 'owner',
+        ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('restaurants', 'public');
+        }
+
+        $restaurant = Restaurant::create([
+            'owner_id'    => $user->id,
+            'name'        => $request->restaurant_name,
+            'address'     => $request->address,
+            'city'        => $request->city,
+            'description' => $request->description,
+            'phone'       => $request->phone,
+            'category'    => $request->category,
+            'maps_link'   => $request->maps_link,
+            'open_time'   => $request->open_time,
+            'close_time'  => $request->close_time,
+            'image'       => $imagePath,
+            'status'      => 'active',
+        ]);
+
+        for ($i = 1; $i <= $request->capacity; $i++) {
+            \App\Models\Table::create([
+                'restaurant_id' => $restaurant->id,
+                'table_number'  => 'Meja ' . $i,
+                'capacity'      => 4,
+                'status'        => 'available',
+            ]);
+        }
+
+        if ($request->capacity) {
+            for ($i = 1; $i <= $request->capacity; $i++) {
+                Table::create([
+                    'restaurant_id' => $restaurant->id,
+                    'table_number'  => 'Meja ' . $i,
+                    'capacity'      => 4,
+                    'status'        => 'available',
+                ]);
+            }
+        }
+
+        Auth::login($user);
+
+        return redirect('/dashboard_owner');
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();

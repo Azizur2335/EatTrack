@@ -33,6 +33,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
 // Owner
 Route::middleware(['auth', 'role:owner'])->group(function () {
+    Route::post('/register-owner', [AuthController::class, 'registerOwner']);
     Route::get('/dashboard_owner', [OwnerController::class, 'beranda']);
     Route::get('/kelola_menu', [OwnerController::class, 'kelolaMenu']);
 });
