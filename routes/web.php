@@ -28,6 +28,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/beranda', [CustomerController::class, 'beranda']);
     Route::get('/map', [CustomerController::class, 'map']);
     Route::get('/reservasi', [CustomerController::class, 'reservasi']);
+    Route::get('/promo', [CustomerController::class, 'promo']);
 });
 
 // Owner

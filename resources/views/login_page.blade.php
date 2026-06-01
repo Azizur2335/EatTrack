@@ -73,7 +73,7 @@
           type="submit"
           class="w-full py-3 rounded-lg bg-red-700 hover:bg-red-800 text-white font-bold text-base transition-colors"
         >
-          Daftar Sebagai Customer
+          Login
         </button>
 
         <!-- Atau -->

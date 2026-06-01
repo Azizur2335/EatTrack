@@ -25,4 +25,10 @@ class CustomerController extends Controller
         $reservations = Reservation::where('customer_id', auth()->id())->latest()->get();
         return view('Customer/Reservasi', compact('reservations'));
     }
+
+    public function promo()
+    {
+        $reservations = Reservation::where('customer_id', auth()->id())->latest()->get();
+        return view('Customer/Promo', compact('reservations'));
+    }
 }

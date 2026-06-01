@@ -10,6 +10,7 @@
         <a href="/beranda" class="text-xl {{ request()->is('beranda') ? 'font-bold text-[#B92C10]' : 'font-normal text-[#272727]' }} hover:text-[#B92C10] transition">Beranda</a>
         <a href="/map" class="text-xl {{ request()->is('map') ? 'font-bold text-[#B92C10]' : 'font-normal text-[#272727]' }} hover:text-[#B92C10] transition">Map</a>
         <a href="/reservasi" class="text-xl {{ request()->is('reservasi') ? 'font-bold text-[#B92C10]' : 'font-normal text-[#272727]' }} hover:text-[#B92C10] transition">Reservasi</a>
+        <a href="/promo" class="text-xl {{ request()->is('promo') ? 'font-bold text-[#B92C10]' : 'font-normal text-[#272727]' }} hover:text-[#B92C10] transition">Promo</a>
     </div>
 
     {{-- Dropdown Kanan --}}
@@ -22,10 +23,10 @@
         </button>
 
         {{-- Dropdown Menu --}}
-        <div class="absolute right-0 top-14 bg-white rounded-2xl shadow-lg py-2 w-48 border border-gray-100 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200" style="z-index: 9999;">
+        <div class="absolute right-0 top-14 bg-white rounded-2xl shadow-lg py-2 w-48 border border-gray-100 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 cursor-pointer" style="z-index: 9999;">
 
             {{-- Profile --}}
-            <a href="#" class="flex items-center gap-3 px-5 py-3 text-[#272727] hover:bg-gray-50 transition text-sm">
+            <a href="#" class="flex items-center gap-3 px-5 py-3 text-[#272727] hover:bg-gray-50 transition text-sm hover: shadow-2xs">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                 </svg>

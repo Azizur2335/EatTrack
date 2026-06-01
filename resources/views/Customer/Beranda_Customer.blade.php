@@ -28,6 +28,15 @@
             opacity: 0.5;
         }
 
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         .card-gradient {
             background: linear-gradient(6.04deg, #000000 5.19%, rgba(102,102,102,0) 95.64%);
         }
@@ -206,6 +215,80 @@
                 @endif
 
             </div>
+        </div>
+    </div>
+
+    <div class="px-8 py-8">
+        <div class="max-w-[1400px] mx-auto">
+
+            <div class="
+                h-auto
+                rounded-3xl
+                bg-[url('/img/gambar_1.jpg')]
+                bg-cover
+                bg-center
+                relative
+                overflow-hidden
+            ">
+
+                <div class="absolute inset-0 bg-black/65"></div>
+
+                <div class="relative py-12 h-full justify-between items-center px-16 text-white">
+                    <h1 class="text-5xl font-bold mb-4">
+                        Promo Spesial Bulan Ini 🎉
+                    </h1>
+    
+                    <p class="mb-6 text-white">
+                        Dapatkan diskon reservasi hingga 50% di restoran favorit Anda.
+                    </p>
+    
+                    <div class="overflow-x-auto hide-scrollbar">
+                        <div class="flex gap-8 w-max py-4 ">
+
+                            <div class="w-85 min-w-85 bg-white rounded-xl overflow-hidden">
+                            <div class="h-[180px] overflow-hidden">
+                                    <img
+                                        src="img/gambar_1.jpg"
+                                        alt=""
+                                        class="w-full h-full object-cover"
+                                    >
+                                </div>
+
+                                <!-- Isi Card -->
+                                <div class="p-6">
+                                    <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">
+                                        Aktif
+                                    </span>
+
+                                    <h3 class="font-bold text-xl mt-3 text-black">
+                                        Weekend Flash Sale
+                                    </h3>
+
+                                    <p class="text-gray-500 mt-2">
+                                        Berlaku sampai 3 Oktober 2026
+                                    </p>
+                                    <div class="mt-2 text-gray-500">
+                                        Kuota terbatas
+                                    </div>
+                                    <div class="flex justify-end mt-4">
+                                        <button class="px-4 py-2 rounded-xl bg-yellow-400 hover:bg-yellow-500">
+                                            Detail
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+    
+                    <button class="mt-6 bg-white text-red-500 font-semibold px-6 py-3 rounded-xl hover:shadow-lg transition">
+                        Lihat Promo
+                    </button>
+                </div>
+
+            </div>
+
         </div>
     </div>
 
