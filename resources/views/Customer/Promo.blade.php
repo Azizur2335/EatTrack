@@ -93,7 +93,7 @@
 									Kuota terbatas
 								</div>
 								<div class="flex justify-end mt-4 gap-2">
-									<button class="px-4 py-2 rounded-xl bg-gray-200 hover:bg-yellow-500">
+									<button onclick="openModal()" class="px-4 py-2 rounded-xl bg-gray-200 hover:bg-yellow-500">
 										Detail
 									</button>
 									<button class="px-4 py-2 rounded-xl bg-yellow-400 hover:bg-yellow-500">
@@ -139,6 +139,35 @@
 
         </section>
 	</div>
+    <div
+        id="modal"
+        class="hidden fixed inset-0 bg-black/50 flex justify-center items-center">
+
+        <div class="bg-white p-6 rounded-xl shadow-lg w-120">
+            <h2 class="text-2xl font-bold mb-3">Detail</h2>
+            <p class="text-gray-600">
+                Ini adalah contoh popup menggunakan HTML, CSS, dan JavaScript.
+            </p>
+
+            <div class="mt-5 flex justify-end">
+                <button
+                    onclick="closeModal()"
+                    class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("modal").classList.remove("hidden");
+        }
+
+        function closeModal() {
+            document.getElementById("modal").classList.add("hidden");
+        }
+    </script>
 
 </body>
 </html>

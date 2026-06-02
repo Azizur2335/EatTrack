@@ -12,22 +12,6 @@
         * { font-family: 'Inter', sans-serif; }
         .unbounded { font-family: 'Unbounded', sans-serif; }
 
-        .hero-section {
-            background-color: #B92C10;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: url('{{ asset("images/hero-bg.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            mix-blend-mode: multiply;
-            opacity: 0.5;
-        }
-
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -55,7 +39,7 @@
     <x-navbar></x-navbar>
 
     {{-- ===== HERO ===== --}}
-    <div class="hero-section px-8 pt-10 pb-14">
+    <div class="px-8 pt-10 pb-14">
         <div class="relative z-10 max-w-[1400px] mx-auto">
 
             {{-- Greeting --}}
@@ -96,7 +80,7 @@
                     >
                 </div>
                 {{-- Filter Button --}}
-                <button class="w-[72px] h-[72px] bg-[#F3D042] rounded-[21px] flex items-center justify-center flex-shrink-0 hover:bg-[#e0bc30] transition-colors">
+                <button onclick="openFilter()" class="w-[72px] h-[72px] bg-[#F3D042] rounded-[21px] flex items-center justify-center flex-shrink-0 hover:bg-[#e0bc30] transition-colors">
                     <svg class="w-6 h-6 text-[#272727]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <line x1="4" y1="6" x2="20" y2="6"/>
                         <line x1="8" y1="12" x2="16" y2="12"/>
@@ -282,17 +266,34 @@
                     </div>
 
     
-                    <button class="mt-6 bg-white text-red-500 font-semibold px-6 py-3 rounded-xl hover:shadow-lg transition">
-                        Lihat Promo
-                    </button>
+                    <div class="mt-6">
+                        <a href="/promo" class="bg-red-700 text-white font-semibold px-6 py-3 rounded-xl hover:shadow-lg transition">
+                            Lihat Selengkapnya
+                        </a>
+                    </div>
                 </div>
 
             </div>
 
         </div>
     </div>
+    <div id="isiFilter" class="w-120 bg-sky-700">
+        <div>
+            bok
+        </div>
+        <button onclick="closeFilter()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+            detail
+        </button>
+    </div>
 
     <script>
+        function openFilter() {
+            document.getElementById("isiFilter").classList.remove("hidden");
+        }
+
+        function closeFilter() {
+            document.getElementById("isiFilter").classList.add("hidden");
+        }
         // ── Search live filter ──
         document.getElementById('searchInput').addEventListener('input', function () {
             const keyword = this.value.toLowerCase().trim();
