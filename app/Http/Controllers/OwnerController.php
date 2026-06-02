@@ -13,7 +13,28 @@ class OwnerController extends Controller
     {
         $periode = request('periode', 'day');
         $restaurant = Restaurant::where('owner_id', auth()->id())->first();
-        return view('Owner/beranda_owner', compact('restaurant', 'periode'));
+
+        $query = $restaurant
+            ? Reservation::where('restaurant_id', $restaurant->id)
+            : Reservation::whereNull('id'); // query kosong jika belum punya restoran
+
+        // Filter berdasarkan periode
+        $query = match($periode) {
+            'week'  => $query->whereBetween('date', [now()->startOfWeek(), now()->endOfWeek()]),
+            'month' => $query->whereMonth('date', now()->month)->whereYear('date', now()->year),
+            default => $query->whereDate('date', today()), // 'day'
+        };
+
+        $totalReservasi        = (clone $query)->count();
+        $reservasiDikonfirmasi = (clone $query)->where('status', 'confirmed')->count();
+        $reservasiPending      = (clone $query)->where('status', 'pending')->count();
+        $reservasiDibatalkan   = (clone $query)->where('status', 'cancelled')->count();
+
+        return view('Owner/beranda_owner', compact(
+            'restaurant', 'periode',
+            'totalReservasi', 'reservasiDikonfirmasi',
+            'reservasiPending', 'reservasiDibatalkan'
+        ));
     }
 
     public function kelolaMenu()
@@ -21,13 +42,6 @@ class OwnerController extends Controller
         $restaurant = Restaurant::where('owner_id', auth()->id())->first();
         $menus = $restaurant ? Menu::where('restaurant_id', $restaurant->id)->get() : collect();
         return view('Owner/kelola_menu', compact('restaurant', 'menus'));
-    }
-
-    public function konfirmasiBook()
-    {
-        $restaurant = Restaurant::where('owner_id', auth()->id())->first();
-        $reservasi = $restaurant ? Reservation::where('restaurant_id', $restaurant->id)->get() : collect();
-        return view('Owner/konfirmasi_book', compact('restaurant', 'reservasi'));
     }
 
     public function promo()
@@ -114,5 +128,41 @@ class OwnerController extends Controller
         $menu->delete();
 
         return redirect('/kelola_menu')->with('success', 'Menu berhasil dihapus.');
+    }
+
+    public function konfirmasiBook()
+    {
+        $restaurant = Restaurant::where('owner_id', auth()->id())->first();
+        $reservasi = $restaurant
+            ? Reservation::where('restaurant_id', $restaurant->id)
+                        ->where('status', 'pending')
+                        ->latest()
+                        ->get()
+            : collect();
+        return view('Owner/konfirmasi_book', compact('restaurant', 'reservasi'));
+    }
+
+    public function konfirmasiReservasi($id)
+    {
+        $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
+        $reservasi = Reservation::where('id', $id)
+                        ->where('restaurant_id', $restaurant->id)
+                        ->firstOrFail();
+
+        $reservasi->update(['status' => 'confirmed']);
+
+        return redirect('/konfirmasi_book')->with('success', 'Reservasi dikonfirmasi.');
+    }
+
+    public function tolakReservasi($id)
+    {
+        $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
+        $reservasi = Reservation::where('id', $id)
+                        ->where('restaurant_id', $restaurant->id)
+                        ->firstOrFail();
+
+        $reservasi->update(['status' => 'cancelled']);
+
+        return redirect('/konfirmasi_book')->with('success', 'Reservasi ditolak.');
     }
 }

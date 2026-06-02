@@ -10,5 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 ])]
 class Reservation extends Model
 {
-    //
+    public function customer() { return $this->belongsTo(User::class, 'customer_id'); }
+    public function restaurant() { return $this->belongsTo(Restaurant::class); }
+    public function table() { return $this->belongsTo(Table::class); }
 }

@@ -30,6 +30,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/reservasi', [CustomerController::class, 'reservasi']);
     Route::get('/promo', [CustomerController::class, 'promo']);
     Route::get('/detail_resto', [CustomerController::class, 'detail_resto']);
+    Route::post('/reservasi', [CustomerController::class, 'storeReservasi']);
 });
 
 // Owner
@@ -43,6 +44,8 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/konfirmasi_book', [OwnerController::class, 'konfirmasiBook']);
     Route::get('/promo_owner', [OwnerController::class, 'promo']);
     Route::get('/profil_owner', [OwnerController::class, 'profil']);
+    Route::post('/konfirmasi_book/{id}/konfirmasi', [OwnerController::class, 'konfirmasiReservasi']);
+    Route::post('/konfirmasi_book/{id}/tolak', [OwnerController::class, 'tolakReservasi']);
 });
 
 // ADMIN
