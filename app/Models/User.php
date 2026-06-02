@@ -35,4 +35,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function restaurant()  { return $this->hasOne(Restaurant::class, 'owner_id'); }
+    public function reservations(){ return $this->hasMany(Reservation::class, 'customer_id'); }
 }

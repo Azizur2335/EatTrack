@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Restaurant;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Models\Table;
 
 class CustomerController extends Controller
 {
@@ -31,9 +32,35 @@ class CustomerController extends Controller
         $reservations = Reservation::where('customer_id', auth()->id())->latest()->get();
         return view('Customer/Promo', compact('reservations'));
     }
+    
     public function detail_resto()
     {
         $reservations = Reservation::where('customer_id', auth()->id())->latest()->get();
         return view('Customer/DetailResto', compact('reservations'));
     }
+
+    public function storeReservasi(Request $request)
+{
+    $request->validate([
+        'restaurant_id' => 'required|exists:restaurants,id',
+        'table_id'      => 'required|exists:tables,id',
+        'date'          => 'required|date|after_or_equal:today',
+        'time'          => 'required',
+        'guest_count'   => 'required|integer|min:1',
+        'notes'         => 'nullable|string',
+    ]);
+
+    Reservation::create([
+        'customer_id'   => auth()->id(),
+        'restaurant_id' => $request->restaurant_id,
+        'table_id'      => $request->table_id,
+        'date'          => $request->date,
+        'time'          => $request->time,
+        'guest_count'   => $request->guest_count,
+        'notes'         => $request->notes,
+        'status'        => 'pending',
+    ]);
+
+    return redirect('/reservasi')->with('success', 'Reservasi berhasil dibuat, menunggu konfirmasi.');
+}
 }

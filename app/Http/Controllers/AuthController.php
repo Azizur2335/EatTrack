@@ -146,17 +146,6 @@ class AuthController extends Controller
             ]);
         }
 
-        if ($request->capacity) {
-            for ($i = 1; $i <= $request->capacity; $i++) {
-                Table::create([
-                    'restaurant_id' => $restaurant->id,
-                    'table_number'  => 'Meja ' . $i,
-                    'capacity'      => 4,
-                    'status'        => 'available',
-                ]);
-            }
-        }
-
         Auth::login($user);
 
         return redirect('/dashboard_owner');
