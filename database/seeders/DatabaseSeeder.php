@@ -15,6 +15,13 @@ class DatabaseSeeder extends Seeder
     {
         $users = [
             [
+                'name'     => 'Admin EatTrack',
+                'email'    => 'admin@eattrack.com',
+                'password' => Hash::make('password123'),
+                'role'     => 'admin',
+                'phone'    => '08100000000',
+            ],
+            [
                 'name'     => 'Nama Owner',
                 'email'    => 'owner@eattrack.com',
                 'password' => Hash::make('password123'),

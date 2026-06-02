@@ -36,9 +36,12 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::post('/register-owner', [AuthController::class, 'registerOwner']);
     Route::get('/dashboard_owner', [OwnerController::class, 'beranda']);
     Route::get('/kelola_menu', [OwnerController::class, 'kelolaMenu']);
-    Route::get('/konfirmasi_book', [OwnerController::class, 'konfirmasiBook']); // tambah
-    Route::get('/promo_owner', [OwnerController::class, 'promo']);              // tambah
-    Route::get('/profil_owner', [OwnerController::class, 'profil']);            // tambah
+    Route::post('/kelola_menu', [OwnerController::class, 'storeMenu']);
+    Route::put('/kelola_menu/{id}', [OwnerController::class, 'updateMenu']);
+    Route::delete('/kelola_menu/{id}', [OwnerController::class, 'destroyMenu']);
+    Route::get('/konfirmasi_book', [OwnerController::class, 'konfirmasiBook']);
+    Route::get('/promo_owner', [OwnerController::class, 'promo']);
+    Route::get('/profil_owner', [OwnerController::class, 'profil']);
 });
 
 // ADMIN
