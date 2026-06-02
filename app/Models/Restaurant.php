@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 #[Fillable([
     'owner_id', 'name', 'description',
-    'address', 'phone', 'latitude',
-    'longitude', 'image', 'status'
+    'address', 'city', 'phone', 'latitude',
+    'longitude', 'image', 'status',
+    'category', 'maps_link', 'open_time',
+    'close_time'
 ])]
 class Restaurant extends Model
 {
