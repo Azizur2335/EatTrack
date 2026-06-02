@@ -10,8 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-      * { font-family: "Inter", sans-serif; }
-      .title-font { font-family: "Unbounded", sans-serif; }
+      body { font-family: "Inter", sans-serif; }
+      .unbound { font-family: "Unbounded", sans-serif; }
     </style>
   </head>
 
@@ -19,43 +19,7 @@
     <div class="flex min-h-screen">
 
       <!-- SIDEBAR -->
-      <aside class="w-72 bg-gray-100 flex flex-col justify-between">
-        <div>
-          <!-- PROFILE -->
-          <div class="flex items-center gap-4 p-6">
-            <div class="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 bg-[#D9D9D9]">
-              @if(auth()->user()?->avatar)
-                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" class="w-full h-full object-cover" alt="Avatar">
-              @else
-                <div class="w-full h-full bg-[#D9D9D9] flex items-center justify-center">
-                  <svg class="w-7 h-7 text-[#999]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-                  </svg>
-                </div>
-              @endif
-            </div>
-            <div>
-              <h3 class="font-semibold text-lg">{{ auth()->user()?->name ?? 'Owner' }}</h3>
-              <p class="text-sm text-gray-500">{{ auth()->user()?->email ?? '' }}</p>
-            </div>
-          </div>
-
-          <!-- MENU -->
-          <nav class="mt-4">
-            <a href="/dashboard_owner" class="block px-6 py-4 bg-red-100 text-[#C52F0F] font-semibold">Dashboard</a>
-            <a href="/kelola_menu" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Kelola Menu</a>
-            <a href="/konfirmasi_book" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Konfirmasi Book</a>
-            <a href="/promo_owner" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Promo</a>
-            <a href="/profil_owner" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Profil</a>
-          </nav>
-        </div>
-
-        <!-- LOGOUT -->
-        <form method="POST" action="/logout">
-            @csrf
-            <button type="submit" class="text-[#C52F0F] font-medium">Log Out</button>
-        </form>
-      </aside>
+      <x-sidebar></x-sidebar>
 
       <!-- CONTENT -->
       <main class="flex-1 p-8">

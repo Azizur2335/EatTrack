@@ -3,12 +3,15 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-	<title>Dashboard</title>
 	<style>
+		li{
+			font-family: "Unbounded", sans-serif;
+		}
 		.unbound{
 			font-family: "Unbounded", sans-serif;
 		}
@@ -16,10 +19,30 @@
 			font-family: "Inter", sans-serif;
 		}
 	</style>
+	<title>Dashboard</title>
 </head>
 <body>
-	<main class="flex min-h-screen">
-		<x-sidebar></x-sidebar>
+	<div class="flex min-h-screen">
+		<nav class="w-md bg-white">
+			<div class="flex px-6 py-2 mt-6 mb-12">
+				<div class="rounded-full overflow-hidden size-16">
+					<img src="img/profile.jpg" alt="" class="w-full h-full object-cover">
+				</div>
+				<div class="px-6 py-2">
+					<h3>{{ auth()->user()->name }}</h3>
+					<p class="text-sm">{{ auth()->user()->email }}</p>
+				</div>
+			</div>
+			<ul>
+				<li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/dashboard_owner">Dashboard</a></li>
+				<li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/kelola_menu">Kelola Pengguna</a></li>
+				<li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/konfirmasi_book">Laporan</a></li>
+			</ul>
+			<form method="POST" action="/logout" class="px-6 mt-8">
+				@csrf
+				<button type="submit" class="text-red-600 font-medium">Log Out</button>
+			</form>
+		</nav>
 		<div class="bg-red-700 h-screen w-screen p-6">
 			<div class="unbound text-2xl text-white py-6 ">
 				Kelola Pengguna
@@ -29,17 +52,18 @@
 					<p class="unbound text-lg font-bold">Daftar Menu</p>
 					<button class="rounded-full bg-red-700 px-4 py-2 text-white">+Tambah</button>
 				</div>
-				<table class="table-fixed w-full text-left border-collapse mt-6">
+				<table class="w-full text-left border-collapse mt-6">
                     <thead>
-                        <tr class="bg-[#F2C4C4] text-gray-800 font-bold">
+                        <tr class="table-auto bg-[#F2C4C4] text-gray-800 font-bold">
                             <th class="p-3 w-12 text-center">
                                 <input type="checkbox" id="selectAll" class="w-5 h-5 rounded border-gray-400 accent-red-700 cursor-pointer">
                             </th>
-                            <th class="p-3 ">Nama Menu</th>
-                            <th class="p-3 ">Harga</th>
-                            <th class="p-3 ">Kategori</th>
-                            <th class="p-3 ">Deskripsi</th>
-                            <th class="p-3 w-24 text-center"></th>
+                            <th class="p-3 ">Nama Lengkap</th>
+                            <th class="p-3 ">Username</th>
+                            <th class="p-3 ">Email</th>
+                            <th class="p-3 ">Nomor Hp</th>
+                            <th class="p-3 ">Role</th>
+                            <th class="p-3 text-center"></th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-700 font-medium">
@@ -47,10 +71,11 @@
                             <td class="p-3 text-center">
                                 <input type="checkbox" class="menu-checkbox w-5 h-5 rounded border-gray-400 accent-red-700 cursor-pointer">
                             </td>
-                            <td class="p-3">Ayam Bakar</td>
-                            <td class="p-3">Rp.35.000</td>
-                            <td class="p-3">Makanan</td>
-                            <td class="p-3 truncate">Ayam bakar lapis...</td>
+                            <td class="p-3">Muhammad Tegar Bijanta</td>
+                            <td class="p-3">MightyBoy</td>
+                            <td class="p-3">tegar@</td>
+                            <td class="p-3">081111111</td>
+                            <td class="p-3"><p class="px-2 w-fit rounded-full bg-yellow-400">customer</p></td>
                             <td class="p-3 flex justify-center space-x-3 items-center">
                                 <button class="bg-[#F4D03F] p-1.5 rounded text-gray-800 hover:bg-yellow-500 transition shadow-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
@@ -68,10 +93,11 @@
                             <td class="p-3 text-center">
                                 <input type="checkbox" class="menu-checkbox w-5 h-5 rounded border-gray-400 accent-red-700 cursor-pointer">
                             </td>
-                            <td class="p-3">Ayam Bakar</td>
-                            <td class="p-3">Rp.35.000</td>
-                            <td class="p-3">Makanan</td>
-                            <td class="p-3 truncate">Ayam bakar lapis...</td>
+                            <td class="p-3">Gembus</td>
+                            <td class="p-3">Pak Gembus</td>
+                            <td class="p-3">gembus@</td>
+                            <td class="p-3">08111111</td>
+                            <td class="p-3"><p class="px-2 w-fit rounded-full bg-red-700 text-white">owner</p></td>
                             <td class="p-3 flex justify-center space-x-3 items-center">
                                 <button class="bg-[#F4D03F] p-1.5 rounded text-gray-800 hover:bg-yellow-500 transition shadow-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
@@ -89,7 +115,8 @@
                 </table>
 			</div>
 		</div>
-	</main>
+	</div>
+
 	<script>
         const selectAllCheckbox = document.getElementById('selectAll');
         const itemCheckboxes = document.querySelectorAll('.menu-checkbox');

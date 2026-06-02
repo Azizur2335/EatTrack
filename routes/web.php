@@ -48,5 +48,7 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
 // ADMIN
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard_admin', [AdminController::class, 'beranda']);
+    Route::get('/kelola_user', [AdminController::class, 'kelolaUser']);
+    Route::get('/laporan', [AdminController::class, 'laporan']);
 });
 
