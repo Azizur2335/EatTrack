@@ -12,14 +12,19 @@
             <img src="img/profile.jpg" alt="" class="w-full h-full object-cover">
         </div>
         <div class="px-6 py-2">
-            <h3>User</h3>
-            <p>hahah</p>
+            <h3>{{ auth()->user()->name }}</h3>
+            <p>{{ auth()->user()->email }}</p>
         </div>
     </div>
     <ul>
-        <li class="text-2xl font-normal px-6 py-2 mt-4 mb-4 bg-white-700 hover:bg-red-200 hover:text-red-700 hover:font-bold"><a href="">Dashboard</a></li>
-        <li class="text-2xl font-normal px-6 py-2 mt-4 mb-4 bg-white-700 hover:bg-red-200 hover:text-red-700 hover:font-bold"><a href="">Kelola Menu</a></li>
-        <li class="text-2xl font-normal px-6 py-2 mt-4 mb-4 bg-white-700 hover:bg-red-200 hover:text-red-700 hover:font-bold"><a href="">Konfirmasi Booking</a></li>
-        <li class="text-2xl font-normal px-6 py-2 mt-4 mb-4 bg-white-700 hover:bg-red-200 hover:text-red-700 hover:font-bold"><a href="">Profile</a></li>
+        <li class="..."><a href="/dashboard_owner">Dashboard</a></li>
+        <li class="..."><a href="/kelola_menu">Kelola Menu</a></li>
+        <li class="..."><a href="/konfirmasi_book">Konfirmasi Booking</a></li>
+        <li class="..."><a href="/promo_owner">Promo</a></li>
+        <li class="..."><a href="/profil_owner">Profile</a></li>
     </ul>
+    <form method="POST" action="/logout" class="px-6 mt-8">
+        @csrf
+        <button type="submit" class="text-red-600 font-medium">Log Out</button>
+    </form>
 </nav>

@@ -42,18 +42,19 @@
 
           <!-- MENU -->
           <nav class="mt-4">
-            <a href="/dashboardOwner" class="block px-6 py-4 bg-red-100 text-[#C52F0F] font-semibold">Dashboard</a>
-            <a href="/kelolaMenu" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Kelola Menu</a>
-            <a href="/konfirmasiBook" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Konfirmasi Book</a>
-            <a href="/promo" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Promo</a>
-            <a href="/profil" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Profil</a>
+            <a href="/dashboard_owner" class="block px-6 py-4 bg-red-100 text-[#C52F0F] font-semibold">Dashboard</a>
+            <a href="/kelola_menu" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Kelola Menu</a>
+            <a href="/konfirmasi_book" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Konfirmasi Book</a>
+            <a href="/promo_owner" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Promo</a>
+            <a href="/profil_owner" class="block px-6 py-4 text-[#C52F0F] hover:bg-red-100 transition">Profil</a>
           </nav>
         </div>
 
         <!-- LOGOUT -->
-        <div class="p-6">
-          <a href="/logout" class="text-[#C52F0F] font-medium">Log Out</a>
-        </div>
+        <form method="POST" action="/logout">
+            @csrf
+            <button type="submit" class="text-[#C52F0F] font-medium">Log Out</button>
+        </form>
       </aside>
 
       <!-- CONTENT -->
@@ -68,13 +69,10 @@
 
           <!-- DROPDOWN FILTER -->
           <div class="relative">
-            <select
-              id="filterPeriode"
-              class="appearance-none bg-gray-100 px-6 py-2 pr-12 rounded-lg text-gray-700 font-medium cursor-pointer outline-none"
-            >
-              <option value="day">Hari Ini</option>
-              <option value="week">Minggu Ini</option>
-              <option value="month">Bulan Ini</option>
+            <select id="filterPeriode" class="appearance-none bg-gray-100 px-6 py-2 pr-12 rounded-lg text-gray-700 font-medium cursor-pointer outline-none">
+                <option value="day"   {{ $periode == 'day'   ? 'selected' : '' }}>Hari Ini</option>
+                <option value="week"  {{ $periode == 'week'  ? 'selected' : '' }}>Minggu Ini</option>
+                <option value="month" {{ $periode == 'month' ? 'selected' : '' }}>Bulan Ini</option>
             </select>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -183,7 +181,7 @@
     <script>
       document.getElementById('filterPeriode').addEventListener('change', function () {
         const periode = this.value;
-        window.location.href = `/dashboardOwner?periode=${periode}`;
+        window.location.href = `/dashboard_owner?periode=${periode}`;
       });
     </script>
   </body>
