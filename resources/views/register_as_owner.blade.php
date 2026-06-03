@@ -20,7 +20,7 @@
 
     {{-- Logo --}}
     <div class="pb-4">
-        <img src="{{ asset('img/logoWEB.png') }}" alt="EatTrack" class="h-12">
+        <img src="{{ asset('img/logoWEB.png') }}" alt="EatTrack" class="h-12">  
     </div>
 
     <hr class="border-gray-300 mb-8">
