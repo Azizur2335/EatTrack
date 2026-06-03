@@ -36,7 +36,7 @@ class AdminController extends Controller
         $totalRestaurants  = Restaurant::count();
         $totalReservations = Reservation::count();
 
-        return view('Admin/beranda_admin', compact(
+        return view('Admin/laporan', compact(
             'totalUsers', 'totalRestaurants', 'totalReservations'
         ));
     }

@@ -20,7 +20,7 @@
 <body>
 	<main class="flex min-h-screen">
 		<x-sidebar></x-sidebar>
-		<div class="bg-red-700 h-screen w-screen p-6">
+		<main class="flex-1 p-8 bg-red-700">
 			<div class="unbound text-2xl text-white py-6 ">
 				Kelola Pengguna
 			</div>
@@ -88,7 +88,7 @@
                     </tbody>
                 </table>
 			</div>
-		</div>
+		</main>
 	</main>
 	<script>
         const selectAllCheckbox = document.getElementById('selectAll');

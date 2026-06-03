@@ -130,16 +130,16 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="bg-white py-8 flex justify-center gap-10 flex-wrap">
-      <a href="/beranda" class="text-gray-500 text-sm hover:text-gray-700 transition">
+    <footer class="py-8 flex justify-center gap-10 flex-wrap">
+      <a href="/beranda" class="text-white text-sm hover:text-gray-700 transition">
         Bantuan
       </a>
 
-      <a href="#" class="text-gray-500 text-sm hover:text-gray-700 transition">
+      <a href="#" class="text-white text-sm hover:text-gray-700 transition">
         Tentang
       </a>
 
-      <a href="#" class="text-gray-500 text-sm hover:text-gray-700 transition">
+      <a href="#" class="text-white text-sm hover:text-gray-700 transition">
         Kontak
       </a>
     </footer>

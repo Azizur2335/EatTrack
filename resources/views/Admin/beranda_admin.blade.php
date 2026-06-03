@@ -33,7 +33,7 @@
 			<ul>
 				<li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/dashboard_owner">Dashboard</a></li>
 				<li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/kelola_user">Kelola Pengguna</a></li>
-				<li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/konfirmasi_book">Laporan</a></li>
+				<li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/laporan">Laporan</a></li>
 			</ul>
 			<form method="POST" action="/logout" class="px-6 mt-8">
 				@csrf

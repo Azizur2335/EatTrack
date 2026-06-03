@@ -25,6 +25,6 @@
     </ul>
     <form method="POST" action="/logout" class="px-6 mt-8">
         @csrf
-        <button type="submit" class="text-red-600 font-medium">Log Out</button>
+        <button type="submit" class="text-red-600 font-medium text-xl hover:underline hover:font-bold cursor-pointer">Log Out</button>
     </form>
 </nav>
