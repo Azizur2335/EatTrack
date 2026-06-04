@@ -58,7 +58,9 @@ class OwnerController extends Controller
     public function profil()
     {
         $user = auth()->user();
-        return view('Owner/profil_owner', compact('user'));
+
+        $restaurant = $user->restaurant;
+        return view('Owner/profil_owner', compact('user', 'restaurant'));
     }
 
     public function storeMenu(Request $request)

@@ -15,6 +15,18 @@
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
+        .fpill {
+            background: transparent;
+            border: 1.5px solid #555;
+            color: #ccc;
+            font-size: 13px;
+            padding: 7px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .fpill:hover { border-color: #F3D042; color: #F3D042; }
+        .fpill.active { background: #F3D042; border-color: #F3D042; color: #474747; font-weight: 500; }
 
         .hide-scrollbar {
             -ms-overflow-style: none;
@@ -80,13 +92,68 @@
                     >
                 </div>
                 {{-- Filter Button --}}
-                <button onclick="openFilter()" class="w-[72px] h-[72px] bg-[#F3D042] rounded-[21px] flex items-center justify-center flex-shrink-0 hover:bg-[#e0bc30] transition-colors">
-                    <svg class="w-6 h-6 text-[#272727]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <line x1="4" y1="6" x2="20" y2="6"/>
-                        <line x1="8" y1="12" x2="16" y2="12"/>
-                        <line x1="11" y1="18" x2="13" y2="18"/>
-                    </svg>
+                <button onclick="openFilter()" class="w-[72px] h-[72px] bg-[#F3D042] rounded-[21px] flex items-center justify-center flex-shrink-0 hover:bg-[#e0bc30] transition-colors cursor-pointer">
+                    <img src="assets/icon_filter.png" alt="" class="w-6 h-6">
                 </button>
+            </div>
+
+            <div id="filterPanel" class="hidden mt-4 bg-[#1a0a07] rounded-[20px] p-5">
+
+            {{-- Header --}}
+            <div class="flex justify-between items-center mb-5">
+                <span class="text-[#F3D042] text-[15px] font-medium">Filter Pencarian</span>
+                <button onclick="resetFilter()" class="text-[#aaa] text-[12px] border border-[#555] rounded-full px-3 py-1 cursor-pointer hover:text-white hover:border-white">
+                Reset semua
+                </button>
+            </div>
+
+            {{-- Status --}}
+            <div class="mb-5">
+                <p class="text-[#D9D9D9] text-[12px] font-medium uppercase tracking-widest mb-3">Status</p>
+                <div class="flex gap-2 flex-wrap">
+                <button class="fpill" data-group="status" data-val="buka">Buka Sekarang</button>
+                <button class="fpill" data-group="status" data-val="tutup">Tutup</button>
+                </div>
+            </div>
+
+            {{-- Kategori --}}
+            <div class="mb-5">
+                <p class="text-[#D9D9D9] text-[12px] font-medium uppercase tracking-widest mb-3">Kategori</p>
+                <div class="flex gap-2 flex-wrap">
+                <button class="fpill" data-group="cat" data-val="indonesia">Masakan Indonesia</button>
+                <button class="fpill" data-group="cat" data-val="western">Japanese</button>
+                <button class="fpill" data-group="cat" data-val="seafood">Seafood</button>
+                <button class="fpill" data-group="cat" data-val="fastfood">Fast Food</button>
+                <button class="fpill" data-group="cat" data-val="vegetarian">Prasmanan</button>
+                <button class="fpill" data-group="cat" data-val="dessert">Dessert</button>
+                </div>
+            </div>
+
+            {{-- Jarak --}}
+            <div class="mb-5">
+                <p class="text-[#D9D9D9] text-[12px] font-medium uppercase tracking-widest mb-2">
+                Jarak Maksimum: <span id="distLabel" class="text-[#F3D042]">5 km</span>
+                </p>
+                <input type="range" min="1" max="20" value="5" id="distRange"
+                oninput="document.getElementById('distLabel').textContent=this.value+' km'"
+                class="w-full accent-[#F3D042]">
+            </div>
+
+            {{-- Rating --}}
+            <div class="mb-6">
+                <p class="text-[#D9D9D9] text-[12px] font-medium uppercase tracking-widest mb-2">
+                Rating Minimum: <span id="ratingLabel" class="text-[#F3D042]">3.0 ★</span>
+                </p>
+                <input type="range" min="1" max="5" step="0.5" value="3" id="ratingRange"
+                oninput="document.getElementById('ratingLabel').textContent=parseFloat(this.value).toFixed(1)+' ★'"
+                class="w-full accent-[#F3D042]">
+            </div>
+
+            {{-- Tombol Terapkan --}}
+            <button onclick="applyFilter()"
+                class="w-full bg-[#F3D042] text-[#474747] font-bold text-[15px] py-4 rounded-[14px] hover:bg-[#e0bc30] transition-colors">
+                Terapkan Filter
+            </button>
             </div>
 
             {{-- Filter Pills --}}
@@ -322,6 +389,43 @@
                 });
             });
         });
+
+        function openFilter() {
+        const panel = document.getElementById('filterPanel');
+        panel.classList.toggle('hidden');
+        }
+
+        document.querySelectorAll('.fpill').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if (this.dataset.group === 'sort') {
+            document.querySelectorAll('.fpill[data-group="sort"]')
+                .forEach(b => b.classList.remove('active'));
+            }
+            this.classList.toggle('active');
+        });
+        });
+
+        function resetFilter() {
+        document.querySelectorAll('.fpill').forEach(b => b.classList.remove('active'));
+        document.getElementById('distRange').value = 5;
+        document.getElementById('distLabel').textContent = '5 km';
+        document.getElementById('ratingRange').value = 3;
+        document.getElementById('ratingLabel').textContent = '3.0 ★';
+        }
+
+        function applyFilter() {
+        const aktif = [...document.querySelectorAll('.fpill.active')].map(b => b.dataset.val);
+        const jarak = document.getElementById('distRange').value;
+        const rating = document.getElementById('ratingRange').value;
+
+        // Kirim ke backend via URL params atau AJAX sesuai kebutuhan
+        const params = new URLSearchParams({
+            filter: aktif.join(','),
+            jarak_max: jarak,
+            rating_min: rating
+        });
+        window.location.href = '/katalog?' + params.toString();
+        }
     </script>
 
 </body>

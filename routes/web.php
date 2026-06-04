@@ -31,6 +31,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/promo', [CustomerController::class, 'promo']);
     Route::get('/detail_resto', [CustomerController::class, 'detail_resto']);
     Route::post('/reservasi', [CustomerController::class, 'storeReservasi']);
+    Route::get('/profile', [CustomerController::class, 'showProfile']);
 });
 
 // Owner

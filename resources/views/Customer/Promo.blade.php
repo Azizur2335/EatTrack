@@ -16,44 +16,6 @@
     <!-- NAVBAR -->
 	<x-navbar></x-navbar>
 
-	<div class="hero-section px-8 pt-10">
-        <div class="relative z-10 max-w-[1400px] mx-auto">
-
-            {{-- Search Bar --}}
-            <div class="flex items-center gap-3">
-                <div class="flex-1 bg-[#D9D9D9] rounded-[21px] flex items-center px-5 h-[72px] gap-3">
-                    <svg class="w-5 h-5 text-[#696969] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                    </svg>
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Cari resto yang paling kamu sukai"
-                        class="bg-transparent flex-1 text-[20px] text-[#737373] outline-none placeholder:text-[#737373]"
-                    >
-                </div>
-                {{-- Filter Button --}}
-                <button class="w-[72px] h-[72px] bg-[#F3D042] rounded-[21px] flex items-center justify-center flex-shrink-0 hover:bg-[#e0bc30] transition-colors">
-                    <svg class="w-6 h-6 text-[#272727]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <line x1="4" y1="6" x2="20" y2="6"/>
-                        <line x1="8" y1="12" x2="16" y2="12"/>
-                        <line x1="11" y1="18" x2="13" y2="18"/>
-                    </svg>
-                </button>
-            </div>
-
-            {{-- Filter Pills --}}
-            <div class="flex items-center gap-3 mt-5 flex-wrap">
-                <button class="filter-pill active-pill bg-[#F3D042] text-[#474747] font-bold text-[18px] px-6 py-3 rounded-full cursor-pointer" data-filter="semua">Semua</button>
-                <button class="filter-pill border-2 border-[#D9D9D9] text-white text-[18px] font-medium px-6 py-3 rounded-full cursor-pointer hover:bg-white/10 transition-colors" data-filter="terlaris">Terlaris</button>
-                <button class="filter-pill border-2 border-[#D9D9D9] text-white text-[18px] font-medium px-6 py-3 rounded-full cursor-pointer hover:bg-white/10 transition-colors" data-filter="buka">Buka Sekarang</button>
-                <button class="filter-pill border-2 border-[#D9D9D9] text-white text-[18px] font-medium px-6 py-3 rounded-full cursor-pointer hover:bg-white/10 transition-colors" data-filter="rating">Rating Tinggi</button>
-                <button class="filter-pill border-2 border-[#D9D9D9] text-white text-[18px] font-medium px-6 py-3 rounded-full cursor-pointer hover:bg-white/10 transition-colors" data-filter="terdekat">Terdekat</button>
-            </div>
-
-        </div>
-    </div>
-
 	<!-- PROMO TERBARU -->
 	<div class="max-w-[1400px] mx-auto my-6">
 		<div class="h-auto rounded-3xl bg-white px-12 py-8">
@@ -143,13 +105,72 @@
         id="modal"
         class="hidden fixed inset-0 bg-black/50 flex justify-center items-center">
 
-        <div class="bg-white p-6 rounded-xl shadow-lg w-120">
-            <h2 class="text-2xl font-bold mb-3">Detail</h2>
-            <p class="text-gray-600">
-                Ini adalah contoh popup menggunakan HTML, CSS, dan JavaScript.
-            </p>
+        <div class="bg-white p-6 rounded-xl shadow-lg w-[550px]">
+            <h2 class="text-2xl font-bold mb-5">Detail Promo</h2>
 
-            <div class="mt-5 flex justify-end">
+            <div class="space-y-3 text-sm">
+
+                <div class="grid grid-cols-[180px_20px_1fr]">
+                    <span class="font-medium">Nama Promo</span>
+                    <span>:</span>
+                    <span>Weekend Flash Sale</span>
+                </div>
+
+                <div class="grid grid-cols-[180px_20px_1fr]">
+                    <span class="font-medium">Jenis Promo</span>
+                    <span>:</span>
+                    <span>Diskon Persentase</span>
+                </div>
+
+                <div class="grid grid-cols-[180px_20px_1fr]">
+                    <span class="font-medium">Nilai Promo</span>
+                    <span>:</span>
+                    <span>20%</span>
+                </div>
+
+                <div class="grid grid-cols-[180px_20px_1fr]">
+                    <span class="font-medium">Berlaku Mulai</span>
+                    <span>:</span>
+                    <span>1 Oktober 2026</span>
+                </div>
+
+                <div class="grid grid-cols-[180px_20px_1fr]">
+                    <span class="font-medium">Berlaku Sampai</span>
+                    <span>:</span>
+                    <span>31 Oktober 2026</span>
+                </div>
+
+                <div class="grid grid-cols-[180px_20px_1fr]">
+                    <span class="font-medium">Minimal Tamu</span>
+                    <span>:</span>
+                    <span>2 Orang</span>
+                </div>
+
+                <div class="grid grid-cols-[180px_20px_1fr]">
+                    <span class="font-medium">Kuota Total</span>
+                    <span>:</span>
+                    <span>100 Voucher</span>
+                </div>
+
+                <div class="grid grid-cols-[180px_20px_1fr]">
+                    <span class="font-medium">Sisa Kuota</span>
+                    <span>:</span>
+                    <span>78 Voucher</span>
+                </div>
+
+                <div class="grid grid-cols-[180px_20px_1fr] items-start">
+                    <span class="font-medium">Deskripsi</span>
+                    <span>:</span>
+                    <span>
+                        Nikmati diskon 20% untuk seluruh menu makanan setiap akhir pekan.
+                        Promo berlaku untuk minimal 2 tamu dan tidak dapat digabung
+                        dengan promo lainnya.
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="mt-6 flex justify-end">
                 <button
                     onclick="closeModal()"
                     class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
