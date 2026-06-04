@@ -22,6 +22,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+Route::post('/register-owner', [AuthController::class, 'registerOwner']);
 
 // Customer
 Route::middleware(['auth', 'role:customer'])->group(function () {
@@ -35,7 +36,6 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
 // Owner
 Route::middleware(['auth', 'role:owner'])->group(function () {
-    Route::post('/register-owner', [AuthController::class, 'registerOwner']);
     Route::get('/dashboard_owner', [OwnerController::class, 'beranda']);
     Route::get('/kelola_menu', [OwnerController::class, 'kelolaMenu']);
     Route::post('/kelola_menu', [OwnerController::class, 'storeMenu']);
