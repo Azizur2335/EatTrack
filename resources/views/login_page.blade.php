@@ -71,7 +71,7 @@
         <!-- Tombol Login -->
         <button
           type="submit"
-          class="w-full py-3 rounded-lg bg-red-700 hover:bg-red-800 text-white font-bold text-base transition-colors"
+          class="w-full py-3 rounded-lg bg-red-700 hover:bg-red-800 text-white font-bold text-base transition-colors cursor-pointer"
         >
           Login
         </button>
@@ -84,7 +84,7 @@
         </div>
 
         <!-- Google -->
-        <a href="/auth/google" class="w-full py-3 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 flex items-center justify-center gap-3 text-sm font-medium text-gray-700 transition-colors">
+        <a href="/auth/google" class="w-full py-3 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 flex items-center justify-center gap-3 text-sm font-medium text-gray-700 transition-colors cursor-pointer">
             <img src="img/google.png" alt="" class="h-5 w-5"> Lanjutkan dengan Google
         </a>
 
@@ -95,7 +95,7 @@
         </p>
 
       </form>
-      <a href="/">kembali</a>
+      <a href="/" class="flex w-30 py-2 gap-3 rounded-xl bg-gray-200 hover:bg-gray-400 justify-center items-center"><img src="assets/icon_back.png" alt="" class="h-4 w-4">Kembali</a>
     </div>
 
     <!-- ══ Kanan: Foto ══ -->

@@ -26,7 +26,10 @@
 			<div class="text-center justify-center mb-4">Daftar akun sebagai:</div>
 			<a href="/register_as_owner" class="text-lg font-bold text-white bg-red-700 rounded-lg w-full pt-3 pb-3 text-center mb-4 hover:bg-red-900">Owner</a>
 			<a href="/register_as_customer" class="text-lg font-bold text-black bg-yellow-400 rounded-lg w-full pt-3 pb-3 text-center mb-4 hover:bg-yellow-700">Customer</a>
-			<div class="mt-8">Sudah memiliki akun? <a href="/loginPage" class="text-red-700 hover:underline">Login</a></div>
+			<div class="flex mt-8 justify-between items-center">
+				<a href="/" class="flex w-30 py-2 gap-3 rounded-xl bg-gray-200 hover:bg-gray-400 justify-center items-center"><img src="assets/icon_back.png" alt="" class="h-4 w-4">Kembali</a>
+				<div class="">Sudah memiliki akun? <a href="/loginPage" class="text-red-700 hover:underline">Login</a></div>
+			</div>
 		</div>
 		<div class="overflow-hidden md:w-1/2 w-full h-full">
 			<img src="img/gambar_resto.jpg" alt="" class="h-full w-full object-cover">

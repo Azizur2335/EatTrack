@@ -32,11 +32,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/promo', [CustomerController::class, 'promo']);
     Route::get('/detail_resto', [CustomerController::class, 'detail_resto']);
     Route::post('/reservasi', [CustomerController::class, 'storeReservasi']);
-<<<<<<< HEAD
     Route::get('/profile', [CustomerController::class, 'showProfile']);
-=======
-    Route::patch('/reservasi/{id}/cancel', [CustomerController::class, 'cancelReservasi']);
->>>>>>> b3d355c4d8c26c197ad0a890e82ed09d4919c0c9
 });
 
 // Owner
