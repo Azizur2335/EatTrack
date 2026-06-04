@@ -4,6 +4,7 @@ use App\Models\Reservation;
 use App\Models\Restaurant;
 use App\Models\Table;
 use App\Models\User;
+uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
     $this->customer = User::factory()->create(['role' => 'customer', 'is_active' => true]);

@@ -13,6 +13,13 @@ use App\Http\Requests\StorePromoRequest;
 
 class OwnerController extends Controller
 {
+    protected ReservationService $reservationService;
+
+    public function __construct(ReservationService $reservationService)
+    {
+        $this->reservationService = $reservationService;
+    }
+
     public function beranda()
     {
         $periode = request('periode', 'day');

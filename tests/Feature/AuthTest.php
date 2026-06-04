@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 test('user bisa login dengan username', function () {
     $user = User::factory()->create([
