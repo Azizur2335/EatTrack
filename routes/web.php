@@ -43,6 +43,7 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::delete('/kelola_menu/{id}', [OwnerController::class, 'destroyMenu']);
     Route::get('/konfirmasi_book', [OwnerController::class, 'konfirmasiBook']);
     Route::get('/promo_owner', [OwnerController::class, 'promo']);
+    Route::get('/tambah_promo', [OwnerController::class, 'tambah_promo']);
     Route::get('/profil_owner', [OwnerController::class, 'profil']);
     Route::post('/konfirmasi_book/{id}/konfirmasi', [OwnerController::class, 'konfirmasiReservasi']);
     Route::post('/konfirmasi_book/{id}/tolak', [OwnerController::class, 'tolakReservasi']);

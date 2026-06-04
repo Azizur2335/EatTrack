@@ -30,7 +30,7 @@
             <h1 class="unbound text-3xl text-white font-bold">PROMO</h1>
             <p class="text-white/80 mt-1 text-sm">Kelola tempat makan anda</p>
           </div>
-          <a href="/promo"
+          <a href="/promo_owner"
             class="flex items-center gap-2 bg-red-200 hover:bg-red-300 transition text-red-700 font-semibold px-4 py-2.5 rounded-xl text-sm shadow">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

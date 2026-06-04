@@ -30,7 +30,7 @@
             <h1 class="unbound text-3xl text-white font-bold">PROMO</h1>
             <p class="text-white/80 mt-1 text-sm">Kelola tempat makan anda</p>
           </div>
-          <a href="/tambah-promo"
+          <a href="/tambah_promo"
             class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 transition text-gray-800 font-semibold px-5 py-2.5 rounded-xl text-sm shadow">
             + Promo
           </a>

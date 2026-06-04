@@ -277,14 +277,6 @@
 
         </div>
     </div>
-    <div id="isiFilter" class="w-120 bg-sky-700">
-        <div>
-            bok
-        </div>
-        <button onclick="closeFilter()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-            detail
-        </button>
-    </div>
 
     <script>
         function openFilter() {
