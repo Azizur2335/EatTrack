@@ -49,6 +49,11 @@ class OwnerController extends Controller
         $restaurant = Restaurant::where('owner_id', auth()->id())->first();
         return view('Owner/promo_owner', compact('restaurant'));
     }
+    public function tambah_promo()
+    {
+        $restaurant = Restaurant::where('owner_id', auth()->id())->first();
+        return view('Owner/tambahpromo_owner', compact('restaurant'));
+    }
 
     public function profil()
     {

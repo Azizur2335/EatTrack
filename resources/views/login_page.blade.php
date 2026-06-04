@@ -95,6 +95,7 @@
         </p>
 
       </form>
+      <a href="/">kembali</a>
     </div>
 
     <!-- ══ Kanan: Foto ══ -->
