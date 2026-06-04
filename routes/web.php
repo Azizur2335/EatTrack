@@ -22,6 +22,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+Route::post('/register-owner', [AuthController::class, 'registerOwner']);
 
 // Customer
 Route::middleware(['auth', 'role:customer'])->group(function () {
@@ -31,12 +32,15 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/promo', [CustomerController::class, 'promo']);
     Route::get('/detail_resto', [CustomerController::class, 'detail_resto']);
     Route::post('/reservasi', [CustomerController::class, 'storeReservasi']);
+<<<<<<< HEAD
     Route::get('/profile', [CustomerController::class, 'showProfile']);
+=======
+    Route::patch('/reservasi/{id}/cancel', [CustomerController::class, 'cancelReservasi']);
+>>>>>>> b3d355c4d8c26c197ad0a890e82ed09d4919c0c9
 });
 
 // Owner
 Route::middleware(['auth', 'role:owner'])->group(function () {
-    Route::post('/register-owner', [AuthController::class, 'registerOwner']);
     Route::get('/dashboard_owner', [OwnerController::class, 'beranda']);
     Route::get('/kelola_menu', [OwnerController::class, 'kelolaMenu']);
     Route::post('/kelola_menu', [OwnerController::class, 'storeMenu']);
@@ -46,8 +50,10 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/promo_owner', [OwnerController::class, 'promo']);
     Route::get('/tambah_promo', [OwnerController::class, 'tambah_promo']);
     Route::get('/profil_owner', [OwnerController::class, 'profil']);
-    Route::post('/konfirmasi_book/{id}/konfirmasi', [OwnerController::class, 'konfirmasiReservasi']);
-    Route::post('/konfirmasi_book/{id}/tolak', [OwnerController::class, 'tolakReservasi']);
+    Route::patch('/konfirmasi_book/{id}/konfirmasi', [OwnerController::class, 'konfirmasiReservasi']);
+    Route::patch('/konfirmasi_book/{id}/tolak', [OwnerController::class, 'tolakReservasi']);
+    Route::post('/promo_owner', [OwnerController::class, 'storePromo']);
+    Route::put('/profil_owner', [OwnerController::class, 'updateProfil']);
 });
 
 // ADMIN
@@ -55,5 +61,24 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard_admin', [AdminController::class, 'beranda']);
     Route::get('/kelola_user', [AdminController::class, 'kelolaUser']);
     Route::get('/laporan', [AdminController::class, 'laporan']);
+    Route::patch('/kelola_user/{id}/activate', [AdminController::class, 'activateUser']);
+    Route::patch('/kelola_user/{id}/ban', [AdminController::class, 'banUser']);
+    Route::delete('/kelola_user/{id}', [AdminController::class, 'destroyUser']);
+});
+
+// API
+Route::prefix('api')->middleware('auth')->group(function () {
+    Route::get('/restaurants', function () {
+        $restaurants = \App\Models\Restaurant::where('status', 'active')->get();
+        return \App\Http\Resources\RestaurantResource::collection($restaurants);
+    });
+
+    Route::get('/reservations', function () {
+        $reservations = \App\Models\Reservation::where('customer_id', auth()->id())
+            ->with('restaurant', 'table')
+            ->latest()
+            ->get();
+        return \App\Http\Resources\ReservationResource::collection($reservations);
+    });
 });
 

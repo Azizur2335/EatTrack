@@ -6,12 +6,23 @@ use App\Models\Restaurant;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\Table;
+use App\Services\ReservationService;
+use App\Http\Requests\StoreReservationRequest;
 
 class CustomerController extends Controller
 {
+    protected ReservationService $reservationService;
+
+    public function __construct(ReservationService $reservationService)
+    {
+        $this->reservationService = $reservationService;
+    }
+
     public function beranda()
     {
-        $restaurants = Restaurant::where('status', 'active')->get();
+        $restaurants = Restaurant::where('status', 'active')
+            ->with('menus')
+            ->get();
         return view('Customer/Beranda_Customer', compact('restaurants'));
     }
 
@@ -23,7 +34,10 @@ class CustomerController extends Controller
 
     public function reservasi()
     {
-        $reservations = Reservation::where('customer_id', auth()->id())->latest()->get();
+        $reservations = Reservation::where('customer_id', auth()->id())
+            ->with('restaurant', 'table')
+            ->latest()
+            ->get();
         return view('Customer/Reservasi', compact('reservations'));
     }
 
@@ -33,10 +47,14 @@ class CustomerController extends Controller
         return view('Customer/Promo', compact('reservations'));
     }
     
-    public function detail_resto()
+    public function detail_resto(Request $request)
     {
-        $reservations = Reservation::where('customer_id', auth()->id())->latest()->get();
-        return view('Customer/DetailResto', compact('reservations'));
+        $restaurant = Restaurant::with(['menus', 'tables'])
+            ->where('id', $request->restaurant_id)
+            ->where('status', 'active')
+            ->firstOrFail();
+
+        return view('Customer/DetailResto', compact('restaurant'));
     }
     public function showProfile()
     {
@@ -44,28 +62,38 @@ class CustomerController extends Controller
         return view('Customer/Profile_customer');
     }
 
-    public function storeReservasi(Request $request)
-{
-    $request->validate([
-        'restaurant_id' => 'required|exists:restaurants,id',
-        'table_id'      => 'required|exists:tables,id',
-        'date'          => 'required|date|after_or_equal:today',
-        'time'          => 'required',
-        'guest_count'   => 'required|integer|min:1',
-        'notes'         => 'nullable|string',
-    ]);
+    public function storeReservasi(StoreReservationRequest $request)
+    {
+        if ($this->reservationService->checkConflict($request->table_id, $request->date, $request->time)) {
+            return back()
+                ->withErrors(['table_id' => 'Meja ini sudah dipesan pada waktu tersebut.'])
+                ->withInput();
+        }
 
-    Reservation::create([
-        'customer_id'   => auth()->id(),
-        'restaurant_id' => $request->restaurant_id,
-        'table_id'      => $request->table_id,
-        'date'          => $request->date,
-        'time'          => $request->time,
-        'guest_count'   => $request->guest_count,
-        'notes'         => $request->notes,
-        'status'        => 'pending',
-    ]);
+        $this->reservationService->store([
+            'customer_id'   => auth()->id(),
+            'restaurant_id' => $request->restaurant_id,
+            'table_id'      => $request->table_id,
+            'date'          => $request->date,
+            'time'          => $request->time,
+            'guest_count'   => $request->guest_count,
+            'notes'         => $request->notes,
+            'status'        => 'pending',
+        ]);
 
-    return redirect('/reservasi')->with('success', 'Reservasi berhasil dibuat, menunggu konfirmasi.');
-}
+        return redirect('/reservasi')->with('success', 'Reservasi berhasil dibuat, menunggu konfirmasi.');
+    }
+
+    public function cancelReservasi($id)
+    {
+        $reservation = Reservation::where('id', $id)
+            ->where('customer_id', auth()->id())
+            ->where('status', 'pending')
+            ->with('table')
+            ->firstOrFail();
+
+        $this->reservationService->cancel($reservation);
+
+        return redirect('/reservasi')->with('success', 'Reservasi berhasil dibatalkan.');
+    }
 }

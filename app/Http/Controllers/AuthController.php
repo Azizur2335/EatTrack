@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Restaurant;
+use App\Models\Reservations;
+use App\Models\Table;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -36,8 +39,15 @@ class AuthController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
+            if (!Auth::user()->is_active) {
+                Auth::logout();
+                return back()->withErrors([
+                    'username' => 'Akun kamu telah dinonaktifkan. Hubungi admin.',
+                ]);
+            }
+
             $request->session()->regenerate();
-            return match(Auth::user()->role){
+            return match(Auth::user()->role) {
                 'owner' => redirect('/dashboard_owner'),
                 'admin' => redirect('/dashboard_admin'),
                 default => redirect('/beranda'),
@@ -167,21 +177,30 @@ class AuthController extends Controller
     public function handleGoogleCallback()
     {
         $googleUser = Socialite::driver('google')->user();
-        $user = User::where('email', $googleUser->email)->first();
 
-        if (!$user){
+        $user = User::where('google_id', $googleUser->id)->first();
+
+        if (!$user) {
+            $existingUser = User::where('email', $googleUser->email)->first();
+
+            if ($existingUser) {
+                return redirect('/loginPage')
+                    ->withErrors(['email' => 'Email ini sudah terdaftar. Silakan login dengan password.']);
+            }
+
             $user = User::create([
-                'name'     => $googleUser->name,
-                'email'    => $googleUser->email,
-                'password' => Hash::make(str()->random(16)),
-                'role'     => 'customer',
-                'phone'    => null,
+                'name'      => $googleUser->name,
+                'email'     => $googleUser->email,
+                'google_id' => $googleUser->id,
+                'password'  => Hash::make(str()->random(32)),
+                'role'      => 'customer',
+                'phone'     => null,
             ]);
         }
 
         Auth::login($user);
 
-        return match($user->role){
+        return match($user->role) {
             'owner' => redirect('/dashboard_owner'),
             'admin' => redirect('/dashboard_admin'),
             default => redirect('/beranda'),

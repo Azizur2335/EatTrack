@@ -5,18 +5,29 @@ namespace App\Http\Controllers;
 use App\Models\Menu;
 use App\Models\Restaurant;
 use App\Models\Reservation;
+use App\Models\Promo;
 use Illuminate\Http\Request;
+use App\Services\ReservationService;
+use App\Http\Requests\StoreMenuRequest;
+use App\Http\Requests\StorePromoRequest;
 
 class OwnerController extends Controller
 {
+    protected ReservationService $reservationService;
+
+    public function __construct(ReservationService $reservationService)
+    {
+        $this->reservationService = $reservationService;
+    }
+
     public function beranda()
     {
         $periode = request('periode', 'day');
         $restaurant = Restaurant::where('owner_id', auth()->id())->first();
 
         $query = $restaurant
-            ? Reservation::where('restaurant_id', $restaurant->id)
-            : Reservation::whereNull('id'); // query kosong jika belum punya restoran
+            ? Reservation::where('restaurant_id', $restaurant->id)->with('customer', 'table')
+            : Reservation::whereNull('id');
 
         // Filter berdasarkan periode
         $query = match($periode) {
@@ -47,12 +58,35 @@ class OwnerController extends Controller
     public function promo()
     {
         $restaurant = Restaurant::where('owner_id', auth()->id())->first();
-        return view('Owner/promo_owner', compact('restaurant'));
+
+        $promos           = $restaurant ? Promo::where('restaurant_id', $restaurant->id)->latest()->get() : collect();
+        $promoAktifCount  = $promos->where('status', 'active')->where('end_date', '>=', today())->count();
+        $promoBerakirCount = $promos->where('end_date', '<', today())->count();
+
+        return view('Owner/promo_owner', compact('restaurant', 'promos', 'promoAktifCount', 'promoBerakirCount'));
     }
+
     public function tambah_promo()
     {
         $restaurant = Restaurant::where('owner_id', auth()->id())->first();
         return view('Owner/tambahpromo_owner', compact('restaurant'));
+    }
+
+    public function storePromo(StorePromoRequest $request)
+    {
+        $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
+
+        Promo::create([
+            'restaurant_id' => $restaurant->id,
+            'title'         => $request->title,
+            'description'   => $request->description,
+            'discount'      => $request->discount,
+            'start_date'    => $request->start_date,
+            'end_date'      => $request->end_date,
+            'status'        => 'active',
+        ]);
+
+        return redirect('/promo_owner')->with('success', 'Promo berhasil ditambahkan.');
     }
 
     public function profil()
@@ -63,16 +97,8 @@ class OwnerController extends Controller
         return view('Owner/profil_owner', compact('user', 'restaurant'));
     }
 
-    public function storeMenu(Request $request)
+    public function storeMenu(StoreMenuRequest $request)
     {
-        $request->validate([
-            'name'        => 'required|string|max:255',
-            'price'       => 'required|numeric',
-            'category'    => 'required|in:makanan,minuman,dessert,lainnya',
-            'description' => 'nullable|string',
-            'image'       => 'nullable|image|max:2048',
-        ]);
-
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
 
         $imagePath = null;
@@ -140,23 +166,38 @@ class OwnerController extends Controller
     public function konfirmasiBook()
     {
         $restaurant = Restaurant::where('owner_id', auth()->id())->first();
-        $reservasi = $restaurant
-            ? Reservation::where('restaurant_id', $restaurant->id)
-                        ->where('status', 'pending')
-                        ->latest()
-                        ->get()
-            : collect();
-        return view('Owner/konfirmasi_book', compact('restaurant', 'reservasi'));
+
+        $statusMap = [
+            'menunggu'     => 'pending',
+            'dikonfirmasi' => 'confirmed',
+            'ditolak'      => 'cancelled',
+        ];
+
+        $filterLabel = request('status', 'semua');
+        $filterDb    = $statusMap[$filterLabel] ?? null;
+
+        $query = $restaurant
+            ? Reservation::where('restaurant_id', $restaurant->id)->with('customer', 'table')->latest()
+            : Reservation::whereNull('id');
+
+        if ($filterDb) {
+            $query->where('status', $filterDb);
+        }
+
+        $reservasi = $query->get();
+
+        return view('Owner/konfirmasi_book', compact('restaurant', 'reservasi', 'filterLabel'));
     }
 
     public function konfirmasiReservasi($id)
     {
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
-        $reservasi = Reservation::where('id', $id)
+        $reservasi  = Reservation::where('id', $id)
                         ->where('restaurant_id', $restaurant->id)
+                        ->with('table')
                         ->firstOrFail();
 
-        $reservasi->update(['status' => 'confirmed']);
+        $this->reservationService->confirm($reservasi);
 
         return redirect('/konfirmasi_book')->with('success', 'Reservasi dikonfirmasi.');
     }
@@ -164,12 +205,51 @@ class OwnerController extends Controller
     public function tolakReservasi($id)
     {
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
-        $reservasi = Reservation::where('id', $id)
+        $reservasi  = Reservation::where('id', $id)
                         ->where('restaurant_id', $restaurant->id)
+                        ->with('table')
                         ->firstOrFail();
 
-        $reservasi->update(['status' => 'cancelled']);
+        $this->reservationService->cancel($reservasi);
 
         return redirect('/konfirmasi_book')->with('success', 'Reservasi ditolak.');
+    }
+
+    public function updateProfil(Request $request)
+    {
+        $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
+
+        $request->validate([
+            'name'        => 'required|string|max:255',
+            'address'     => 'required|string',
+            'city'        => 'nullable|string|max:255',
+            'phone'       => 'nullable|string|max:15',
+            'description' => 'nullable|string',
+            'category'    => 'required|string',
+            'open_time'   => 'nullable|date_format:H:i',
+            'close_time'  => 'nullable|date_format:H:i|after:open_time',
+            'maps_link'   => 'nullable|string',
+            'image'       => 'nullable|image|max:2048',
+        ]);
+
+        $imagePath = $restaurant->image;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('restaurants', 'public');
+        }
+
+        $restaurant->update([
+            'name'        => $request->name,
+            'address'     => $request->address,
+            'city'        => $request->city,
+            'phone'       => $request->phone,
+            'description' => $request->description,
+            'category'    => $request->category,
+            'open_time'   => $request->open_time,
+            'close_time'  => $request->close_time,
+            'maps_link'   => $request->maps_link,
+            'image'       => $imagePath,
+        ]);
+
+        return redirect('/profil_owner')->with('success', 'Profil restoran berhasil diperbarui.');
     }
 }

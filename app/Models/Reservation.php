@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 #[Fillable([
     'customer_id', 'restaurant_id', 'table_id',
@@ -10,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 ])]
 class Reservation extends Model
 {
+    use HasFactory;
+    
     public function customer() { return $this->belongsTo(User::class, 'customer_id'); }
     public function restaurant() { return $this->belongsTo(Restaurant::class); }
     public function table() { return $this->belongsTo(Table::class); }
