@@ -62,3 +62,19 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/kelola_user/{id}', [AdminController::class, 'destroyUser']);
 });
 
+// API
+Route::prefix('api')->middleware('auth')->group(function () {
+    Route::get('/restaurants', function () {
+        $restaurants = \App\Models\Restaurant::where('status', 'active')->get();
+        return \App\Http\Resources\RestaurantResource::collection($restaurants);
+    });
+
+    Route::get('/reservations', function () {
+        $reservations = \App\Models\Reservation::where('customer_id', auth()->id())
+            ->with('restaurant', 'table')
+            ->latest()
+            ->get();
+        return \App\Http\Resources\ReservationResource::collection($reservations);
+    });
+});
+

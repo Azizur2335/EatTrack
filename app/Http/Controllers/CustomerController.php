@@ -6,12 +6,23 @@ use App\Models\Restaurant;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\Table;
+use App\Services\ReservationService;
+use App\Http\Requests\StoreReservationRequest;
 
 class CustomerController extends Controller
 {
+    protected ReservationService $reservationService;
+
+    public function __construct(ReservationService $reservationService)
+    {
+        $this->reservationService = $reservationService;
+    }
+
     public function beranda()
     {
-        $restaurants = Restaurant::where('status', 'active')->get();
+        $restaurants = Restaurant::where('status', 'active')
+            ->with('menus')
+            ->get();
         return view('Customer/Beranda_Customer', compact('restaurants'));
     }
 
@@ -23,7 +34,10 @@ class CustomerController extends Controller
 
     public function reservasi()
     {
-        $reservations = Reservation::where('customer_id', auth()->id())->latest()->get();
+        $reservations = Reservation::where('customer_id', auth()->id())
+            ->with('restaurant', 'table')
+            ->latest()
+            ->get();
         return view('Customer/Reservasi', compact('reservations'));
     }
 
@@ -43,30 +57,15 @@ class CustomerController extends Controller
         return view('Customer/DetailResto', compact('restaurant'));
     }
 
-    public function storeReservasi(Request $request)
+    public function storeReservasi(StoreReservationRequest $request)
     {
-        $request->validate([
-            'restaurant_id' => 'required|exists:restaurants,id',
-            'table_id'      => 'required|exists:tables,id',
-            'date'          => 'required|date|after_or_equal:today',
-            'time'          => 'required',
-            'guest_count'   => 'required|integer|min:1',
-            'notes'         => 'nullable|string',
-        ]);
-
-        $conflict = Reservation::where('table_id', $request->table_id)
-            ->where('date', $request->date)
-            ->where('time', $request->time)
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->exists();
-
-        if ($conflict) {
+        if ($this->reservationService->checkConflict($request->table_id, $request->date, $request->time)) {
             return back()
-                ->withErrors(['table_id' => 'Meja ini sudah dipesan pada waktu tersebut. Silakan pilih meja atau waktu lain.'])
+                ->withErrors(['table_id' => 'Meja ini sudah dipesan pada waktu tersebut.'])
                 ->withInput();
         }
 
-        Reservation::create([
+        $this->reservationService->store([
             'customer_id'   => auth()->id(),
             'restaurant_id' => $request->restaurant_id,
             'table_id'      => $request->table_id,
@@ -88,8 +87,7 @@ class CustomerController extends Controller
             ->with('table')
             ->firstOrFail();
 
-        $reservation->update(['status' => 'cancelled']);
-        $reservation->table->update(['status' => 'available']);
+        $this->reservationService->cancel($reservation);
 
         return redirect('/reservasi')->with('success', 'Reservasi berhasil dibatalkan.');
     }

@@ -7,6 +7,9 @@ use App\Models\Restaurant;
 use App\Models\Reservation;
 use App\Models\Promo;
 use Illuminate\Http\Request;
+use App\Services\ReservationService;
+use App\Http\Requests\StoreMenuRequest;
+use App\Http\Requests\StorePromoRequest;
 
 class OwnerController extends Controller
 {
@@ -16,8 +19,8 @@ class OwnerController extends Controller
         $restaurant = Restaurant::where('owner_id', auth()->id())->first();
 
         $query = $restaurant
-            ? Reservation::where('restaurant_id', $restaurant->id)
-            : Reservation::whereNull('id'); // query kosong jika belum punya restoran
+            ? Reservation::where('restaurant_id', $restaurant->id)->with('customer', 'table')
+            : Reservation::whereNull('id');
 
         // Filter berdasarkan periode
         $query = match($periode) {
@@ -62,16 +65,8 @@ class OwnerController extends Controller
         return view('Owner/tambahpromo_owner', compact('restaurant'));
     }
 
-    public function storePromo(Request $request)
+    public function storePromo(StorePromoRequest $request)
     {
-        $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'discount'    => 'nullable|numeric|min:0|max:100',
-            'start_date'  => 'required|date',
-            'end_date'    => 'required|date|after_or_equal:start_date',
-        ]);
-
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
 
         Promo::create([
@@ -95,16 +90,8 @@ class OwnerController extends Controller
         return view('Owner/profil_owner', compact('user', 'restaurant'));
     }
 
-    public function storeMenu(Request $request)
+    public function storeMenu(StoreMenuRequest $request)
     {
-        $request->validate([
-            'name'        => 'required|string|max:255',
-            'price'       => 'required|numeric',
-            'category'    => 'required|in:makanan,minuman,dessert,lainnya',
-            'description' => 'nullable|string',
-            'image'       => 'nullable|image|max:2048',
-        ]);
-
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
 
         $imagePath = null;
@@ -198,13 +185,12 @@ class OwnerController extends Controller
     public function konfirmasiReservasi($id)
     {
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
-        $reservasi = Reservation::where('id', $id)
+        $reservasi  = Reservation::where('id', $id)
                         ->where('restaurant_id', $restaurant->id)
                         ->with('table')
                         ->firstOrFail();
 
-        $reservasi->update(['status' => 'confirmed']);
-        $reservasi->table->update(['status' => 'reserved']);
+        $this->reservationService->confirm($reservasi);
 
         return redirect('/konfirmasi_book')->with('success', 'Reservasi dikonfirmasi.');
     }
@@ -212,13 +198,12 @@ class OwnerController extends Controller
     public function tolakReservasi($id)
     {
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
-        $reservasi = Reservation::where('id', $id)
+        $reservasi  = Reservation::where('id', $id)
                         ->where('restaurant_id', $restaurant->id)
                         ->with('table')
                         ->firstOrFail();
 
-        $reservasi->update(['status' => 'cancelled']);
-        $reservasi->table->update(['status' => 'available']);
+        $this->reservationService->cancel($reservasi);
 
         return redirect('/konfirmasi_book')->with('success', 'Reservasi ditolak.');
     }
