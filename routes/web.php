@@ -32,6 +32,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/promo', [CustomerController::class, 'promo']);
     Route::get('/detail_resto', [CustomerController::class, 'detail_resto']);
     Route::post('/reservasi', [CustomerController::class, 'storeReservasi']);
+    Route::patch('/reservasi/{id}/cancel', [CustomerController::class, 'cancelReservasi']);
 });
 
 // Owner
@@ -45,8 +46,10 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/promo_owner', [OwnerController::class, 'promo']);
     Route::get('/tambah_promo', [OwnerController::class, 'tambah_promo']);
     Route::get('/profil_owner', [OwnerController::class, 'profil']);
-    Route::post('/konfirmasi_book/{id}/konfirmasi', [OwnerController::class, 'konfirmasiReservasi']);
-    Route::post('/konfirmasi_book/{id}/tolak', [OwnerController::class, 'tolakReservasi']);
+    Route::patch('/konfirmasi_book/{id}/konfirmasi', [OwnerController::class, 'konfirmasiReservasi']);
+    Route::patch('/konfirmasi_book/{id}/tolak', [OwnerController::class, 'tolakReservasi']);
+    Route::post('/promo_owner', [OwnerController::class, 'storePromo']);
+    Route::put('/profil_owner', [OwnerController::class, 'updateProfil']);
 });
 
 // ADMIN
@@ -54,5 +57,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard_admin', [AdminController::class, 'beranda']);
     Route::get('/kelola_user', [AdminController::class, 'kelolaUser']);
     Route::get('/laporan', [AdminController::class, 'laporan']);
+    Route::patch('/kelola_user/{id}/activate', [AdminController::class, 'activateUser']);
+    Route::patch('/kelola_user/{id}/ban', [AdminController::class, 'banUser']);
+    Route::delete('/kelola_user/{id}', [AdminController::class, 'destroyUser']);
 });
 

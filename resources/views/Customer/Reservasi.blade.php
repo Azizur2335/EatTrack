@@ -87,7 +87,7 @@
                                     Tanggal
                                 </div>
                                 <p class="font-bold text-[20px] text-[#272727]">
-                                    {{ \Carbon\Carbon::parse($reservation->reservation_date)->format('d/m/Y') }}
+                                    {{ \Carbon\Carbon::parse($reservation->date)->format('d/m/Y') }}
                                 </p>
                             </div>
 
@@ -101,7 +101,7 @@
                                     Waktu
                                 </div>
                                 <p class="font-bold text-[20px] text-[#272727]">
-                                    {{ \Carbon\Carbon::parse($reservation->reservation_time)->format('H.i') }} WITA
+                                    {{ \Carbon\Carbon::parse($reservation->time)->format('H.i') }} WITA
                                 </p>
                             </div>
 
