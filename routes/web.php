@@ -23,6 +23,12 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 Route::post('/register-owner', [AuthController::class, 'registerOwner']);
+Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+Route::get('/about', function () {return view('about');})->middleware(['auth', 'role:customer']);
+
 
 // Customer
 Route::middleware(['auth', 'role:customer'])->group(function () {
@@ -33,6 +39,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/detail_resto', [CustomerController::class, 'detail_resto']);
     Route::post('/reservasi', [CustomerController::class, 'storeReservasi']);
     Route::get('/profile', [CustomerController::class, 'showProfile']);
+    Route::delete('/reservasi/{id}', [CustomerController::class, 'cancelReservasi'])->name('reservasi.cancel');
 });
 
 // Owner
