@@ -12,6 +12,10 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::get('/kontak', function () {
+    return view('kontak');
+});
+
 // Auth
 Route::get('/loginPage', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

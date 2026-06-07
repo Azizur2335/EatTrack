@@ -129,6 +129,19 @@
       </div>
     </section>
 
+    <section class="px-24">
+      <div class="rounded-t-xl p-4 bg-gray-300">
+        <h1 class="text-lg">Apa itu EatTrack?</h1>
+      </div>
+      <div class="rounded-b-xl bg-white p-4">
+        <p class="text-sm items-center">EatTrack merupakan sebuah sistem reservasi tempat makan berbasi web 
+          yang berfokus untuk memberikan informasi tempat makan terdekat di lokasi anda.
+          Informasi yang diberikan berupa jam buka tempat makan, foto tempat makan, list 
+          menunya, dan sebagainya. Tidak hanya memberikan informasi, anda juga dapat melakukan
+          reservasi tempat makan sesuai pilihan anda. Diharapkan dengan adanya sistem ini, akan membuat pengguna dapat lebih mudah mencari informasi terkait tempat makan terdekat di lokasi anda berada.</p>
+      </div>
+    </section>
+
     <!-- FOOTER -->
     <footer class="py-8 flex justify-center gap-10 flex-wrap">
       <a href="/beranda" class="text-white text-sm hover:text-gray-700 transition">
@@ -139,7 +152,7 @@
         Tentang
       </a>
 
-      <a href="#" class="text-white text-sm hover:text-gray-700 transition">
+      <a href="/kontak" class="text-white text-sm hover:text-gray-700 transition">
         Kontak
       </a>
     </footer>

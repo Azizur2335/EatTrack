@@ -39,7 +39,7 @@
                             <th class="p-3 ">Harga</th>
                             <th class="p-3 ">Kategori</th>
                             <th class="p-3 ">Deskripsi</th>
-                            <th class="p-3 w-24 text-center"></th>
+                            <th cjlass="p-3 w-24 text-center"></th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-700 font-medium">

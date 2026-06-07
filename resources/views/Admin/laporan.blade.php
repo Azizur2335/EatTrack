@@ -24,26 +24,7 @@
 
       <!-- SIDEBAR -->
       <div class="flex min-h-screen">
-		<nav class="w-md bg-white">
-			<div class="flex px-6 py-2 mt-6 mb-12">
-				<div class="rounded-full overflow-hidden size-16">
-					<img src="img/profile.jpg" alt="" class="w-full h-full object-cover">
-				</div>
-				<div class="px-6 py-2">
-					<h3>{{ auth()->user()->name }}</h3>
-					<p class="text-sm">{{ auth()->user()->email }}</p>
-				</div>
-			</div>
-			<ul>
-				<li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/dashboard_owner">Dashboard</a></li>
-				<li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/kelola_user">Kelola Pengguna</a></li>
-				<li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/laporan">Laporan</a></li>
-			</ul>
-			<form method="POST" action="/logout" class="px-6 mt-8">
-				@csrf
-				<button type="submit" class="text-red-600 font-medium">Log Out</button>
-			</form>
-		</nav>
+		  <x-sidebar></x-sidebar>
 
       <!-- CONTENT -->
       <main class="flex-1 p-8">
