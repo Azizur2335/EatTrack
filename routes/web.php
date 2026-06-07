@@ -40,7 +40,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/map', [CustomerController::class, 'map']);
     Route::get('/reservasi', [CustomerController::class, 'reservasi']);
     Route::get('/promo', [CustomerController::class, 'promo']);
-    Route::get('/detail_resto', [CustomerController::class, 'detail_resto']);
+    Route::get('/katalog/{resto_id}', [CustomerController::class, 'detail_resto']);
     Route::post('/reservasi', [CustomerController::class, 'storeReservasi']);
     Route::get('/profile', [CustomerController::class, 'showProfile']);
     Route::delete('/reservasi/{id}', [CustomerController::class, 'cancelReservasi'])->name('reservasi.cancel');

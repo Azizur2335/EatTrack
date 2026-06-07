@@ -24,7 +24,7 @@
 
       <!-- SIDEBAR -->
       <div class="flex min-h-screen">
-		  <x-sidebar></x-sidebar>
+		  <x-sidebar_admin></x-sidebar_admin>
 
       <!-- CONTENT -->
       <main class="flex-1 p-8">

@@ -20,7 +20,7 @@
 </head>
 <body>
 	<div class="flex min-h-screen">
-		<x-sidebar></x-sidebar>
+		<x-sidebar_admin></x-sidebar_admin>
 		<div class="bg-red-700 h-screen w-screen p-6">
 			<div class="unbound text-2xl text-white py-6">
 				Selamat Datang Minnnn
