@@ -36,6 +36,12 @@
                 Profile
             </a>
 
+            {{-- Laporan --}}
+            <a href="/laporan" class="flex items-center gap-3 px-5 py-3 text-[#272727] hover:bg-gray-200 transition text-sm">
+                <img src="assets/icon_service.png" alt="" class="h-5 w-5">
+                Laporan
+            </a>
+
             {{-- About --}}
             <a href="#" class="flex items-center gap-3 px-5 py-3 text-[#272727] hover:bg-gray-200 transition text-sm">
                 <img src="assets/icon_about.png" alt="" class="h-5 w-5">
