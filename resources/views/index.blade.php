@@ -173,20 +173,34 @@
 
 </section>
 
-    <!-- FOOTER -->
-    <footer class="py-8 flex justify-center gap-10 flex-wrap">
-      <a href="/beranda" class="text-white text-sm hover:text-gray-700 transition">
-        Bantuan
-      </a>
+   <!-- FOOTER -->
+<footer class="py-10">
 
-      <a href="#" class="text-white text-sm hover:text-gray-700 transition">
-        Tentang
-      </a>
+    <div class="flex flex-col items-center">
 
-      <a href="/kontak" class="text-white text-sm hover:text-gray-700 transition">
-        Kontak
-      </a>
-    </footer>
+        <h2 class="text-white text-xl font-bold mb-4">
+            EatTrack
+        </h2>
+
+        <div class="flex gap-8 mb-4">
+            <a href="/about"
+               class="text-white hover:text-yellow-300 transition">
+                About
+            </a>
+
+            <a href="/kontak"
+               class="text-white hover:text-yellow-300 transition">
+                Contact
+            </a>
+        </div>
+
+        <p class="text-white/60 text-sm">
+            © 2026 EatTrack. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
   </body>
 </html>
       
