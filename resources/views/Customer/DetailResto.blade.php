@@ -157,13 +157,13 @@
 				<!-- CALENDAR -->
 				<div class="mb-5">
 				<div class="flex items-center justify-between mb-4">
-					<button onclick="prevMonth()" class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:border-red hover:text-red transition-colors">
+					<button type="button" onclick="prevMonth()" class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:border-red hover:text-red transition-colors">
 					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
 					</svg>
 					</button>
 					<span class="font-semibold text-gray-800 text-sm" id="monthLabel"></span>
-					<button onclick="nextMonth()" class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:border-red hover:text-red transition-colors">
+					<button type="button" onclick="nextMonth()" class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:border-red hover:text-red transition-colors">
 					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
 					</svg>
@@ -208,9 +208,9 @@
 					Jumlah Tamu
 					</label>
 					<div class="flex items-center gap-3">
-					<button onclick="decreaseGuests()" class="w-8 h-8 rounded-full border-2 border-red text-red flex items-center justify-center hover:bg-red-700 hover:text-white transition-all text-lg font-bold leading-none">−</button>
+					<button type="button" onclick="decreaseGuests()" class="w-8 h-8 rounded-full border-2 border-red text-red flex items-center justify-center hover:bg-red-700 hover:text-white transition-all text-lg font-bold leading-none">−</button>
 					<span class="font-bold text-gray-800 text-base w-4 text-center" id="guestCount">2</span>
-					<button onclick="increaseGuests()" class="w-8 h-8 rounded-full border-2 border-red text-red flex items-center justify-center hover:bg-red-700 hover:text-white transition-all text-lg font-bold leading-none">+</button>
+					<button type="button" onclick="increaseGuests()" class="w-8 h-8 rounded-full border-2 border-red text-red flex items-center justify-center hover:bg-red-700 hover:text-white transition-all text-lg font-bold leading-none">+</button>
 					</div>
 				</div>
 				<div class="flex-1">
@@ -227,7 +227,7 @@
 				</div>
 
 				<!-- BOOKING BUTTON -->
-				<button type="submit" class="w-full bg-red-700 hover:bg-red-900 active:scale-[0.99] text-white font-semibold py-3.5 rounded-2xl text-sm tracking-wide shadow-lg shadow-red/30 hover:shadow-red/40 transition-all duration-200">
+				<button type="button" onclick="submitReservasi()" class="w-full bg-red-700 hover:bg-red-900 active:scale-[0.99] text-white font-semibold py-3.5 rounded-2xl text-sm tracking-wide shadow-lg shadow-red/30 hover:shadow-red/40 transition-all duration-200">
 				Booking
 				</button>
 				</form>
@@ -235,120 +235,142 @@
 		</div>
 	</div>
 
-  <script>
-	function showTab(tabName) {
+	<script>
+		function showTab(tabName) {
 
-		document.querySelectorAll('.tab-content').forEach(tab => {
-			tab.classList.add('hidden');
-		});
+			document.querySelectorAll('.tab-content').forEach(tab => {
+				tab.classList.add('hidden');
+			});
 
-		document.querySelectorAll('.tab-btn').forEach(btn => {
-			btn.classList.remove(
-				'text-red-700',
-				'font-semibold'
-			);
+			document.querySelectorAll('.tab-btn').forEach(btn => {
+				btn.classList.remove(
+					'text-red-700',
+					'font-semibold'
+				);
 
-			btn.classList.add(
+				btn.classList.add(
+					'text-gray-500',
+					'font-medium'
+				);
+			});
+
+			document.getElementById(`content-${tabName}`)
+				.classList.remove('hidden');
+
+			const activeBtn =
+				document.getElementById(`tab-${tabName}`);
+
+			activeBtn.classList.remove(
 				'text-gray-500',
 				'font-medium'
 			);
-		});
 
-		document.getElementById(`content-${tabName}`)
-			.classList.remove('hidden');
+			activeBtn.classList.add(
+				'text-red-700',
+				'font-semibold'
+			);
+		}
 
-		const activeBtn =
-			document.getElementById(`tab-${tabName}`);
+		const MONTHS_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+		let today = new Date();
+		let currentYear = today.getFullYear();
+		let currentMonth = today.getMonth();
+		let selectedDay = today.getDate();
+		let guests = 2;
 
-		activeBtn.classList.remove(
-			'text-gray-500',
-			'font-medium'
-		);
+		function renderCalendar() {
+		document.getElementById('monthLabel').textContent = MONTHS_ID[currentMonth] + ' ' + currentYear;
 
-		activeBtn.classList.add(
-			'text-red-700',
-			'font-semibold'
-		);
-	}
+		const grid = document.getElementById('calendarGrid');
+		grid.innerHTML = '';
 
-    const MONTHS_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-    let today = new Date();
-    let currentYear = today.getFullYear();
-    let currentMonth = today.getMonth();
-    let selectedDay = today.getDate();
-    let guests = 2;
+		const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+		const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+		const prevDays = new Date(currentYear, currentMonth, 0).getDate();
 
-    function renderCalendar() {
-      document.getElementById('monthLabel').textContent = MONTHS_ID[currentMonth] + ' ' + currentYear;
+		for (let i = 0; i < firstDay; i++) {
+			const d = document.createElement('div');
+			d.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-300 cursor-default';
+			d.textContent = prevDays - firstDay + 1 + i;
+			grid.appendChild(d);
+		}
 
-      const grid = document.getElementById('calendarGrid');
-      grid.innerHTML = '';
+		for (let d = 1; d <= daysInMonth; d++) {
+			const el = document.createElement('div');
+			const isSelected = (d === selectedDay && currentMonth === today.getMonth() && currentYear === today.getFullYear());
+			const isToday = (d === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear());
 
-      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-      const prevDays = new Date(currentYear, currentMonth, 0).getDate();
+			if (isSelected) {
+			el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium bg-red-700 text-white cursor-pointer shadow-[0_4px_12px_rgba(185,28,28,0.35)]';
+			} else if (isToday) {
+			el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-bold text-red-700 cursor-pointer hover:bg-red-100 transition-colors';
+			} else {
+			el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-700 cursor-pointer hover:bg-red-50 hover:text-red transition-colors';
+			}
 
-      for (let i = 0; i < firstDay; i++) {
-        const d = document.createElement('div');
-        d.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-300 cursor-default';
-        d.textContent = prevDays - firstDay + 1 + i;
-        grid.appendChild(d);
-      }
+			el.textContent = d;
+			el.addEventListener('click', () => {
+			selectedDay = d;
+			renderCalendar();
+			const mm = String(currentMonth + 1).padStart(2, '0');
+			const dd = String(selectedDay).padStart(2, '0');
+			document.getElementById('selectedDate').value = currentYear + '-' + mm + '-' + dd;
+			});
+			grid.appendChild(el);
+		}
 
-      for (let d = 1; d <= daysInMonth; d++) {
-        const el = document.createElement('div');
-        const isSelected = (d === selectedDay && currentMonth === today.getMonth() && currentYear === today.getFullYear());
-        const isToday = (d === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear());
+		const total = firstDay + daysInMonth;
+		const remainder = total % 7 === 0 ? 0 : 7 - (total % 7);
+		for (let i = 1; i <= remainder; i++) {
+			const d = document.createElement('div');
+			d.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-300 cursor-default';
+			d.textContent = i;
+			grid.appendChild(d);
+		}
+		}
 
-        if (isSelected) {
-          el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium bg-red-700 text-white cursor-pointer shadow-[0_4px_12px_rgba(185,28,28,0.35)]';
-        } else if (isToday) {
-          el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-bold text-red-700 cursor-pointer hover:bg-red-100 transition-colors';
-        } else {
-          el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-700 cursor-pointer hover:bg-red-50 hover:text-red transition-colors';
-        }
+		function prevMonth() {
+		if (currentMonth === 0) { currentMonth = 11; currentYear--; } else currentMonth--;
+		renderCalendar();
+		}
+		function nextMonth() {
+		if (currentMonth === 11) { currentMonth = 0; currentYear++; } else currentMonth++;
+		renderCalendar();
+		}
+		function increaseGuests() {
+		guests = Math.min(guests + 1, 20);
+		document.getElementById('guestCount').textContent = guests;
+		document.getElementById('guestCountInput').value = guests;
+		}
+		function decreaseGuests() {
+		guests = Math.max(guests - 1, 1);
+		document.getElementById('guestCount').textContent = guests;
+		document.getElementById('guestCountInput').value = guests;
+		}
 
-        el.textContent = d;
-        el.addEventListener('click', () => {
-          selectedDay = d;
-          renderCalendar();
-          const mm = String(currentMonth + 1).padStart(2, '0');
-          const dd = String(selectedDay).padStart(2, '0');
-          document.getElementById('selectedDate').value = currentYear + '-' + mm + '-' + dd;
-        });
-        grid.appendChild(el);
-      }
+		renderCalendar();
 
-      const total = firstDay + daysInMonth;
-      const remainder = total % 7 === 0 ? 0 : 7 - (total % 7);
-      for (let i = 1; i <= remainder; i++) {
-        const d = document.createElement('div');
-        d.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-300 cursor-default';
-        d.textContent = i;
-        grid.appendChild(d);
-      }
-    }
+		// Set default selectedDate ke hari ini
+		const todayMm = String(today.getMonth() + 1).padStart(2, '0');
+		const todayDd = String(today.getDate()).padStart(2, '0');
+		document.getElementById('selectedDate').value = today.getFullYear() + '-' + todayMm + '-' + todayDd;
 
-    function prevMonth() {
-      if (currentMonth === 0) { currentMonth = 11; currentYear--; } else currentMonth--;
-      renderCalendar();
-    }
-    function nextMonth() {
-      if (currentMonth === 11) { currentMonth = 0; currentYear++; } else currentMonth++;
-      renderCalendar();
-    }
-    function increaseGuests() {
-      guests = Math.min(guests + 1, 20);
-      document.getElementById('guestCount').textContent = guests;
-      document.getElementById('guestCountInput').value = guests;
-    }
-    function decreaseGuests() {
-      guests = Math.max(guests - 1, 1);
-      document.getElementById('guestCount').textContent = guests;
-      document.getElementById('guestCountInput').value = guests;
-    }
-
-    renderCalendar();
-  </script>
+		function submitReservasi() {
+			if (!document.getElementById('selectedDate').value) {
+				alert('Pilih tanggal terlebih dahulu.');
+				return;
+			}
+			if (!document.getElementById('timeInput').value) {
+				alert('Pilih waktu terlebih dahulu.');
+				return;
+			}
+			const tableSelect = document.querySelector('select[name="table_id"]');
+			if (!tableSelect.value) {
+				alert('Pilih meja terlebih dahulu.');
+				return;
+			}
+			document.getElementById('reservasiForm').submit();
+		}
+	</script>
 </body>
 </html>
