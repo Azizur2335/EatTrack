@@ -38,6 +38,7 @@ class User extends Authenticatable
         ];
     }
 
+    public function claimedPromos() { return $this->hasMany(ClaimedPromo::class, 'customer_id'); }
     public function restaurant()  { return $this->hasOne(Restaurant::class, 'owner_id'); }
     public function reservations(){ return $this->hasMany(Reservation::class, 'customer_id'); }
 }

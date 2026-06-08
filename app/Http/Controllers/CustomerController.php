@@ -79,9 +79,9 @@ class CustomerController extends Controller
         return view('Customer/Promo', compact('promos'));
     }
     
-    public function detail_resto(Request $request)
+    public function detail_resto(Request $request, $resto_id)
     {
-        $restaurant = Restaurant::with(['menus', 'tables'])
+        $restaurant = Restaurant::with(['menus', 'tables', 'promos', 'reviews'])
             ->where('id', $resto_id)
             ->where('status', 'active')
             ->firstOrFail();

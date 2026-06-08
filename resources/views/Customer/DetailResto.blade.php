@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Steak Dasan Agung</title>
+  <title>{{ $restaurant->name }}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,27 +22,29 @@
 	<!-- HERO -->
 	<div class="relative h-64 overflow-hidden">
 		<img
-		src="https://images.unsplash.com/photo-1544025162-d76694265947?w=1200&q=80"
-		alt="Steak"
-		class="w-full h-full object-cover object-center"
-		/>
+			src="{{ $restaurant->image ? Storage::url($restaurant->image) : 'https://images.unsplash.com/photo-1544025162-d76694265947?w=1200&q=80' }}"
+			alt="{{ $restaurant->name }}"
+			class="w-full h-full object-cover object-center"
+			/>
 		<div class="absolute inset-0 flex flex-col justify-center px-24"
 			style="background: linear-gradient(to right, rgba(153,27,27,0.92) 30%, rgba(153,27,27,0.55) 70%, rgba(0,0,0,0.15) 100%)">
-			<h1 class="unbound font-display text-4xl font-bold text-white leading-tight mb-1 mx-">Steak Dasan Agung</h1>
-			<p class="font-semibold text-base mb-3 text-red-300">Steakhouse</p>
+			<h1 class="unbound font-display text-4xl font-bold text-white leading-tight mb-1 mx-">{{ $restaurant->name }}</h1>
+			<p class="font-semibold text-base mb-3 text-red-300">{{ $restaurant->category }}</p>
 			<div class="flex items-center gap-3 mb-3">
 				<div class="flex items-center gap-1">
 				<svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
 					<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
 				</svg>
-				<span class="text-white font-semibold text-sm">4.5</span>
+				<span class="text-white font-semibold text-sm">
+					{{ $restaurant->reviews->count() > 0 ? number_format($restaurant->reviews->avg('rating'), 1) : '-' }}
+				</span>
 				</div>
 				<span class="text-white/60 text-sm">•</span>
-				<span class="text-white/80 text-sm">20 Ulasan</span>
+				<span class="text-white/80 text-sm">{{ $restaurant->reviews->count() }} Ulasan</span>
 			</div>
 			<span class="inline-flex items-center gap-2 bg-white/95 text-gray-800 text-xs font-medium px-3 py-1.5 rounded-full w-fit shadow-sm">
 				<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-				Buka Jam 9.00 - 21.00 WITA
+				Buka {{ $restaurant->open_time ? \Carbon\Carbon::parse($restaurant->open_time)->format('H.i') : '-' }} - {{ $restaurant->close_time ? \Carbon\Carbon::parse($restaurant->close_time)->format('H.i') : '-' }} WITA
 			</span>
 		</div>
 	</div>
@@ -75,94 +77,50 @@
 				</button>
 			</div>
 
-
 			<!-- MENU -->
 			<div id="content-menu" class="tab-content">
-
-				<p class="text-sm font-semibold text-gray-700 mb-3 tracking-wide uppercase">
-					Makanan
-				</p>
-
-				<div class="bg-white rounded-2xl p-4 flex items-center gap-4 mb-6 shadow-sm">
-					<img src="https://images.unsplash.com/photo-1558030006-450675393462?w=120&q=80"
-						class="w-16 h-16 rounded-xl object-cover">
-
-					<div class="flex-1">
-						<p class="font-semibold text-gray-900 text-sm">
-							Steak Ribeye
-						</p>
-
-						<p class="text-xs text-gray-400">
-							Steak dengan Mushroom sauce
-						</p>
+				@forelse($restaurant->menus->groupBy('category') as $kategori => $items)
+					<p class="text-sm font-semibold text-gray-700 mb-3 tracking-wide uppercase">
+						{{ $kategori }}
+					</p>
+					@foreach($items as $menu)
+					<div class="bg-white rounded-2xl p-4 flex items-center gap-4 mb-3 shadow-sm">
+						<img src="{{ $menu->image ? Storage::url($menu->image) : 'https://images.unsplash.com/photo-1558030006-450675393462?w=120&q=80' }}"
+							class="w-16 h-16 rounded-xl object-cover">
+						<div class="flex-1">
+							<p class="font-semibold text-gray-900 text-sm">{{ $menu->name }}</p>
+							<p class="text-xs text-gray-400">{{ $menu->description ?? '-' }}</p>
+						</div>
+						<span class="font-bold text-red-700 text-sm">
+							Rp {{ number_format($menu->price, 0, ',', '.') }}
+						</span>
 					</div>
-
-					<span class="font-bold text-red-700 text-sm">
-						Rp.180.000
-					</span>
-				</div>
-
-				<p class="text-sm font-semibold text-gray-700 mb-3 tracking-wide uppercase">
-					Minuman
-				</p>
-
-				<div class="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm">
-					<img src="https://images.unsplash.com/photo-1544145945-f90425340c7e?w=120&q=80"
-						class="w-16 h-16 rounded-xl object-cover">
-
-					<div class="flex-1">
-						<p class="font-semibold text-gray-900 text-sm">
-							Es Teh Manis
-						</p>
-
-						<p class="text-xs text-gray-400">
-							Teh manis segar dengan es batu
-						</p>
-					</div>
-
-					<span class="font-bold text-red-700 text-sm">
-						Rp.15.000
-					</span>
-				</div>
-
+					@endforeach
+					<div class="mb-4"></div>
+				@empty
+					<p class="text-sm text-gray-400">Belum ada menu.</p>
+				@endforelse
 			</div>
 
 			<div id="content-ulasan" class="tab-content hidden">
-				<div class="space-y-4">
-					<div class="bg-white p-4 rounded-2xl shadow-sm">
-						<div class="flex justify-between">
-							<h3 class="font-semibold">Andi</h3>
-							<span class="text-yellow-500">★★★★★</span>
-						</div>
-						<p class="text-gray-600 mt-2 text-sm">
-							Steaknya sangat empuk dan sausnya enak.
-						</p>
+				@forelse($restaurant->reviews()->with('customer')->latest()->get() as $review)
+				<div class="bg-white p-4 rounded-2xl shadow-sm mb-3">
+					<div class="flex justify-between items-center">
+						<h3 class="font-semibold text-sm">{{ $review->customer->name }}</h3>
+						<span class="text-yellow-500 text-sm">
+							@for($i = 1; $i <= 5; $i++)
+								{{ $i <= $review->rating ? '★' : '☆' }}
+							@endfor
+						</span>
 					</div>
-
-					<div class="bg-white p-4 rounded-2xl shadow-sm">
-						<div class="flex justify-between">
-							<h3 class="font-semibold">Budi</h3>
-							<span class="text-yellow-500">★★★★☆</span>
-						</div>
-
-						<p class="text-gray-600 mt-2 text-sm">
-							Tempat nyaman untuk keluarga.
-						</p>
-					</div>
-
-					<div class="bg-white p-4 rounded-2xl shadow-sm">
-						<div class="flex justify-between">
-							<h3 class="font-semibold">Siti</h3>
-							<span class="text-yellow-500">★★★★★</span>
-						</div>
-
-						<p class="text-gray-600 mt-2 text-sm">
-							Pelayanan cepat dan ramah.
-						</p>
-					</div>
-
+					<p class="text-gray-600 mt-2 text-sm">{{ $review->comment ?? '-' }}</p>
+					<p class="text-gray-400 text-xs mt-1">{{ $review->created_at->diffForHumans() }}</p>
 				</div>
-
+				@empty
+				<div class="bg-white rounded-2xl p-6 shadow-sm text-center text-gray-400 text-sm">
+					Belum ada ulasan untuk restoran ini.
+				</div>
+				@endforelse
 			</div>
 
 			<div id="content-info" class="tab-content hidden">
@@ -174,32 +132,11 @@
 					</h3>
 
 					<div class="space-y-3 text-sm">
-
-						<p>
-							<strong>Alamat:</strong>
-							Jl. Dasan Agung No. 10, Mataram
-						</p>
-
-						<p>
-							<strong>Jam Operasional:</strong>
-							09.00 - 21.00 WITA
-						</p>
-
-						<p>
-							<strong>Telepon:</strong>
-							0812-3456-7890
-						</p>
-
-						<p>
-							<strong>Kategori:</strong>
-							Steakhouse
-						</p>
-
-						<p>
-							<strong>Fasilitas:</strong>
-							WiFi, AC, Parkir, Reservasi Online
-						</p>
-
+						<p><strong>Alamat:</strong> {{ $restaurant->address }}{{ $restaurant->city ? ', ' . $restaurant->city : '' }}</p>
+						<p><strong>Jam Operasional:</strong> {{ $restaurant->open_time ? \Carbon\Carbon::parse($restaurant->open_time)->format('H.i') : '-' }} - {{ $restaurant->close_time ? \Carbon\Carbon::parse($restaurant->close_time)->format('H.i') : '-' }} WITA</p>
+						<p><strong>Telepon:</strong> {{ $restaurant->phone ?? '-' }}</p>
+						<p><strong>Kategori:</strong> {{ $restaurant->category }}</p>
+						<p><strong>Deskripsi:</strong> {{ $restaurant->description ?? '-' }}</p>
 					</div>
 
 				</div>
@@ -211,6 +148,11 @@
 		<div class="w-96 flex-shrink-0">
 			<div class="bg-white rounded-3xl shadow-md p-6">
 				<h2 class="font-display text-xl font-bold text-red mb-5">Reservasi Meja</h2>
+				<form method="POST" action="/reservasi" id="reservasiForm">
+					@csrf
+					<input type="hidden" name="restaurant_id" value="{{ $restaurant->id }}">
+					<input type="hidden" name="date" id="selectedDate">
+					<input type="hidden" name="guest_count" id="guestCountInput" value="2">
 
 				<!-- CALENDAR -->
 				<div class="mb-5">
@@ -251,7 +193,7 @@
 					</svg>
 					Waktu
 				</label>
-				<input type="time" id="timeInput"
+				<input type="time" id="timeInput" name="time"
 					class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 bg-gray-50 focus:outline-none focus:border-red focus:ring-2 focus:ring-red/10 transition-all duration-200 font-body"
 				/>
 				</div>
@@ -273,28 +215,22 @@
 				</div>
 				<div class="flex-1">
 					<label class="text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide block">Meja</label>
-					<select
+					<select name="table_id"
 						class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 bg-gray-50 focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-200 transition-all duration-200"
 					>
 						<option value="">Pilih Meja</option>
-						<option value="1">Meja 1</option>
-						<option value="2">Meja 2</option>
-						<option value="3">Meja 3</option>
-						<option value="4">Meja 4</option>
-						<option value="5">Meja 5</option>
-						<option value="6">Meja 6</option>
-						<option value="7">Meja 7</option>
-						<option value="8">Meja 8</option>
-						<option value="9">Meja 9</option>
-						<option value="10">Meja 10</option>
+						@foreach($restaurant->tables as $table)
+							<option value="{{ $table->id }}">{{ $table->table_number }} (Kapasitas {{ $table->capacity }})</option>
+						@endforeach
 					</select>
 				</div>
 				</div>
 
 				<!-- BOOKING BUTTON -->
-				<button class="w-full bg-red-700 hover:bg-red-900 active:scale-[0.99] text-white font-semibold py-3.5 rounded-2xl text-sm tracking-wide shadow-lg shadow-red/30 hover:shadow-red/40 transition-all duration-200">
+				<button type="submit" class="w-full bg-red-700 hover:bg-red-900 active:scale-[0.99] text-white font-semibold py-3.5 rounded-2xl text-sm tracking-wide shadow-lg shadow-red/30 hover:shadow-red/40 transition-all duration-200">
 				Booking
 				</button>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -373,7 +309,13 @@
         }
 
         el.textContent = d;
-        el.addEventListener('click', () => { selectedDay = d; renderCalendar(); });
+        el.addEventListener('click', () => {
+          selectedDay = d;
+          renderCalendar();
+          const mm = String(currentMonth + 1).padStart(2, '0');
+          const dd = String(selectedDay).padStart(2, '0');
+          document.getElementById('selectedDate').value = currentYear + '-' + mm + '-' + dd;
+        });
         grid.appendChild(el);
       }
 
@@ -398,10 +340,12 @@
     function increaseGuests() {
       guests = Math.min(guests + 1, 20);
       document.getElementById('guestCount').textContent = guests;
+      document.getElementById('guestCountInput').value = guests;
     }
     function decreaseGuests() {
       guests = Math.max(guests - 1, 1);
       document.getElementById('guestCount').textContent = guests;
+      document.getElementById('guestCountInput').value = guests;
     }
 
     renderCalendar();

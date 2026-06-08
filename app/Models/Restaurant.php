@@ -22,4 +22,5 @@ class Restaurant extends Model
     public function tables() { return $this->hasMany(Table::class); }
     public function promos() { return $this->hasMany(Promo::class); }
     public function reservations() { return $this->hasMany(Reservation::class); }
+    public function reviews() { return $this->hasMany(Review::class); }
 }
