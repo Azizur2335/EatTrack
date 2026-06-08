@@ -121,13 +121,14 @@
                 <p class="text-[#D9D9D9] text-[12px] font-medium uppercase tracking-widest mb-3">Kategori</p>
                 <div class="flex gap-2 flex-wrap">
                 <button class="fpill" data-group="cat" data-val="indonesia">Masakan Indonesia</button>
-                <button class="fpill" data-group="cat" data-val="western">Japanese</button>
+                <button class="fpill" data-group="cat" data-val="japanese">Japanese</button>
                 <button class="fpill" data-group="cat" data-val="seafood">Seafood</button>
                 <button class="fpill" data-group="cat" data-val="fastfood">Fast Food</button>
-                <button class="fpill" data-group="cat" data-val="vegetarian">Prasmanan</button>
+                <button class="fpill" data-group="cat" data-val="prasmanan">Prasmanan</button>
                 <button class="fpill" data-group="cat" data-val="dessert">Dessert</button>
                 </div>
             </div>
+            
 
             {{-- Jarak --}}
             <div class="mb-5">

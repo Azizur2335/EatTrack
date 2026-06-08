@@ -151,13 +151,13 @@
                     <label class="block text-sm font-bold text-gray-800 mb-2">Kategori Restoran</label>
                     <select name="category"
                         class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-red-400 bg-white mb-4">
-                        <option value="cafe">Cafe</option>
-                        <option value="restoran">Restoran</option>
-                        <option value="warung">Warung</option>
-                        <option value="fastfood">Fast Food</option>
-                        <option value="steakhouse">Steakhouse</option>
+                        <option value="indonesia">Masakan Indonesia</option>
+                        <option value="japanese">Japanese</option>
                         <option value="seafood">Seafood</option>
-                        <option value="lainnya">Lainnya</option>
+                        <option value="fastfood">Fast Food</option>
+                        <option value="prasmanan">Prasmanan</option>
+                        <option value="dessert">Dessert</option>
+                        <option value="steakhouse">Steakhouse</option>
                     </select>
                 </div>
                 <div class="flex-1">
