@@ -85,17 +85,17 @@ EatTrack
 |   ├── Controller untuk customer (CustomerController.php)
 |   └── Controller untuk owner (OwnerController.php)
 |
-├── Models
-|   ├── Model untuk klaim promo (ClaimedPromo.php)
-|   ├── Model untuk menu dari restoran (Menu.php)
-|   ├── Model untuk promo (Promo.php)
-|   ├── Model untuk laporan bug (Report.php)
-|   ├── Model untuk reservasi meja (Reservation.php)
-|   ├── Model untuk restoran (Restaurant.php)
-|   ├── Model untuk review (Review.php)
-|   ├── Model untuk meja yang di reservasi (Table.php)
-|   └── Model untuk user/pengguna (User.php)
-|
+└── Models
+    ├── Model untuk klaim promo (ClaimedPromo.php)
+    ├── Model untuk menu dari restoran (Menu.php)
+    ├── Model untuk promo (Promo.php)
+    ├── Model untuk laporan bug (Report.php)
+    ├── Model untuk reservasi meja (Reservation.php)
+    ├── Model untuk restoran (Restaurant.php)
+    ├── Model untuk review (Review.php)
+    ├── Model untuk meja yang di reservasi (Table.php)
+    └── Model untuk user/pengguna (User.php)
+
 ```
 
 ## TechStack
