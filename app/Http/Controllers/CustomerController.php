@@ -73,10 +73,16 @@ class CustomerController extends Controller
     {
         $promos = \App\Models\Promo::where('status', 'active')
             ->where('end_date', '>=', now())
-            ->with('restaurant')
+            ->with(['restaurant', 'claimedBy'])
             ->latest()
             ->get();
-        return view('Customer/Promo', compact('promos'));
+
+        $claimedPromos = \App\Models\ClaimedPromo::where('customer_id', auth()->id())
+            ->with(['promo.restaurant'])
+            ->latest()
+            ->get();
+
+        return view('Customer/Promo', compact('promos', 'claimedPromos'));
     }
     
     public function detail_resto(Request $request, $resto_id)
@@ -114,6 +120,33 @@ class CustomerController extends Controller
         ]);
 
         return redirect('/reservasi')->with('success', 'Reservasi berhasil dibuat, menunggu konfirmasi.');
+    }
+
+    public function klaimPromo($id)
+    {
+        $promo = \App\Models\Promo::where('id', $id)
+            ->where('status', 'active')
+            ->where('end_date', '>=', today())
+            ->firstOrFail();
+
+        $sudahKlaim = \App\Models\ClaimedPromo::where('promo_id', $id)
+            ->where('customer_id', auth()->id())
+            ->exists();
+
+        if ($sudahKlaim) {
+            return back()->with('error', 'Kamu sudah mengklaim promo ini.');
+        }
+
+        if ($promo->kuota_total && $promo->claimedBy()->count() >= $promo->kuota_total) {
+            return back()->with('error', 'Kuota promo sudah habis.');
+        }
+
+        \App\Models\ClaimedPromo::create([
+            'promo_id'    => $id,
+            'customer_id' => auth()->id(),
+        ]);
+
+        return back()->with('success', 'Promo berhasil diklaim!');
     }
 
     public function cancelReservasi($id)

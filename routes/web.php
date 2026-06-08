@@ -44,6 +44,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/reservasi', [CustomerController::class, 'storeReservasi']);
     Route::get('/profile', [CustomerController::class, 'showProfile']);
     Route::delete('/reservasi/{id}', [CustomerController::class, 'cancelReservasi'])->name('reservasi.cancel');
+    Route::post('/promo/{id}/klaim', [CustomerController::class, 'klaimPromo'])->name('promo.klaim');
 });
 
 // Owner
