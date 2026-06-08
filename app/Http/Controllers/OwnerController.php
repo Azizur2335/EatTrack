@@ -70,12 +70,30 @@ class OwnerController extends Controller
     public function promo()
     {
         $restaurant = Restaurant::where('owner_id', auth()->id())->first();
+        $tab        = request('tab', 'semua');
 
-        $promos           = $restaurant ? Promo::where('restaurant_id', $restaurant->id)->latest()->get() : collect();
-        $promoAktifCount  = $promos->where('status', 'active')->where('end_date', '>=', today())->count();
-        $promoBerakirCount = $promos->where('end_date', '<', today())->count();
+        $query = $restaurant
+            ? Promo::where('restaurant_id', $restaurant->id)->latest()
+            : Promo::whereNull('id');
 
-        return view('Owner/promo_owner', compact('restaurant', 'promos', 'promoAktifCount', 'promoBerakirCount'));
+        if ($tab === 'aktif') {
+            $query->where('status', 'active')->where('end_date', '>=', today());
+        } elseif ($tab === 'berakhir') {
+            $query->where('end_date', '<', today());
+        }
+
+        $promos            = $query->get();
+        $allPromos         = $restaurant ? Promo::where('restaurant_id', $restaurant->id)->get() : collect();
+        $promoAktifCount   = $allPromos->where('status', 'active')->where('end_date', '>=', today()->toDateString())->count();
+        $promoBerakirCount = $allPromos->where('end_date', '<', today()->toDateString())->count();
+        $totalPromo        = $allPromos->count();
+        $totalDigunakan    = $allPromos->sum('kuota_terpakai');
+
+        return view('Owner/promo_owner', compact(
+            'restaurant', 'promos', 'tab',
+            'promoAktifCount', 'promoBerakirCount',
+            'totalPromo', 'totalDigunakan'
+        ));
     }
 
     public function tambah_promo()
@@ -88,6 +106,11 @@ class OwnerController extends Controller
     {
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
 
+        $bannerPath = null;
+        if ($request->hasFile('banner')) {
+            $bannerPath = $request->file('banner')->store('promos', 'public');
+        }
+
         Promo::create([
             'restaurant_id' => $restaurant->id,
             'title'         => $request->title,
@@ -95,6 +118,9 @@ class OwnerController extends Controller
             'discount'      => $request->discount,
             'start_date'    => $request->start_date,
             'end_date'      => $request->end_date,
+            'minimal_tamu'  => $request->minimal_tamu,
+            'kuota_total'   => $request->kuota_total,
+            'banner'        => $bannerPath,
             'status'        => 'active',
         ]);
 
@@ -283,5 +309,63 @@ class OwnerController extends Controller
         ]);
 
         return redirect('/profil_owner')->with('success', 'Profil restoran berhasil diperbarui.');
+    }
+
+    public function nonaktifkanPromo($id)
+    {
+        $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
+        $promo = Promo::where('id', $id)->where('restaurant_id', $restaurant->id)->firstOrFail();
+        $promo->update(['status' => 'inactive']);
+        return redirect('/promo_owner')->with('success', 'Promo dinonaktifkan.');
+    }
+
+    public function destroyPromo($id)
+    {
+        $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
+        $promo = Promo::where('id', $id)->where('restaurant_id', $restaurant->id)->firstOrFail();
+        $promo->delete();
+        return redirect('/promo_owner')->with('success', 'Promo dihapus.');
+    }
+
+    public function editPromo($id)
+    {
+        $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
+        $promo = Promo::where('id', $id)->where('restaurant_id', $restaurant->id)->firstOrFail();
+        return view('Owner/tambahpromo_owner', compact('restaurant', 'promo'));
+    }
+
+    public function updatePromo(Request $request, $id)
+    {
+        $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
+        $promo = Promo::where('id', $id)->where('restaurant_id', $restaurant->id)->firstOrFail();
+
+        $request->validate([
+            'title'        => 'required|string|max:255',
+            'description'  => 'nullable|string',
+            'discount'     => 'nullable|numeric|min:0|max:100',
+            'start_date'   => 'required|date',
+            'end_date'     => 'required|date|after_or_equal:start_date',
+            'minimal_tamu' => 'nullable|integer|min:1',
+            'kuota_total'  => 'nullable|integer|min:1',
+            'banner'       => 'nullable|image|max:2048',
+        ]);
+
+        $bannerPath = $promo->banner;
+        if ($request->hasFile('banner')) {
+            $bannerPath = $request->file('banner')->store('promos', 'public');
+        }
+
+        $promo->update([
+            'title'        => $request->title,
+            'description'  => $request->description,
+            'discount'     => $request->discount,
+            'start_date'   => $request->start_date,
+            'end_date'     => $request->end_date,
+            'minimal_tamu' => $request->minimal_tamu,
+            'kuota_total'  => $request->kuota_total,
+            'banner'       => $bannerPath,
+        ]);
+
+        return redirect('/promo_owner')->with('success', 'Promo berhasil diperbarui.');
     }
 }

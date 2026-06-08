@@ -28,7 +28,7 @@
         <div class="flex justify-between items-start mb-6">
           <div>
             <h1 class="unbound text-3xl text-white font-bold">PROMO</h1>
-            <p class="text-white/80 mt-1 text-sm">Kelola tempat makan anda</p>
+            <p class="text-white/80 mt-1 text-sm">Kelola diskon / promo tempat makan anda</p>
           </div>
           <a href="/tambah_promo"
             class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 transition text-gray-800 font-semibold px-5 py-2.5 rounded-xl text-sm shadow">
@@ -80,7 +80,7 @@
 
             @forelse($promos ?? [] as $promo)
             @php
-              $isAktif = \Carbon\Carbon::parse($promo->berlaku_sampai)->isFuture();
+              $isAktif = $promo->status === 'active' && \Carbon\Carbon::parse($promo->end_date)->isFuture();
               $persen = ($promo->kuota_total > 0)
                 ? round(($promo->kuota_terpakai / $promo->kuota_total) * 100)
                 : 0;
@@ -106,9 +106,9 @@
 
               <!-- Info -->
               <div class="p-4">
-                <h4 class="font-semibold text-gray-800 text-sm mb-0.5">{{ $promo->nama }}</h4>
+                <h4 class="font-semibold text-gray-800 text-sm mb-0.5">{{ $promo->title }}</h4>
                 <p class="text-xs text-gray-400 mb-1">
-                  Berlaku Sampai {{ \Carbon\Carbon::parse($promo->berlaku_sampai)->translatedFormat('j F Y') }}
+                  Berlaku Sampai {{ \Carbon\Carbon::parse($promo->end_date)->translatedFormat('j F Y') }}
                 </p>
                 <p class="text-xs text-gray-400 mb-3">
                   Digunakan {{ $promo->kuota_terpakai ?? 0 }} dari {{ $promo->kuota_total ?? 0 }} kuota
@@ -121,18 +121,18 @@
 
                 <!-- Action buttons -->
                 <div class="flex gap-2">
-                  <a href="/promo/{{ $promo->id }}/edit"
+                  <a href="/tambah_promo/{{ $promo->id }}/edit"
                     class="flex-1 text-center text-xs font-semibold py-1.5 rounded-lg bg-yellow-400 text-gray-800 hover:bg-yellow-300 transition">
                     Edit
                   </a>
-                  <form action="/promo/{{ $promo->id }}" method="GET" class="flex-1">
+                  <form action="/promo_owner/{{ $promo->id }}/nonaktifkan" method="POST" class="flex-1">
                     @csrf @method('PATCH')
                     <button type="submit"
                       class="w-full text-xs font-semibold py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
                       Nonaktifkan
                     </button>
                   </form>
-                  <form action="/promo/{{ $promo->id }}" method="POST" onsubmit="return confirm('Hapus promo ini?')">
+                  <form action="/promo_owner/{{ $promo->id }}" method="POST" onsubmit="return confirm('Hapus promo ini?')">
                     @csrf @method('DELETE')
                     <button type="submit"
                       class="text-xs font-semibold py-1.5 px-3 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition">

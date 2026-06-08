@@ -136,9 +136,7 @@
               <div>
                 <p class="text-xs text-gray-400 mb-1">Meja</p>
                 <p class="font-semibold text-sm text-gray-800">
-                  <p class="font-semibold text-sm text-gray-800">
-                    {{ $item->tableData?->table_number ?? '-' }} · {{ $item->tableData?->capacity ?? '-' }} kursi
-                  </p>
+                  {{ $item->tableData?->table_number ?? '-' }} · {{ $item->tableData?->capacity ?? '-' }} kursi
                 </p>
               </div>
             </div>
@@ -153,7 +151,7 @@
                   Tolak
                 </button>
               </form>
-              <form action="/konfirmasi_book/{{ $item->id }}/terima" method="POST">
+              <form action="/konfirmasi_book/{{ $item->id }}/konfirmasi" method="POST">
                 @csrf @method('PATCH')
                 <button type="submit"
                   class="px-6 py-2 rounded-full bg-green-500 text-white font-semibold text-sm hover:bg-green-600 transition">

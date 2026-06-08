@@ -14,11 +14,14 @@ class StorePromoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'       => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'discount'    => 'nullable|numeric|min:0|max:100',
-            'start_date'  => 'required|date',
-            'end_date'    => 'required|date|after_or_equal:start_date',
+            'title'        => 'required|string|max:255',
+            'description'  => 'nullable|string',
+            'discount'     => 'nullable|numeric|min:0|max:100',
+            'start_date'   => 'required|date',
+            'end_date'     => 'required|date|after_or_equal:start_date',
+            'minimal_tamu' => 'nullable|integer|min:1',
+            'kuota_total'  => 'nullable|integer|min:1',
+            'banner'       => 'nullable|image|max:2048',
         ];
     }
 }

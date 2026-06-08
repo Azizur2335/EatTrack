@@ -41,10 +41,20 @@
 
         <!-- FORM CARD -->
         <div class="bg-white rounded-3xl p-8">
-          <h2 class="unbound text-xl font-bold text-[#C52F0F] mb-6">Tambah Promo</h2>
+          <h2 class="unbound text-xl font-bold text-[#C52F0F] mb-6">{{ isset($promo) ? 'Edit Promo' : 'Tambah Promo' }}</h2>
 
-          <form action="/promo_owner" method="POST" enctype="multipart/form-data">
+          <form action="{{ isset($promo) ? '/promo_owner/'.$promo->id : '/promo_owner' }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @isset($promo) @method('PATCH') @endisset
+            @if($errors->any())
+            <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-5">
+                <ul class="text-sm text-red-600 list-disc list-inside">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
 
             <!-- Baris 1: Nama Promo + Jenis Promo -->
             <div class="grid grid-cols-2 gap-5 mb-5">
@@ -54,7 +64,7 @@
                   type="text"
                   name="title"
                   required
-                  value="{{ old('nama') }}"
+                  value="{{ old('title', $promo->title ?? '') }}"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition"
                   placeholder="Nama promo...">
                 @error('nama')
@@ -90,7 +100,7 @@
                 <input
                   type="text"
                   name="discount"
-                  value="{{ old('nilai_promo') }}"
+                  value="{{ old('discount', $promo->discount ?? '') }}"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition"
                   placeholder="Misal: 20%">
                 @error('nilai_promo')
@@ -103,7 +113,7 @@
                   type="date"
                   name="start_date"
                   required
-                  value="{{ old('berlaku_mulai') }}"
+                  value="{{ old('start_date', isset($promo) ? $promo->start_date : '') }}"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition">
                 @error('berlaku_mulai')
                   <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -115,7 +125,7 @@
                   type="date"
                   name="end_date"
                   required
-                  value="{{ old('berlaku_sampai') }}"
+                  value="{{ old('end_date', isset($promo) ? $promo->end_date : '') }}"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition">
                 @error('berlaku_sampai')
                   <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -131,7 +141,7 @@
                   type="number"
                   name="minimal_tamu"
                   min="1"
-                  value="{{ old('minimal_tamu') }}"
+                  value="{{ old('minimal_tamu', $promo->minimal_tamu ?? '') }}"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition"
                   placeholder="Misal: 2">
                 @error('minimal_tamu')
@@ -144,8 +154,7 @@
                   type="number"
                   name="kuota_total"
                   min="1"
-                  required
-                  value="{{ old('kuota_total') }}"
+                  value="{{ old('kuota_total', $promo->kuota_total ?? '') }}"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition"
                   placeholder="Misal: 100">
                 @error('kuota_total')
@@ -161,7 +170,7 @@
                 name="description"
                 rows="4"
                 class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition resize-none"
-                placeholder="Deskripsi singkat promo...">{{ old('deskripsi') }}</textarea>
+                placeholder="Deskripsi singkat promo...">>{{ old('description', $promo->description ?? '') }}</textarea></textarea>
               @error('deskripsi')
                 <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
               @enderror
@@ -184,7 +193,7 @@
 
             <!-- Tombol Aksi -->
             <div class="flex gap-4">
-              <a href="/promo"
+              <a href="../../promo_owner"
                 class="flex-1 text-center py-3.5 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition">
                 Batal
               </a>

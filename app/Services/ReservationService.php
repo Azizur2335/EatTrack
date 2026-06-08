@@ -23,12 +23,12 @@ class ReservationService
     public function confirm(Reservation $reservation): void
     {
         $reservation->update(['status' => 'confirmed']);
-        $reservation->table->update(['status' => 'reserved']);
+        $reservation->tableData->update(['status' => 'reserved']);
     }
 
     public function cancel(Reservation $reservation): void
     {
         $reservation->update(['status' => 'cancelled']);
-        $reservation->table->update(['status' => 'available']);
+        $reservation->tableData->update(['status' => 'available']);
     }
 }

@@ -63,6 +63,10 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::patch('/konfirmasi_book/{id}/konfirmasi', [OwnerController::class, 'konfirmasiReservasi']);
     Route::patch('/konfirmasi_book/{id}/tolak', [OwnerController::class, 'tolakReservasi']);
     Route::post('/promo_owner', [OwnerController::class, 'storePromo']);
+    Route::get('/tambah_promo/{id}/edit', [OwnerController::class, 'editPromo']);
+    Route::patch('/promo_owner/{id}', [OwnerController::class, 'updatePromo']);
+    Route::patch('/promo_owner/{id}/nonaktifkan', [OwnerController::class, 'nonaktifkanPromo']);
+    Route::delete('/promo_owner/{id}', [OwnerController::class, 'destroyPromo']);
     Route::post('/profil_owner', [OwnerController::class, 'updateProfil']);
 });
 

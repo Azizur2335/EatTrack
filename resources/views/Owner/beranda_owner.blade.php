@@ -68,7 +68,7 @@
           <div class="bg-white rounded-3xl p-5">
             <p class="text-sm text-gray-500">Menunggu Konfirmasi</p>
             <h2 class="text-3xl font-bold mt-2">{{ $menungguKonfirmasi ?? '0' }}</h2>
-            <p class="text-xs text-green-600 mt-2">+50 pengguna minggu ini</p>
+            <p class="text-xs text-gray-400 mt-2">Menunggu {{ $periode }}</p>
           </div>
         </div>
 
@@ -84,7 +84,7 @@
               <div class="flex items-center gap-3">
                 <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#D9D9D9]">
                   @if($item->user?->avatar)
-                    <img src="{{ asset('storage/' . $item->user->avatar) }}" class="w-full h-full object-cover" alt="Avatar">
+                    <img src="{{ asset('storage/' . $item->customer->avatar) }}" class="w-full h-full object-cover" alt="Avatar">
                   @else
                     <div class="w-full h-full bg-[#D9D9D9] flex items-center justify-center">
                       <svg class="w-6 h-6 text-[#999]" fill="currentColor" viewBox="0 0 24 24">
@@ -94,15 +94,24 @@
                   @endif
                 </div>
                 <div>
-                  <h4 class="font-medium">{{ $item->user?->name ?? 'Pengguna' }}</h4>
-                  <p class="text-sm text-gray-500">{{ $item->jumlah_meja }} Meja</p>
+                  <h4 class="font-medium">{{ $item->customer?->name ?? 'Pengguna' }}</h4>
+                  <p class="text-sm text-gray-500">{{ $item->tableData?->table_number ?? 'Meja' }} · {{ $item->date }}</p>
                 </div>
               </div>
               <div class="flex items-center gap-4">
-                <span class="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-xs">
+                @php
+                  $sc = match($item->status) {
+                    'pending'   => 'bg-yellow-100 text-yellow-600',
+                    'confirmed' => 'bg-green-100 text-green-600',
+                    'cancelled' => 'bg-red-100 text-red-500',
+                    'completed' => 'bg-blue-100 text-blue-500',
+                    default     => 'bg-gray-100 text-gray-500',
+                  };
+                @endphp
+                <span class="{{ $sc }} px-3 py-1 rounded-full text-xs">
                   {{ ucfirst($item->status) }}
                 </span>
-                <a href="/konfirmasiBook/{{ $item->id }}" class="font-semibold text-sm">Lihat</a>
+                <a href="/konfirmasi_book/{{ $item->id }}" class="font-semibold text-sm">Lihat</a>
               </div>
             </div>
             @empty
