@@ -109,7 +109,16 @@
                         Data Restoran
                     </h2>
 
+                    @if(session('success'))
+                        <div class="mb-4 px-4 py-3 bg-green-100 text-green-700 rounded-lg text-sm">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     @if($restaurant)
+                    <form action="/profil_owner" method="POST" enctype="multipart/form-data" id="restoForm">
+                        @csrf
+                        @method('PUT')
 
                         <div class="grid grid-cols-2 gap-5">
 
@@ -117,6 +126,7 @@
                                 <label class="font-semibold text-sm">Nama Restoran</label>
                                 <input
                                     type="text"
+                                    name="name"
                                     value="{{ $restaurant->name }}"
                                     class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
                                     readonly>
@@ -126,6 +136,7 @@
                                 <label class="font-semibold text-sm">Kategori</label>
                                 <input
                                     type="text"
+                                    name="category"
                                     value="{{ $restaurant->category }}"
                                     class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
                                     readonly>
@@ -135,6 +146,7 @@
                                 <label class="font-semibold text-sm">Kota / Kecamatan</label>
                                 <input
                                     type="text"
+                                    name="city"
                                     value="{{ $restaurant->city }}"
                                     class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
                                     readonly>
@@ -144,6 +156,7 @@
                                 <label class="font-semibold text-sm">Jam Buka</label>
                                 <input
                                     type="text"
+                                    name="open_time"
                                     value="{{ $restaurant->open_time }}"
                                     class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
                                     readonly>
@@ -153,6 +166,7 @@
                                 <label class="font-semibold text-sm">Jam Tutup</label>
                                 <input
                                     type="text"
+                                    name="close_time"
                                     value="{{ $restaurant->close_time }}"
                                     class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
                                     readonly>
@@ -166,6 +180,7 @@
                             </label>
 
                             <textarea
+                                name="address"
                                 class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
                                 rows="3"
                                 readonly>{{ $restaurant->address }}</textarea>
@@ -177,6 +192,7 @@
                             </label>
 
                             <textarea
+                                name="description"
                                 class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
                                 rows="4"
                                 readonly>{{ $restaurant->description }}</textarea>
@@ -186,13 +202,31 @@
                             <label class="font-semibold text-sm">
                                 Link Google Maps
                             </label>
-
                             <input
                                 type="text"
+                                name="maps_link"
                                 value="{{ $restaurant->maps_link }}"
                                 class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
                                 readonly>
+                            @if($restaurant->latitude && $restaurant->longitude)
+                                <p class="text-xs text-green-600 mt-1">✓ Koordinat tersimpan: {{ $restaurant->latitude }}, {{ $restaurant->longitude }}</p>
+                            @else
+                                <p class="text-xs text-red-400 mt-1">⚠ Koordinat belum tersimpan. Klik Edit Profil lalu Simpan untuk mengisi otomatis dari link maps.</p>
+                            @endif
                         </div>
+
+                        <div class="flex justify-end gap-3 mt-6 resto-action-buttons hidden">
+                            <button type="button" id="cancelRestoBtn"
+                                class="px-6 py-3 border-2 border-red-600 text-red-600 rounded-lg hover:bg-red-50">
+                                Batal
+                            </button>
+                            <button type="submit"
+                                class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                                Simpan Perubahan
+                            </button>
+                        </div>
+
+                    </form>
 
                     @else
 
@@ -240,20 +274,31 @@
 	const actionButtons = document.getElementById('actionButtons');
 
 	editBtn.addEventListener('click', () => {
+        inputs.forEach(input => {
+            input.removeAttribute('readonly');
+            input.classList.remove('bg-gray-100');
+            input.classList.add('bg-white');
+        });
 
-		inputs.forEach(input => {
-			input.removeAttribute('readonly');
-			input.classList.remove('bg-gray-100');
-			input.classList.add('bg-white');
-		});
+        actionButtons.classList.remove('hidden');
+        actionButtons.classList.add('flex');
 
-		actionButtons.classList.remove('hidden');
-		actionButtons.classList.add('flex');
+        // Aktifkan juga form restoran
+        document.querySelectorAll('.resto-action-buttons').forEach(el => {
+            el.classList.remove('hidden');
+        });
 
-		editBtn.classList.add('hidden');
-	});
+        editBtn.classList.add('hidden');
+    });
 
-	cancelBtn.addEventListener('click', () => {
-		location.reload();
-	});
+    cancelBtn.addEventListener('click', () => {
+        location.reload();
+    });
+
+    const cancelRestoBtn = document.getElementById('cancelRestoBtn');
+    if (cancelRestoBtn) {
+        cancelRestoBtn.addEventListener('click', () => {
+            location.reload();
+        });
+    }
 </script>

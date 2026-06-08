@@ -50,6 +50,8 @@ class DatabaseSeeder extends Seeder
             'open_time'   => '08:00',
             'close_time'  => '22:00',
             'status'      => 'active',
+            'latitude'    => -8.5855,
+            'longitude'   => 116.1014,
         ]);
 
         // Tables

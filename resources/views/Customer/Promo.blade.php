@@ -25,46 +25,27 @@
 				</h2>
 
 				<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-					<!-- CARD 1 -->
-					<div class="flex gap-8 w-max py-4 ">
-
-					<div class="shadow-xl w-85 min-w-85 bg-white rounded-xl overflow-hidden">
-						<div class="h-[180px] overflow-hidden">
-								<img
-									src="img/gambar_1.jpg"
-									alt=""
-									class="w-full h-full object-cover"
-								>
-							</div>
-
-							<!-- Isi Card -->
-							<div class="p-6">
-								<span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">
-									Aktif
-								</span>
-
-								<h3 class="font-bold text-xl mt-3 text-black">
-									Weekend Flash Sale
-								</h3>
-
-								<p class="text-gray-500 mt-2">
-									Berlaku sampai 3 Oktober 2026
-								</p>
-								<div class="mt-2 text-gray-500">
-									Kuota terbatas
-								</div>
-								<div class="flex justify-end mt-4 gap-2">
-									<button onclick="openModal()" class="px-4 py-2 rounded-xl bg-gray-200 hover:bg-yellow-500">
-										Detail
-									</button>
-									<button class="px-4 py-2 rounded-xl bg-yellow-400 hover:bg-yellow-500">
-										Klaim
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @forelse($promos as $promo)
+                        <div class="shadow-xl bg-white rounded-xl overflow-hidden">
+                            <div class="h-[180px] bg-gray-200 flex items-center justify-center overflow-hidden">
+                                <span class="text-gray-400 text-sm">{{ $promo->restaurant->name ?? 'Restoran' }}</span>
+                            </div>
+                            <div class="p-6">
+                                <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">Aktif</span>
+                                <h3 class="font-bold text-xl mt-3 text-black">{{ $promo->title }}</h3>
+                                <p class="text-gray-500 mt-2">Berlaku sampai {{ \Carbon\Carbon::parse($promo->end_date)->translatedFormat('d F Y') }}</p>
+                                <div class="mt-2 text-gray-500">Diskon {{ $promo->discount }}%</div>
+                                <div class="flex justify-end mt-4 gap-2">
+                                    <button onclick="openModal({{ $promo->id }})" class="px-4 py-2 rounded-xl bg-gray-200 hover:bg-yellow-500">Detail</button>
+                                    <button class="px-4 py-2 rounded-xl bg-yellow-400 hover:bg-yellow-500">Klaim</button>
+                                </div>
+                            </div>
+                        </div>
+                        @empty
+                        <div class="col-span-3 text-center py-12 text-gray-400">Belum ada promo aktif saat ini.</div>
+                        @endforelse
+                    </div>
 				</div>
 			</div>
 		</div>
@@ -101,92 +82,44 @@
 
         </section>
 	</div>
-    <div
-        id="modal"
-        class="hidden fixed inset-0 bg-black/50 flex justify-center items-center">
-
-        <div class="bg-white p-6 rounded-xl shadow-lg w-[550px]">
-            <h2 class="text-2xl font-bold mb-5">Detail Promo</h2>
-
-            <div class="space-y-3 text-sm">
-
-                <div class="grid grid-cols-[180px_20px_1fr]">
-                    <span class="font-medium">Nama Promo</span>
-                    <span>:</span>
-                    <span>Weekend Flash Sale</span>
-                </div>
-
-                <div class="grid grid-cols-[180px_20px_1fr]">
-                    <span class="font-medium">Jenis Promo</span>
-                    <span>:</span>
-                    <span>Diskon Persentase</span>
-                </div>
-
-                <div class="grid grid-cols-[180px_20px_1fr]">
-                    <span class="font-medium">Nilai Promo</span>
-                    <span>:</span>
-                    <span>20%</span>
-                </div>
-
-                <div class="grid grid-cols-[180px_20px_1fr]">
-                    <span class="font-medium">Berlaku Mulai</span>
-                    <span>:</span>
-                    <span>1 Oktober 2026</span>
-                </div>
-
-                <div class="grid grid-cols-[180px_20px_1fr]">
-                    <span class="font-medium">Berlaku Sampai</span>
-                    <span>:</span>
-                    <span>31 Oktober 2026</span>
-                </div>
-
-                <div class="grid grid-cols-[180px_20px_1fr]">
-                    <span class="font-medium">Minimal Tamu</span>
-                    <span>:</span>
-                    <span>2 Orang</span>
-                </div>
-
-                <div class="grid grid-cols-[180px_20px_1fr]">
-                    <span class="font-medium">Kuota Total</span>
-                    <span>:</span>
-                    <span>100 Voucher</span>
-                </div>
-
-                <div class="grid grid-cols-[180px_20px_1fr]">
-                    <span class="font-medium">Sisa Kuota</span>
-                    <span>:</span>
-                    <span>78 Voucher</span>
-                </div>
-
-                <div class="grid grid-cols-[180px_20px_1fr] items-start">
-                    <span class="font-medium">Deskripsi</span>
-                    <span>:</span>
-                    <span>
-                        Nikmati diskon 20% untuk seluruh menu makanan setiap akhir pekan.
-                        Promo berlaku untuk minimal 2 tamu dan tidak dapat digabung
-                        dengan promo lainnya.
-                    </span>
-                </div>
-
+    @foreach($promos as $promo)
+<div id="modal-{{ $promo->id }}" class="hidden fixed inset-0 bg-black/50 flex justify-center items-center" style="z-index:9999">
+    <div class="bg-white p-6 rounded-xl shadow-lg w-[550px]">
+        <h2 class="text-2xl font-bold mb-5">Detail Promo</h2>
+        <div class="space-y-3 text-sm">
+            <div class="grid grid-cols-[180px_20px_1fr]">
+                <span class="font-medium">Nama Promo</span><span>:</span><span>{{ $promo->title }}</span>
             </div>
-
-            <div class="mt-6 flex justify-end">
-                <button
-                    onclick="closeModal()"
-                    class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-                    Tutup
-                </button>
+            <div class="grid grid-cols-[180px_20px_1fr]">
+                <span class="font-medium">Restoran</span><span>:</span><span>{{ $promo->restaurant->name ?? '-' }}</span>
+            </div>
+            <div class="grid grid-cols-[180px_20px_1fr]">
+                <span class="font-medium">Nilai Diskon</span><span>:</span><span>{{ $promo->discount }}%</span>
+            </div>
+            <div class="grid grid-cols-[180px_20px_1fr]">
+                <span class="font-medium">Berlaku Mulai</span><span>:</span><span>{{ \Carbon\Carbon::parse($promo->start_date)->translatedFormat('d F Y') }}</span>
+            </div>
+            <div class="grid grid-cols-[180px_20px_1fr]">
+                <span class="font-medium">Berlaku Sampai</span><span>:</span><span>{{ \Carbon\Carbon::parse($promo->end_date)->translatedFormat('d F Y') }}</span>
+            </div>
+            <div class="grid grid-cols-[180px_20px_1fr] items-start">
+                <span class="font-medium">Deskripsi</span><span>:</span><span>{{ $promo->description ?? '-' }}</span>
             </div>
         </div>
+        <div class="mt-6 flex justify-end">
+            <button onclick="closeModal({{ $promo->id }})" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Tutup</button>
+        </div>
     </div>
+</div>
+@endforeach
 
     <script>
-        function openModal() {
-            document.getElementById("modal").classList.remove("hidden");
+        function openModal(id) {
+            document.getElementById("modal-" + id).classList.remove("hidden");
         }
 
-        function closeModal() {
-            document.getElementById("modal").classList.add("hidden");
+        function closeModal(id) {
+            document.getElementById("modal-" + id).classList.add("hidden");
         }
     </script>
 

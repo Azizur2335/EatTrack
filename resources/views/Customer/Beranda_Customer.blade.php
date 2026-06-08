@@ -158,11 +158,11 @@
 
             {{-- Filter Pills --}}
             <div class="flex items-center gap-3 mt-5 flex-wrap">
-                <button class="filter-pill active-pill bg-[#F3D042] text-[#474747] font-bold text-[18px] px-6 py-3 rounded-full cursor-pointer" data-filter="semua">Semua</button>
-                <button class="filter-pill border-2 border-[#D9D9D9] text-white text-[18px] font-medium px-6 py-3 rounded-full cursor-pointer hover:bg-white/10 transition-colors" data-filter="terlaris">Terlaris</button>
-                <button class="filter-pill border-2 border-[#D9D9D9] text-white text-[18px] font-medium px-6 py-3 rounded-full cursor-pointer hover:bg-white/10 transition-colors" data-filter="buka">Buka Sekarang</button>
-                <button class="filter-pill border-2 border-[#D9D9D9] text-white text-[18px] font-medium px-6 py-3 rounded-full cursor-pointer hover:bg-white/10 transition-colors" data-filter="rating">Rating Tinggi</button>
-                <button class="filter-pill border-2 border-[#D9D9D9] text-white text-[18px] font-medium px-6 py-3 rounded-full cursor-pointer hover:bg-white/10 transition-colors" data-filter="terdekat">Terdekat</button>
+                <button class="filter-pill text-[18px] px-6 py-3 rounded-full cursor-pointer {{ ($filter ?? 'semua') === 'semua' ? 'bg-[#F3D042] text-[#474747] font-bold' : 'border-2 border-[#D9D9D9] text-white font-medium hover:bg-white/10' }}" data-filter="semua">Semua</button>
+                <button class="filter-pill text-[18px] px-6 py-3 rounded-full cursor-pointer transition-colors {{ ($filter ?? 'semua') === 'terlaris' ? 'bg-[#F3D042] text-[#474747] font-bold' : 'border-2 border-[#D9D9D9] text-white font-medium hover:bg-white/10' }}" data-filter="terlaris">Terlaris</button>
+                <button class="filter-pill text-[18px] px-6 py-3 rounded-full cursor-pointer transition-colors {{ ($filter ?? 'semua') === 'buka' ? 'bg-[#F3D042] text-[#474747] font-bold' : 'border-2 border-[#D9D9D9] text-white font-medium hover:bg-white/10' }}" data-filter="buka">Buka Sekarang</button>
+                <button class="filter-pill text-[18px] px-6 py-3 rounded-full cursor-pointer transition-colors {{ ($filter ?? 'semua') === 'rating' ? 'bg-[#F3D042] text-[#474747] font-bold' : 'border-2 border-[#D9D9D9] text-white font-medium hover:bg-white/10' }}" data-filter="rating">Rating Tinggi</button>
+                <button class="filter-pill text-[18px] px-6 py-3 rounded-full cursor-pointer transition-colors {{ ($filter ?? 'semua') === 'terdekat' ? 'bg-[#F3D042] text-[#474747] font-bold' : 'border-2 border-[#D9D9D9] text-white font-medium hover:bg-white/10' }}" data-filter="terdekat">Terdekat</button>
             </div>
 
         </div>
@@ -294,41 +294,25 @@
                     </p>
     
                     <div class="overflow-x-auto hide-scrollbar">
-                        <div class="flex gap-8 w-max py-4 ">
-
+                        <div class="flex gap-8 w-max py-4">
+                            @forelse($promos as $promo)
                             <div class="w-85 min-w-85 bg-white rounded-xl overflow-hidden">
-                            <div class="h-[180px] overflow-hidden">
-                                    <img
-                                        src="img/gambar_1.jpg"
-                                        alt=""
-                                        class="w-full h-full object-cover"
-                                    >
+                                <div class="h-[180px] bg-gray-200 flex items-center justify-center">
+                                    <span class="text-gray-400 text-sm">{{ $promo->restaurant->name ?? 'Restoran' }}</span>
                                 </div>
-
-                                <!-- Isi Card -->
                                 <div class="p-6">
-                                    <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">
-                                        Aktif
-                                    </span>
-
-                                    <h3 class="font-bold text-xl mt-3 text-black">
-                                        Weekend Flash Sale
-                                    </h3>
-
-                                    <p class="text-gray-500 mt-2">
-                                        Berlaku sampai 3 Oktober 2026
-                                    </p>
-                                    <div class="mt-2 text-gray-500">
-                                        Kuota terbatas
-                                    </div>
+                                    <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">Aktif</span>
+                                    <h3 class="font-bold text-xl mt-3 text-black">{{ $promo->title }}</h3>
+                                    <p class="text-gray-500 mt-2">Berlaku sampai {{ \Carbon\Carbon::parse($promo->end_date)->translatedFormat('d F Y') }}</p>
+                                    <div class="mt-2 text-gray-500">Diskon {{ $promo->discount }}%</div>
                                     <div class="flex justify-end mt-4">
-                                        <button class="px-4 py-2 rounded-xl bg-yellow-400 hover:bg-yellow-500">
-                                            Detail
-                                        </button>
+                                        <a href="/promo" class="px-4 py-2 rounded-xl bg-yellow-400 hover:bg-yellow-500">Detail</a>
                                     </div>
                                 </div>
-
                             </div>
+                            @empty
+                            <div class="text-white/70 text-sm py-4">Belum ada promo aktif saat ini.</div>
+                            @endforelse
                         </div>
                     </div>
 
@@ -357,29 +341,40 @@
 
         // ── Filter pills ──
         const pills = document.querySelectorAll('.filter-pill');
+        const currentFilter = new URLSearchParams(window.location.search).get('filter') || 'semua';
+
+        // Set active state pill berdasarkan URL saat ini
+        pills.forEach(b => {
+            if (b.dataset.filter === currentFilter) {
+                b.classList.add('bg-[#F3D042]', 'text-[#474747]', 'font-bold');
+                b.classList.remove('border-2', 'border-[#D9D9D9]', 'text-white', 'font-medium');
+            }
+        });
 
         pills.forEach(btn => {
             btn.addEventListener('click', function () {
-                // Reset semua pill
-                pills.forEach(b => {
-                    b.classList.remove('bg-[#F3D042]', 'text-[#474747]', 'font-bold', 'border-0');
-                    b.classList.add('border-2', 'border-[#D9D9D9]', 'text-white', 'font-medium');
-                });
-
-                // Aktifkan pill yang diklik
-                this.classList.add('bg-[#F3D042]', 'text-[#474747]', 'font-bold');
-                this.classList.remove('border-2', 'border-[#D9D9D9]', 'text-white', 'font-medium');
-
                 const filter = this.dataset.filter;
-                document.querySelectorAll('#restoGrid a[data-status]').forEach(card => {
-                    if (filter === 'semua') {
-                        card.style.display = 'block';
-                    } else if (filter === 'buka') {
-                        card.style.display = card.dataset.status === 'active' ? 'block' : 'none';
-                    } else {
-                        card.style.display = 'block'; // terlaris/rating/terdekat butuh backend
+
+                if (filter === 'terdekat') {
+                    // Ambil GPS dulu, baru redirect
+                    if (!navigator.geolocation) {
+                        alert('Browser kamu tidak mendukung GPS.');
+                        return;
                     }
-                });
+                    navigator.geolocation.getCurrentPosition(
+                        pos => {
+                            const lat = pos.coords.latitude;
+                            const lng = pos.coords.longitude;
+                            window.location.href = `/beranda?filter=terdekat&lat=${lat}&lng=${lng}`;
+                        },
+                        () => {
+                            alert('Izin lokasi ditolak. Filter terdekat tidak bisa digunakan.');
+                        }
+                    );
+                    return;
+                }
+
+                window.location.href = `/beranda?filter=${filter}`;
             });
         });
 

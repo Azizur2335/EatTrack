@@ -59,10 +59,10 @@
                     @forelse($restaurants as $restaurant)
                     <div
                         class="resto-card bg-[#F1F1F1] border border-[#737373] rounded-[21px] flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-200 transition"
-                        data-lat="{{ $restaurant->latitude ?? -8.583333 }}"
-                        data-lng="{{ $restaurant->longitude ?? 116.116667 }}"
+                        data-lat="{{ $restaurant->latitude ?? '' }}"
+                        data-lng="{{ $restaurant->longitude ?? '' }}"
                         data-id="{{ $restaurant->id }}"
-                        onclick="focusMarker({{ $restaurant->latitude ?? -8.583333 }}, {{ $restaurant->longitude ?? 116.116667 }}, '{{ addslashes($restaurant->name) }}')"
+                        onclick="focusMarker({{ $restaurant->latitude ?? 'null' }}, {{ $restaurant->longitude ?? 'null' }}, '{{ addslashes($restaurant->name) }}', {{ $restaurant->id }})"
                     >
                         {{-- Foto --}}
                         <div class="w-[72px] h-[72px] rounded-[10px] overflow-hidden flex-shrink-0 bg-gray-300">
@@ -133,7 +133,6 @@
     </div>
 
     <script>
-        // Init peta, center di Mataram
         const map = L.map('map').setView([-8.583333, 116.116667], 14);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -152,106 +151,145 @@
             popupAnchor: [1, -34],
         });
 
-        // Tambahkan marker untuk tiap restoran
+        // Fallback koordinat acak halus di sekitar Mataram berdasarkan ID
+        function getFallbackCoords(id) {
+            const seed = id * 9301 + 49297;
+            const offsetLat = ((seed % 1000) / 1000 - 0.5) * 0.04;
+            const offsetLng = (((seed * 7) % 1000) / 1000 - 0.5) * 0.04;
+            return {
+                lat: -8.583333 + offsetLat,
+                lng: 116.116667 + offsetLng
+            };
+        }
+
+        // Simpan semua marker agar bisa disaring
+        const markerMap = {};
+
         restaurants.forEach(function(resto) {
-            if (resto.latitude && resto.longitude) {
-                const marker = L.marker([resto.latitude, resto.longitude], { icon: redIcon })
-                    .addTo(map)
-                    .bindPopup(`
-                        <div style="min-width:200px">
-                            <b style="font-size:14px">${resto.name}</b><br>
-                            <span style="font-size:12px;color:#737373">${resto.description ?? ''}</span><br>
-                            <span style="font-size:12px">${resto.status === 'active' ? '🟢 Buka' : '🔴 Tutup'}</span>
-                            <br><br>
-                            <a href="/katalog/${resto.id}" style="background:#B92C10;color:white;padding:6px 12px;border-radius:8px;text-decoration:none;font-size:13px">
-                                Lihat Menu & Booking
-                            </a>
-                        </div>
-                    `);
+            let lat = parseFloat(resto.latitude);
+            let lng = parseFloat(resto.longitude);
+
+            if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
+                const fallback = getFallbackCoords(resto.id);
+                lat = fallback.lat;
+                lng = fallback.lng;
+            }
+
+            const marker = L.marker([lat, lng], { icon: redIcon })
+                .addTo(map)
+                .bindPopup(`
+                    <div style="min-width:200px">
+                        <b style="font-size:14px">${resto.name}</b><br>
+                        <span style="font-size:12px;color:#737373">${resto.address ?? ''}</span><br>
+                        <span style="font-size:12px">${resto.status === 'active' ? '🟢 Buka' : '🔴 Tutup'}</span>
+                        <br><br>
+                        <a href="/katalog/${resto.id}" style="background:#B92C10;color:white;padding:6px 12px;border-radius:8px;text-decoration:none;font-size:13px">
+                            Lihat Menu & Booking
+                        </a>
+                    </div>
+                `);
+
+            markerMap[resto.id] = { marker, lat, lng, data: resto };
+        });
+
+        // Fokus ke marker saat klik list
+        function focusMarker(lat, lng, name, id) {
+            const entry = markerMap[id];
+            if (entry) {
+                map.setView([entry.lat, entry.lng], 17);
+                entry.marker.openPopup();
+            }
+        }
+
+        // Pencarian cerdas: prioritas lokal dulu, fallback ke Nominatim
+        let geocodeTimer = null;
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const keyword = this.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.resto-card');
+            let matched = [];
+            let count = 0;
+
+            // Filter list & marker berdasarkan nama, kategori, alamat, kota
+            cards.forEach(function(card) {
+                const id = parseInt(card.dataset.id);
+                const entry = markerMap[id];
+                if (!entry) return;
+
+                const r = entry.data;
+                const searchable = [
+                    r.name, r.category, r.address, r.city, r.description
+                ].join(' ').toLowerCase();
+
+                if (!keyword || searchable.includes(keyword)) {
+                    card.style.display = 'flex';
+                    entry.marker.addTo(map);
+                    count++;
+                    matched.push(entry);
+                } else {
+                    card.style.display = 'none';
+                    map.removeLayer(entry.marker);
+                }
+            });
+
+            document.getElementById('jumlahResto').textContent = count;
+
+            // Auto-focus ke restoran pertama yang cocok
+            if (keyword && matched.length > 0) {
+                map.setView([matched[0].lat, matched[0].lng], 16);
+                matched[0].marker.openPopup();
+                return; // tidak perlu geocode eksternal
+            }
+
+            // Kalau tidak ada match lokal, cari via Nominatim
+            if (keyword && matched.length === 0 && keyword.length >= 3) {
+                clearTimeout(geocodeTimer);
+                geocodeTimer = setTimeout(() => {
+                    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(keyword)}&format=json&limit=1`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data && data.length > 0) {
+                                const place = data[0];
+                                const bbox = place.boundingbox;
+                                map.fitBounds([
+                                    [parseFloat(bbox[0]), parseFloat(bbox[2])],
+                                    [parseFloat(bbox[1]), parseFloat(bbox[3])]
+                                ]);
+                            }
+                        })
+                        .catch(err => console.error('Geocode error:', err));
+                }, 600);
+            }
+
+            // Reset view kalau search dikosongkan
+            if (!keyword) {
+                map.setView([-8.583333, 116.116667], 14);
             }
         });
 
-        // Fungsi focus ke marker saat klik list
-        function focusMarker(lat, lng, name) {
-            map.setView([lat, lng], 16);
+        // Toggle panel kiri
+        let panelOpen = true;
+
+        function togglePanel() {
+            const panel = document.getElementById('panelKiri');
+            const btn = document.getElementById('toggleBtn');
+            const arrow = document.getElementById('arrowIcon');
+
+            if (panelOpen) {
+                panel.style.width = '0';
+                panel.style.overflow = 'hidden';
+                btn.style.left = '0';
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                panel.style.width = '25%';
+                panel.style.overflow = '';
+                btn.style.left = '25%';
+                arrow.style.transform = 'rotate(0deg)';
+            }
+
+            panelOpen = !panelOpen;
+            setTimeout(() => { map.invalidateSize(); }, 310);
         }
-
-        // Search filter
-        document.getElementById('searchInput').addEventListener('input', function() {
-            const keyword = this.value.toLowerCase();
-            const cards = document.querySelectorAll('.resto-card');
-            let count = 0;
-            cards.forEach(function(card) {
-                const name = card.querySelector('h3').textContent.toLowerCase();
-                if (name.includes(keyword)) {
-                    card.style.display = 'flex';
-                    count++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            document.getElementById('jumlahResto').textContent = count;
-        });
-		let panelOpen = true;
-
-		function togglePanel() {
-			const panel = document.getElementById('panelKiri');
-			const btn = document.getElementById('toggleBtn');
-			const arrow = document.getElementById('arrowIcon');
-
-			if (panelOpen) {
-				// Tutup panel
-				panel.style.width = '0';
-				panel.style.overflow = 'hidden';
-				btn.style.left = '0';
-				arrow.style.transform = 'rotate(180deg)';
-			} else {
-				// Buka panel
-				panel.style.width = '25%';
-				panel.style.overflow = '';
-				btn.style.left = '25%';
-				arrow.style.transform = 'rotate(0deg)';
-			}
-
-			panelOpen = !panelOpen;
-
-			// Refresh peta biar tidak glitch
-			setTimeout(() => { map.invalidateSize(); }, 310);
-		}
-
-		// Debounce geocoding saat ketik di search
-		let geocodeTimer = null;
-
-		document.getElementById('searchInput').addEventListener('input', function() {
-			const keyword = this.value.toLowerCase();
-
-			// ... kode search filter yang udah ada ...
-
-			// Geocoding: kalau keyword >= 3 karakter
-			clearTimeout(geocodeTimer);
-			if (this.value.trim().length >= 3) {
-				geocodeTimer = setTimeout(() => {
-					geocodeAndFit(this.value.trim());
-				}, 600); // tunggu 600ms setelah berhenti ngetik
-			}
-		});
-
-		function geocodeAndFit(query) {
-			fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`)
-				.then(res => res.json())
-				.then(data => {
-					if (data && data.length > 0) {
-						const place = data[0];
-						const bbox = place.boundingbox;
-						// boundingbox: [south, north, west, east]
-						map.fitBounds([
-							[parseFloat(bbox[0]), parseFloat(bbox[2])],
-							[parseFloat(bbox[1]), parseFloat(bbox[3])]
-						]);
-					}
-				})
-				.catch(err => console.error('Geocode error:', err));
-		}
     </script>
 
 </body>

@@ -220,6 +220,7 @@ class OwnerController extends Controller
 
     public function updateProfil(Request $request)
     {
+        dd($request->maps_link, $request->name, $request->address);
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
 
         $request->validate([
@@ -240,6 +241,18 @@ class OwnerController extends Controller
             $imagePath = $request->file('image')->store('restaurants', 'public');
         }
 
+        $latitude = $restaurant->latitude;
+        $longitude = $restaurant->longitude;
+        if ($request->maps_link) {
+            if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $request->maps_link, $m)) {
+                $latitude = $m[1]; $longitude = $m[2];
+            } elseif (preg_match('/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/', $request->maps_link, $m)) {
+                $latitude = $m[1]; $longitude = $m[2];
+            } elseif (preg_match('/ll=(-?\d+\.\d+),(-?\d+\.\d+)/', $request->maps_link, $m)) {
+                $latitude = $m[1]; $longitude = $m[2];
+            }
+        }
+
         $restaurant->update([
             'name'        => $request->name,
             'address'     => $request->address,
@@ -251,6 +264,8 @@ class OwnerController extends Controller
             'close_time'  => $request->close_time,
             'maps_link'   => $request->maps_link,
             'image'       => $imagePath,
+            'latitude'    => $latitude,
+            'longitude'   => $longitude,
         ]);
 
         return redirect('/profil_owner')->with('success', 'Profil restoran berhasil diperbarui.');

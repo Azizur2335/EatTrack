@@ -135,6 +135,22 @@ class AuthController extends Controller
             $imagePath = $request->file('image')->store('restaurants', 'public');
         }
 
+        $latitude = null;
+        $longitude = null;
+        if ($request->maps_link) {
+            if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $request->maps_link, $m)) {
+                $latitude  = $m[1];
+                $longitude = $m[2];
+            }
+            elseif (preg_match('/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/', $request->maps_link, $m)) {
+                $latitude  = $m[1];
+                $longitude = $m[2];
+            }
+            elseif (preg_match('/ll=(-?\d+\.\d+),(-?\d+\.\d+)/', $request->maps_link, $m)) {
+                $latitude  = $m[1];
+                $longitude = $m[2];
+            }
+        }
         $restaurant = Restaurant::create([
             'owner_id'    => $user->id,
             'name'        => $request->restaurant_name,
@@ -144,6 +160,8 @@ class AuthController extends Controller
             'phone'       => $request->phone,
             'category'    => $request->category,
             'maps_link'   => $request->maps_link,
+            'latitude'    => $latitude,
+            'longitude'   => $longitude,
             'open_time'   => $request->open_time,
             'close_time'  => $request->close_time,
             'image'       => $imagePath,

@@ -18,12 +18,40 @@ class CustomerController extends Controller
         $this->reservationService = $reservationService;
     }
 
-    public function beranda()
+    public function beranda(Request $request)
     {
-        $restaurants = Restaurant::where('status', 'active')
-            ->with('menus')
+        $filter = $request->query('filter', 'semua');
+        $now = now()->format('H:i:s');
+
+        $query = Restaurant::where('status', 'active')->with('menus');
+
+        if ($filter === 'terlaris') {
+            $query->withCount('reservations')->orderByDesc('reservations_count');
+        } elseif ($filter === 'buka') {
+            $query->where('open_time', '<=', $now)->where('close_time', '>=', $now);
+        } elseif ($filter === 'rating') {
+            $query->withCount('menus')->orderByDesc('menus_count');
+        }
+
+        $restaurants = $query->get();
+
+        if ($filter === 'terdekat' && $request->filled('lat') && $request->filled('lng')) {
+            $userLat = (float) $request->query('lat');
+            $userLng = (float) $request->query('lng');
+            $restaurants = $restaurants->sortBy(function ($r) use ($userLat, $userLng) {
+                $lat = $r->latitude ?? -8.583333;
+                $lng = $r->longitude ?? 116.116667;
+                return sqrt(pow($lat - $userLat, 2) + pow($lng - $userLng, 2));
+            })->values();
+        }
+
+        $promos = \App\Models\Promo::where('status', 'active')
+            ->where('end_date', '>=', now())
+            ->with('restaurant')
+            ->latest()
+            ->take(5)
             ->get();
-        return view('Customer/Beranda_Customer', compact('restaurants'));
+        return view('Customer/Beranda_Customer', compact('restaurants', 'promos', 'filter'));
     }
 
     public function map()
@@ -43,8 +71,12 @@ class CustomerController extends Controller
 
     public function promo()
     {
-        $reservations = Reservation::where('customer_id', auth()->id())->latest()->get();
-        return view('Customer/Promo', compact('reservations'));
+        $promos = \App\Models\Promo::where('status', 'active')
+            ->where('end_date', '>=', now())
+            ->with('restaurant')
+            ->latest()
+            ->get();
+        return view('Customer/Promo', compact('promos'));
     }
     
     public function detail_resto(Request $request)
