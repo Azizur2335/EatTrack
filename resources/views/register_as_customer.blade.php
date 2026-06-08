@@ -40,7 +40,7 @@
 					<button
 						type="submit"
 						class="w-full py-3 rounded-lg bg-red-700 hover:bg-red-800 text-white font-bold text-base transition-colors"
-						>Login
+						>Daftar
 					</button>
 					<!-- Atau -->
 					<div class="flex items-center gap-3 my-4">
