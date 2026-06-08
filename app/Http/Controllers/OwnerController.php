@@ -229,8 +229,8 @@ class OwnerController extends Controller
             'phone'       => 'nullable|string|max:15',
             'description' => 'nullable|string',
             'category'    => 'required|string',
-            'open_time'   => 'nullable',
-            'close_time'  => 'nullable',
+            'open_time'   => 'nullable|date_format:H:i',
+            'close_time'  => 'nullable|date_format:H:i|after:open_time',
             'maps_link'   => 'nullable|string',
             'image'       => 'nullable|image|max:2048',
         ]);

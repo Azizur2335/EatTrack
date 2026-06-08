@@ -154,7 +154,7 @@
                             <div>
                                 <label class="font-semibold text-sm">Jam Buka</label>
                                 <input
-                                    type="text"
+                                    type="time"
                                     name="open_time"
                                     value="{{ $restaurant->open_time }}"
                                     class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
@@ -164,7 +164,7 @@
                             <div>
                                 <label class="font-semibold text-sm">Jam Tutup</label>
                                 <input
-                                    type="text"
+                                    type="time"
                                     name="close_time"
                                     value="{{ $restaurant->close_time }}"
                                     class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
