@@ -1,178 +1,117 @@
 <!doctype html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Laporan - EatTrack</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <style>
-		li{
-			font-family: "Unbounded", sans-serif;
-		}
-		.unbound{
-			font-family: "Unbounded", sans-serif;
-		}
-	</style>
-  </head>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <style> .unbound { font-family: "Unbounded", sans-serif; } body { font-family: "Inter", sans-serif; } </style>
+</head>
+<body class="bg-[#C52F0F] min-h-screen">
+<div class="flex min-h-screen">
+    <x-sidebar_admin></x-sidebar_admin>
 
-  <body class="bg-[#C52F0F] min-h-screen">
-    <div class="flex min-h-screen">
-
-      <!-- SIDEBAR -->
-      <div class="flex min-h-screen">
-		  <x-sidebar_admin></x-sidebar_admin>
-
-      <!-- CONTENT -->
-      <main class="flex-1 p-8">
-
+    <main class="flex-1 p-8">
         <!-- HEADER -->
         <div class="flex justify-between items-start mb-8">
-          <div>
-            <h1 class="unbound text-3xl text-white font-bold">Laporan Reservasi</h1>
-            <p class="text-white/80 mt-1 text-sm">Semua data reservasi dari seluruh restoran</p>
-          </div>
-
-          <!-- FILTER -->
-          <div class="relative">
-            <button id="filterBtn" class="flex items-center gap-2 bg-gray-100 px-5 py-2 rounded-lg text-gray-700 font-medium cursor-pointer outline-none hover:bg-gray-200 transition">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
-              </svg>
-              Filter
-            </button>
-
-            <!-- Dropdown filter -->
-            <div id="filterDropdown" class="hidden absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg z-10 overflow-hidden">
-              <a href="?status=semua" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('status','semua') == 'semua' ? 'bg-gray-100 font-semibold' : '' }}">Semua</a>
-              <a href="?status=menunggu" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('status') == 'menunggu' ? 'bg-gray-100 font-semibold' : '' }}">Menunggu</a>
-              <a href="?status=dikonfirmasi" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('status') == 'dikonfirmasi' ? 'bg-gray-100 font-semibold' : '' }}">Dikonfirmasi</a>
-              <a href="?status=ditolak" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('status') == 'ditolak' ? 'bg-gray-100 font-semibold' : '' }}">Ditolak</a>
-              <a href="?status=selesai" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ request('status') == 'selesai' ? 'bg-gray-100 font-semibold' : '' }}">Selesai</a>
+            <div>
+                <h1 class="unbound text-3xl text-white font-bold">Laporan Masuk</h1>
+                <p class="text-white/80 mt-1 text-sm">{{ $totalUnread }} belum dibaca · {{ $totalReports }} total</p>
             </div>
-          </div>
+            <!-- FILTER -->
+            <div class="flex gap-3">
+                <select onchange="window.location.href='?category='+this.value+'&status={{ request('status') }}'"
+                    class="bg-white px-4 py-2 rounded-lg text-sm text-gray-700 focus:outline-none">
+                    <option value="">Semua Kategori</option>
+                    <option value="bug"        {{ request('category') == 'bug'        ? 'selected' : '' }}>Bug</option>
+                    <option value="saran"      {{ request('category') == 'saran'      ? 'selected' : '' }}>Saran</option>
+                    <option value="keluhan"    {{ request('category') == 'keluhan'    ? 'selected' : '' }}>Keluhan</option>
+                    <option value="pertanyaan" {{ request('category') == 'pertanyaan' ? 'selected' : '' }}>Pertanyaan</option>
+                </select>
+                <select onchange="window.location.href='?category={{ request('category') }}&status='+this.value"
+                    class="bg-white px-4 py-2 rounded-lg text-sm text-gray-700 focus:outline-none">
+                    <option value="">Semua Status</option>
+                    <option value="belum_dibaca"    {{ request('status') == 'belum_dibaca'    ? 'selected' : '' }}>Belum Dibaca</option>
+                    <option value="dibaca"          {{ request('status') == 'dibaca'          ? 'selected' : '' }}>Dibaca</option>
+                    <option value="ditindaklanjuti" {{ request('status') == 'ditindaklanjuti' ? 'selected' : '' }}>Ditindaklanjuti</option>
+                    <option value="ditutup"         {{ request('status') == 'ditutup'         ? 'selected' : '' }}>Ditutup</option>
+                </select>
+            </div>
         </div>
 
-        <!-- DAFTAR BOOKING -->
-        <div class="bg-gray-100 rounded-3xl p-6 space-y-4">
+        @if(session('success'))
+        <div class="bg-green-100 text-green-700 px-4 py-3 rounded-xl mb-6">{{ session('success') }}</div>
+        @endif
 
-          @forelse($reservasi ?? [] as $item)
-          <div class="bg-white rounded-2xl p-5 shadow-sm">
-
-            <!-- Top row: nama + status -->
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full overflow-hidden bg-[#D9D9D9] flex-shrink-0">
-                  @if($item->user?->avatar)
-                    <img src="{{ asset('storage/' . $item->user->avatar) }}" class="w-full h-full object-cover" alt="Avatar">
-                  @else
-                    <div class="w-full h-full bg-[#D9D9D9] flex items-center justify-center">
-                      <svg class="w-5 h-5 text-[#999]" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-                      </svg>
+        <!-- LIST LAPORAN -->
+        <div class="space-y-4">
+            @forelse($reports as $report)
+            @php
+                $catColor = match($report->category) {
+                    'bug'        => 'bg-red-100 text-red-600',
+                    'keluhan'    => 'bg-orange-100 text-orange-600',
+                    'saran'      => 'bg-blue-100 text-blue-600',
+                    'pertanyaan' => 'bg-purple-100 text-purple-600',
+                    default      => 'bg-gray-100 text-gray-600',
+                };
+                $statColor = match($report->status) {
+                    'belum_dibaca'    => 'bg-gray-100 text-gray-500',
+                    'dibaca'          => 'bg-blue-100 text-blue-600',
+                    'ditindaklanjuti' => 'bg-yellow-100 text-yellow-600',
+                    'ditutup'         => 'bg-green-100 text-green-600',
+                    default           => 'bg-gray-100 text-gray-500',
+                };
+            @endphp
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+                <div class="flex items-start justify-between mb-3">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xs px-2 py-1 rounded-full font-medium {{ $catColor }}">{{ ucfirst($report->category) }}</span>
+                            <span class="text-xs px-2 py-1 rounded-full font-medium {{ $statColor }}">{{ ucfirst(str_replace('_', ' ', $report->status)) }}</span>
+                            <span class="text-xs text-gray-400">{{ $report->created_at->diffForHumans() }}</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800">{{ $report->title }}</h3>
+                        <p class="text-sm text-gray-500 mt-1">dari <strong>{{ $report->customer->name }}</strong> · {{ $report->customer->email }}</p>
                     </div>
-                  @endif
+                    @if($report->screenshot)
+                    <a href="{{ asset('storage/' . $report->screenshot) }}" target="_blank" class="text-xs text-blue-500 hover:underline">Lihat Screenshot</a>
+                    @endif
                 </div>
-                <div>
-                  <p class="font-semibold text-gray-800">{{ $item->customer?->name ?? 'Pengguna' }}</p>
-                  <p class="text-xs text-gray-400">{{ $item->customer?->email ?? '-' }}</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                @php
-                  $statusColor = match($item->status) {
-                    'pending'   => 'bg-yellow-100 text-yellow-600',
-                    'confirmed' => 'bg-green-100 text-green-600',
-                    'cancelled' => 'bg-red-100 text-red-500',
-                    'completed' => 'bg-blue-100 text-blue-500',
-                    default     => 'bg-gray-100 text-gray-500',
-                  };
-                @endphp
-                <span class="{{ $statusColor }} px-3 py-1 rounded-full text-xs font-medium capitalize">
-                  {{ ucfirst($item->status) }}
-                </span>
-                <!-- Ikon waktu -->
-                <div class="w-7 h-7 rounded-full bg-orange-100 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
+                <p class="text-sm text-gray-700 bg-gray-50 rounded-xl p-4 mb-4">{{ $report->message }}</p>
+                @if($report->reservation)
+                <p class="text-xs text-gray-400 mb-1">Reservasi: #{{ $report->reservation_id }} — {{ $report->reservation->restaurant->name ?? '-' }} {{ \Carbon\Carbon::parse($report->reservation->date)->format('d/m/Y') }}</p>
+                @endif
+                @if($report->restaurant)
+                <p class="text-xs text-gray-400 mb-3">Restoran: {{ $report->restaurant->name }}</p>
+                @endif
 
-            <!-- Detail row -->
-            <p class="text-xs text-gray-400 mb-3">{{ $item->restaurant->name ?? '-' }}</p>
-            <div class="grid grid-cols-4 gap-4 mb-5">
-              <div>
-                <p class="text-xs text-gray-400 flex items-center gap-1 mb-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                  </svg>
-                  Tanggal
-                </p>
-                <p class="font-semibold text-sm text-gray-800">
-                  {{ \Carbon\Carbon::parse($item->date)->format('j/n/Y') }}
-                </p>
-              </div>
-              <div>
-                <p class="text-xs text-gray-400 flex items-center gap-1 mb-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                  </svg>
-                  Waktu
-                </p>
-                <p class="font-semibold text-sm text-gray-800">
-                  {{ \Carbon\Carbon::parse($item->time)->format('H.i') }} WITA
-                </p>
-              </div>
-              <div>
-                <p class="text-xs text-gray-400 flex items-center gap-1 mb-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4H4a4 4 0 00-4 4v2h5"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M23 20v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
-                  </svg>
-                  Tamu
-                </p>
-                <p class="font-semibold text-sm text-gray-800">{{ $item->guest_count ?? 0 }} Orang</p>
-              </div>
-              <div>
-                <p class="text-xs text-gray-400 mb-1">Meja</p>
-                <p class="font-semibold text-sm text-gray-800">
-                  {{ $item->table->table_number ?? '-' }}
-                </p>
-              </div>
+                <!-- UPDATE STATUS -->
+                <form method="POST" action="/laporan/{{ $report->id }}/status" class="flex gap-3 items-end">
+                    @csrf @method('PATCH')
+                    <div class="flex-1">
+                        <label class="block text-xs text-gray-500 mb-1">Catatan Admin</label>
+                        <input type="text" name="admin_note" value="{{ $report->admin_note }}" placeholder="Tulis catatan..." class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-200">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Status</label>
+                        <select name="status" class="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none">
+                            <option value="belum_dibaca"    {{ $report->status == 'belum_dibaca'    ? 'selected' : '' }}>Belum Dibaca</option>
+                            <option value="dibaca"          {{ $report->status == 'dibaca'          ? 'selected' : '' }}>Dibaca</option>
+                            <option value="ditindaklanjuti" {{ $report->status == 'ditindaklanjuti' ? 'selected' : '' }}>Ditindaklanjuti</option>
+                            <option value="ditutup"         {{ $report->status == 'ditutup'         ? 'selected' : '' }}>Ditutup</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="px-4 py-2 bg-[#C52F0F] text-white rounded-lg text-sm font-semibold hover:bg-red-800 transition">Simpan</button>
+                </form>
             </div>
-          </div>
-          @empty
-          <div class="text-center py-16 text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-            </svg>
-            <p class="text-sm">Belum ada reservasi</p>
-          </div>
-          @endforelse
-
+            @empty
+            <div class="text-center py-16 text-white/60">
+                <p class="text-sm">Belum ada laporan masuk.</p>
+            </div>
+            @endforelse
         </div>
-
-      </main>
-    </div>
-
-    <script>
-      // Toggle filter dropdown
-      const filterBtn = document.getElementById('filterBtn');
-      const filterDropdown = document.getElementById('filterDropdown');
-      filterBtn.addEventListener('click', () => {
-        filterDropdown.classList.toggle('hidden');
-      });
-      document.addEventListener('click', (e) => {
-        if (!filterBtn.contains(e.target) && !filterDropdown.contains(e.target)) {
-          filterDropdown.classList.add('hidden');
-        }
-      });
-    </script>
-  </body>
+    </main>
+</div>
+</body>
 </html>

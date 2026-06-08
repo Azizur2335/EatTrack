@@ -44,6 +44,8 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/reservasi', [CustomerController::class, 'storeReservasi']);
     Route::get('/profile', [CustomerController::class, 'showProfile']);
     Route::delete('/reservasi/{id}', [CustomerController::class, 'cancelReservasi'])->name('reservasi.cancel');
+    Route::get('/laporan', [CustomerController::class, 'laporanPage'])->name('customer.laporan');
+    Route::post('/laporan', [CustomerController::class, 'storeLaporan']);
     Route::post('/promo/{id}/klaim', [CustomerController::class, 'klaimPromo'])->name('promo.klaim');
 });
 
@@ -72,6 +74,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::patch('/kelola_user/{id}/activate', [AdminController::class, 'activateUser']);
     Route::patch('/kelola_user/{id}/ban', [AdminController::class, 'banUser']);
     Route::delete('/kelola_user/{id}', [AdminController::class, 'destroyUser']);
+    Route::delete('/kelola_user/{id}', [AdminController::class, 'destroyUser']);
+    Route::patch('/laporan/{id}/status', [AdminController::class, 'updateStatusLaporan']);
 });
 
 // API

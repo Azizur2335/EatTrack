@@ -48,30 +48,30 @@ class AdminController extends Controller
 
     public function laporan()
     {
-        $totalUsers        = User::count();
-        $totalRestaurants  = Restaurant::count();
-        $totalReservations = Reservation::count();
+        $filterKategori = request('category');
+        $filterStatus   = request('status');
 
-        $statusMap = [
-            'menunggu'     => 'pending',
-            'dikonfirmasi' => 'confirmed',
-            'ditolak'      => 'cancelled',
-            'selesai'      => 'completed',
-        ];
+        $query = \App\Models\Report::with(['customer', 'reservation', 'restaurant'])->latest();
 
-        $filterLabel = request('status', 'semua');
-        $filterDb    = $statusMap[$filterLabel] ?? null;
+        if ($filterKategori) $query->where('category', $filterKategori);
+        if ($filterStatus)   $query->where('status', $filterStatus);
 
-        $query = Reservation::with(['customer', 'restaurant', 'table'])->latest();
-        if ($filterDb) {
-            $query->where('status', $filterDb);
-        }
+        $reports        = $query->get();
+        $totalUnread    = \App\Models\Report::where('status', 'belum_dibaca')->count();
+        $totalReports   = \App\Models\Report::count();
 
-        $reservasi = $query->get();
+        return view('Admin/laporan', compact('reports', 'totalUnread', 'totalReports'));
+    }
 
-        return view('Admin/laporan', compact(
-            'totalUsers', 'totalRestaurants', 'totalReservations', 'reservasi'
-        ));
+    public function updateStatusLaporan($id)
+    {
+        $report = \App\Models\Report::findOrFail($id);
+        request()->validate(['status' => 'required|in:belum_dibaca,dibaca,ditindaklanjuti,ditutup']);
+        $report->update([
+            'status'     => request('status'),
+            'admin_note' => request('admin_note'),
+        ]);
+        return back()->with('success', 'Status laporan diperbarui.');
     }
 
     public function activateUser($id)

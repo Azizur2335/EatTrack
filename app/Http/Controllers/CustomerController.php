@@ -149,6 +149,44 @@ class CustomerController extends Controller
         return back()->with('success', 'Promo berhasil diklaim!');
     }
 
+    public function laporanPage()
+    {
+        $reservations = Reservation::where('customer_id', auth()->id())->latest()->get();
+        $restaurants  = \App\Models\Restaurant::where('status', 'active')->get();
+        $myReports    = \App\Models\Report::where('customer_id', auth()->id())->latest()->get();
+        return view('Customer/Laporan', compact('reservations', 'restaurants', 'myReports'));
+    }
+
+    public function storeLaporan(Request $request)
+    {
+        $request->validate([
+            'category'       => 'required|in:bug,saran,keluhan,pertanyaan',
+            'title'          => 'required|string|max:255',
+            'message'        => 'required|string',
+            'screenshot'     => 'nullable|image|max:2048',
+            'reservation_id' => 'nullable|exists:reservations,id',
+            'restaurant_id'  => 'nullable|exists:restaurants,id',
+        ]);
+
+        $screenshotPath = null;
+        if ($request->hasFile('screenshot')) {
+            $screenshotPath = $request->file('screenshot')->store('reports', 'public');
+        }
+
+        \App\Models\Report::create([
+            'customer_id'    => auth()->id(),
+            'category'       => $request->category,
+            'title'          => $request->title,
+            'message'        => $request->message,
+            'screenshot'     => $screenshotPath,
+            'reservation_id' => $request->reservation_id,
+            'restaurant_id'  => $request->restaurant_id,
+            'status'         => 'belum_dibaca',
+        ]);
+
+        return back()->with('success', 'Laporan berhasil dikirim.');
+    }
+
     public function cancelReservasi($id)
     {
         $reservation = Reservation::where('id', $id)
