@@ -42,9 +42,9 @@
 					<p class="text-sm text-green-600 mb-2">+{{ $newResvThisMonth }} bulan ini</p>
 				</div>
 				<div class="rounded-xl bg-white p-4">
-					<p class="text-sm mb-2">Total Promo Aktif</p>
-					<p class="unbound text-xl font-bold mb-2">{{ \App\Models\Promo::where('status','active')->where('end_date','>=',today())->count() }}</p>
-					<p class="text-sm text-gray-400 mb-2">saat ini</p>
+					<p class="text-sm mb-2">Total Laporan</p>
+					<p class="unbound text-xl font-bold mb-2">{{ \App\Models\Report::count() }}</p>
+					<p class="text-sm text-gray-400 mb-2">{{ \App\Models\Report::where('status','belum_dibaca')->count() }} belum dibaca</p>
 				</div>
 				<div class="col-span-4 rounded-xl bg-white p-6">
 					<h3 class="unbound text-lg mb-4">

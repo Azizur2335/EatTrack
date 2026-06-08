@@ -125,7 +125,7 @@
                             <div class="flex flex-col gap-1">
                                 <span class="text-[#737373] text-[14px]">Meja</span>
                                 <p class="font-bold text-[20px] text-[#272727]">
-                                    {{ $reservation->table->name ?? 'No. ' . ($reservation->table_id ?? '-') }}
+                                    {{ $reservation->tableData->name ?? 'No. ' . ($reservation->table_id ?? '-') }}
                                 </p>
                             </div>
 

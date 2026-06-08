@@ -26,7 +26,7 @@ class OwnerController extends Controller
         $restaurant = Restaurant::where('owner_id', auth()->id())->first();
 
         $query = $restaurant
-            ? Reservation::where('restaurant_id', $restaurant->id)->with('customer', 'table')
+            ? Reservation::where('restaurant_id', $restaurant->id)->with('customer', 'tableData')
             : Reservation::whereNull('id');
 
         // Filter berdasarkan periode
@@ -43,11 +43,20 @@ class OwnerController extends Controller
         $reservasiSelesai      = (clone $query)->where('status', 'completed')->count();
         $menungguKonfirmasi    = $reservasiPending;
 
+        $reservasiTerbaru = $restaurant
+            ? Reservation::where('restaurant_id', $restaurant->id)
+                ->with('customer', 'tableData')
+                ->latest()
+                ->take(5)
+                ->get()
+            : collect();
+
         return view('Owner/beranda_owner', compact(
             'restaurant', 'periode',
             'totalReservasi', 'reservasiDikonfirmasi',
             'reservasiPending', 'reservasiDibatalkan',
-            'reservasiSelesai', 'menungguKonfirmasi'
+            'reservasiSelesai', 'menungguKonfirmasi',
+            'reservasiTerbaru'
         ));
     }
 
@@ -180,7 +189,7 @@ class OwnerController extends Controller
         $filterDb    = $statusMap[$filterLabel] ?? null;
 
         $query = $restaurant
-            ? Reservation::where('restaurant_id', $restaurant->id)->with('customer', 'table')->latest()
+            ? Reservation::where('restaurant_id', $restaurant->id)->with('customer', 'tableData')->latest()
             : Reservation::whereNull('id');
 
         if ($filterDb) {
@@ -197,7 +206,7 @@ class OwnerController extends Controller
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
         $reservasi  = Reservation::where('id', $id)
                         ->where('restaurant_id', $restaurant->id)
-                        ->with('table')
+                        ->with('tableData')
                         ->firstOrFail();
 
         $this->reservationService->confirm($reservasi);
@@ -210,7 +219,7 @@ class OwnerController extends Controller
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
         $reservasi  = Reservation::where('id', $id)
                         ->where('restaurant_id', $restaurant->id)
-                        ->with('table')
+                        ->with('tableData')
                         ->firstOrFail();
 
         $this->reservationService->cancel($reservasi);

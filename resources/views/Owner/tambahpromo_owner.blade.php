@@ -101,7 +101,7 @@
                 <label class="block text-sm text-gray-600 font-medium mb-1.5">Tanggal Mulai</label>
                 <input
                   type="date"
-                  name="star_date"
+                  name="start_date"
                   required
                   value="{{ old('berlaku_mulai') }}"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition">

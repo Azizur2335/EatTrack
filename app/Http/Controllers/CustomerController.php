@@ -63,7 +63,7 @@ class CustomerController extends Controller
     public function reservasi()
     {
         $reservations = Reservation::where('customer_id', auth()->id())
-            ->with('restaurant', 'table')
+            ->with('restaurant', 'tableData')
             ->latest()
             ->get();
         return view('Customer/Reservasi', compact('reservations'));
@@ -192,7 +192,7 @@ class CustomerController extends Controller
         $reservation = Reservation::where('id', $id)
             ->where('customer_id', auth()->id())
             ->where('status', 'pending')
-            ->with('table')
+            ->with('tableData')
             ->firstOrFail();
 
         $this->reservationService->cancel($reservation);

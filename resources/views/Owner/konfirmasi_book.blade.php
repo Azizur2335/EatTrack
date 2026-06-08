@@ -27,7 +27,7 @@
         <!-- HEADER -->
         <div class="flex justify-between items-start mb-8">
           <div>
-            <h1 class="unbound text-3xl text-white">Selamat Pagi, <span class="font-bold">Owner</span></h1>
+            <h1 class="unbound text-3xl text-white">Halo, <span class="font-bold">{{ auth()->user()->name }}</span></h1>
             <p class="text-white/80 mt-1 text-sm">Kelola tempat makan anda</p>
           </div>
 
@@ -61,8 +61,8 @@
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full overflow-hidden bg-[#D9D9D9] flex-shrink-0">
-                  @if($item->user?->avatar)
-                    <img src="{{ asset('storage/' . $item->user->avatar) }}" class="w-full h-full object-cover" alt="Avatar">
+                  @if($item->customer?->avatar)
+                    <img src="{{ asset('storage/' . $item->customer->avatar) }}" class="w-full h-full object-cover" alt="Avatar">
                   @else
                     <div class="w-full h-full bg-[#D9D9D9] flex items-center justify-center">
                       <svg class="w-5 h-5 text-[#999]" fill="currentColor" viewBox="0 0 24 24">
@@ -72,18 +72,18 @@
                   @endif
                 </div>
                 <div>
-                  <p class="font-semibold text-gray-800">{{ $item->user?->name ?? 'Pengguna' }}</p>
-                  <p class="text-xs text-gray-400">{{ $item->user?->email ?? '-' }}</p>
+                  <p class="font-semibold text-gray-800">{{ $item->customer?->name ?? 'Pengguna' }}</p>
+                  <p class="text-xs text-gray-400">{{ $item->customer?->email ?? '-' }}</p>
                 </div>
               </div>
               <div class="flex items-center gap-2">
                 @php
                   $statusColor = match($item->status) {
-                    'menunggu'      => 'bg-yellow-100 text-yellow-600',
-                    'dikonfirmasi'  => 'bg-green-100 text-green-600',
-                    'ditolak'       => 'bg-red-100 text-red-500',
-                    'selesai'       => 'bg-blue-100 text-blue-500',
-                    default         => 'bg-gray-100 text-gray-500',
+                      'pending'   => 'bg-yellow-100 text-yellow-600',
+                      'confirmed' => 'bg-green-100 text-green-600',
+                      'cancelled' => 'bg-red-100 text-red-500',
+                      'completed' => 'bg-blue-100 text-blue-500',
+                      default     => 'bg-gray-100 text-gray-500',
                   };
                 @endphp
                 <span class="{{ $statusColor }} px-3 py-1 rounded-full text-xs font-medium capitalize">
@@ -108,7 +108,7 @@
                   Tanggal
                 </p>
                 <p class="font-semibold text-sm text-gray-800">
-                  {{ \Carbon\Carbon::parse($item->tanggal)->format('j/n/Y') }}
+                  {{ \Carbon\Carbon::parse($item->date)->format('j/n/Y') }}
                 </p>
               </div>
               <div>
@@ -119,7 +119,7 @@
                   Waktu
                 </p>
                 <p class="font-semibold text-sm text-gray-800">
-                  {{ \Carbon\Carbon::parse($item->waktu)->format('H.i') }} WITA
+                  {{ \Carbon\Carbon::parse($item->time)->format('H.i') }} WITA
                 </p>
               </div>
               <div>
@@ -131,27 +131,29 @@
                   </svg>
                   Tamu
                 </p>
-                <p class="font-semibold text-sm text-gray-800">{{ $item->jumlah_tamu ?? 0 }} Orang</p>
+                <p class="font-semibold text-sm text-gray-800">{{ $item->guest_count ?? 0 }} Orang</p>
               </div>
               <div>
                 <p class="text-xs text-gray-400 mb-1">Meja</p>
                 <p class="font-semibold text-sm text-gray-800">
-                  No. {{ $item->nomor_meja ?? '-' }} ({{ $item->tipe_meja ?? 'Outdoor' }})
+                  <p class="font-semibold text-sm text-gray-800">
+                    {{ $item->tableData?->table_number ?? '-' }} · {{ $item->tableData?->capacity ?? '-' }} kursi
+                  </p>
                 </p>
               </div>
             </div>
 
             <!-- Action buttons -->
-            @if($item->status === 'menunggu')
+            @if($item->status === 'pending')
             <div class="flex gap-3 justify-end">
-              <form action="/konfirmasiBook/{{ $item->id }}/tolak" method="POST">
+              <form action="/konfirmasi_book/{{ $item->id }}/tolak" method="POST">
                 @csrf @method('PATCH')
                 <button type="submit"
                   class="px-6 py-2 rounded-full border-2 border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-100 transition">
                   Tolak
                 </button>
               </form>
-              <form action="/konfirmasiBook/{{ $item->id }}/terima" method="POST">
+              <form action="/konfirmasi_book/{{ $item->id }}/terima" method="POST">
                 @csrf @method('PATCH')
                 <button type="submit"
                   class="px-6 py-2 rounded-full bg-green-500 text-white font-semibold text-sm hover:bg-green-600 transition">

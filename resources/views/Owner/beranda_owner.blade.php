@@ -53,17 +53,17 @@
           <div class="bg-white rounded-3xl p-5">
             <p class="text-sm text-gray-500">Total Reservasi</p>
             <h2 class="text-3xl font-bold mt-2">{{ $totalReservasi ?? '0' }}</h2>
-            <p class="text-xs text-green-600 mt-2">+50 pengguna di bulan ini</p>
+            <p class="text-xs text-gray-400 mt-2">periode: {{ $periode }}</p>
           </div>
           <div class="bg-white rounded-3xl p-5">
             <p class="text-sm text-gray-500">Reservasi Dikonfirmasi</p>
             <h2 class="text-3xl font-bold mt-2">{{ $reservasiDikonfirmasi ?? '0' }}</h2>
-            <p class="text-xs text-green-600 mt-2">+5 restoran di bulan ini</p>
+            <p class="text-xs text-gray-400 mt-2">dikonfirmasi</p>
           </div>
           <div class="bg-white rounded-3xl p-5">
             <p class="text-sm text-gray-500">Reservasi Selesai</p>
             <h2 class="text-3xl font-bold mt-2">{{ $reservasiSelesai ?? '0' }}</h2>
-            <p class="text-xs text-green-600 mt-2">+50 pengguna minggu ini</p>
+            <p class="text-xs text-gray-400 mt-2">selesai</p>
           </div>
           <div class="bg-white rounded-3xl p-5">
             <p class="text-sm text-gray-500">Menunggu Konfirmasi</p>
