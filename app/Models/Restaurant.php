@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
     'category', 'maps_link', 'open_time',
     'close_time'
 ])]
-
 class Restaurant extends Model
 {
     use HasFactory;

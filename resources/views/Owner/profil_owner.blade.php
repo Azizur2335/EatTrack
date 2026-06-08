@@ -118,7 +118,6 @@
                     @if($restaurant)
                     <form action="/profil_owner" method="POST" enctype="multipart/form-data" id="restoForm">
                         @csrf
-                        @method('PUT')
 
                         <div class="grid grid-cols-2 gap-5">
 

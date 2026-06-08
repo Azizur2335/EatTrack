@@ -60,7 +60,7 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::patch('/konfirmasi_book/{id}/konfirmasi', [OwnerController::class, 'konfirmasiReservasi']);
     Route::patch('/konfirmasi_book/{id}/tolak', [OwnerController::class, 'tolakReservasi']);
     Route::post('/promo_owner', [OwnerController::class, 'storePromo']);
-    Route::put('/profil_owner', [OwnerController::class, 'updateProfil']);
+    Route::post('/profil_owner', [OwnerController::class, 'updateProfil']);
 });
 
 // ADMIN
