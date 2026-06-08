@@ -346,13 +346,6 @@
     </div>
 
     <script>
-        function openFilter() {
-            document.getElementById("isiFilter").classList.remove("hidden");
-        }
-
-        function closeFilter() {
-            document.getElementById("isiFilter").classList.add("hidden");
-        }
         // ── Search live filter ──
         document.getElementById('searchInput').addEventListener('input', function () {
             const keyword = this.value.toLowerCase().trim();

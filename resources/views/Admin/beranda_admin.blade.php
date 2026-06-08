@@ -28,18 +28,18 @@
 			<div class="grid grid-cols-4 gap-6">
 				<div class="rounded-xl bg-white p-4">
 					<p class="text-sm mb-2">Total Pengguna</p>
-					<p class="unbound text-xl font-bold mb-2">0</p>
+					<p class="unbound text-xl font-bold mb-2">{{ $totalUsers }}</p>
 					<p class="text-sm mb-2">+Pengguna Baru</p>
 				</div>
 				<div class="rounded-xl bg-white p-4">
-					<p class="text-sm mb-2">Total Pengguna</p>
-					<p class="unbound text-xl font-bold mb-2">0</p>
-					<p class="text-sm mb-2">+Pengguna Baru</p>
+					<p class="text-sm mb-2">Total Restoran</p>
+					<p class="unbound text-xl font-bold mb-2">{{ $totalRestaurants }}</p>
+					<p class="text-sm mb-2">+Restoran Baru</p>
 				</div>
 				<div class="rounded-xl bg-white p-4">
-					<p class="text-sm mb-2">Total Pengguna</p>
-					<p class="unbound text-xl font-bold mb-2">0</p>
-					<p class="text-sm mb-2">+Pengguna Baru</p>
+					<p class="text-sm mb-2">Total Reservasi</p>
+					<p class="unbound text-xl font-bold mb-2">{{ $totalReservations }}</p>
+					<p class="text-sm mb-2">+Reservasi Baru</p>
 				</div>
 				<div class="rounded-xl bg-white p-4">
 					<p class="text-sm mb-2">Total Pengguna</p>

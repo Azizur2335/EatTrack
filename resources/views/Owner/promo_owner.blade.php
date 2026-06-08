@@ -125,7 +125,7 @@
                     class="flex-1 text-center text-xs font-semibold py-1.5 rounded-lg bg-yellow-400 text-gray-800 hover:bg-yellow-300 transition">
                     Edit
                   </a>
-                  <form action="/promo/{{ $promo->id }}/nonaktif" method="POST" class="flex-1">
+                  <form action="/promo/{{ $promo->id }}" method="GET" class="flex-1">
                     @csrf @method('PATCH')
                     <button type="submit"
                       class="w-full text-xs font-semibold py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition">

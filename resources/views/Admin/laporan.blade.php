@@ -145,27 +145,6 @@
                 </p>
               </div>
             </div>
-
-            <!-- Action buttons -->
-            @if($item->status === 'menunggu')
-            <div class="flex gap-3 justify-end">
-              <form action="/konfirmasiBook/{{ $item->id }}/tolak" method="POST">
-                @csrf @method('PATCH')
-                <button type="submit"
-                  class="px-6 py-2 rounded-full border-2 border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-100 transition">
-                  Tolak
-                </button>
-              </form>
-              <form action="/konfirmasiBook/{{ $item->id }}/terima" method="POST">
-                @csrf @method('PATCH')
-                <button type="submit"
-                  class="px-6 py-2 rounded-full bg-green-500 text-white font-semibold text-sm hover:bg-green-600 transition">
-                  Terima
-                </button>
-              </form>
-            </div>
-            @endif
-
           </div>
           @empty
           <div class="text-center py-16 text-gray-400">

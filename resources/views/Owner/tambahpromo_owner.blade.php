@@ -43,7 +43,7 @@
         <div class="bg-white rounded-3xl p-8">
           <h2 class="unbound text-xl font-bold text-[#C52F0F] mb-6">Tambah Promo</h2>
 
-          <form action="/promo" method="POST" enctype="multipart/form-data">
+          <form action="/promo_owner" method="POST" enctype="multipart/form-data">
             @csrf
 
             <!-- Baris 1: Nama Promo + Jenis Promo -->
@@ -52,7 +52,7 @@
                 <label class="block text-sm text-gray-600 font-medium mb-1.5">Nama Promo</label>
                 <input
                   type="text"
-                  name="nama"
+                  name="title"
                   required
                   value="{{ old('nama') }}"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition"
@@ -61,7 +61,7 @@
                   <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                 @enderror
               </div>
-              <div>
+              {{-- <div>
                 <label class="block text-sm text-gray-600 font-medium mb-1.5">Jenis Promo</label>
                 <div class="relative">
                   <select
@@ -80,7 +80,7 @@
                 @error('jenis_promo')
                   <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                 @enderror
-              </div>
+              </div> --}}
             </div>
 
             <!-- Baris 2: Nilai Promo + Tanggal Mulai + Tanggal Selesai -->
@@ -89,7 +89,7 @@
                 <label class="block text-sm text-gray-600 font-medium mb-1.5">Nilai Promo</label>
                 <input
                   type="text"
-                  name="nilai_promo"
+                  name="discount"
                   value="{{ old('nilai_promo') }}"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition"
                   placeholder="Misal: 20%">
@@ -101,7 +101,7 @@
                 <label class="block text-sm text-gray-600 font-medium mb-1.5">Tanggal Mulai</label>
                 <input
                   type="date"
-                  name="berlaku_mulai"
+                  name="star_date"
                   required
                   value="{{ old('berlaku_mulai') }}"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition">
@@ -113,7 +113,7 @@
                 <label class="block text-sm text-gray-600 font-medium mb-1.5">Tanggal Selesai</label>
                 <input
                   type="date"
-                  name="berlaku_sampai"
+                  name="end_date"
                   required
                   value="{{ old('berlaku_sampai') }}"
                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition">
@@ -158,7 +158,7 @@
             <div class="mb-5">
               <label class="block text-sm text-gray-600 font-medium mb-1.5">Deskripsi</label>
               <textarea
-                name="deskripsi"
+                name="description"
                 rows="4"
                 class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition resize-none"
                 placeholder="Deskripsi singkat promo...">{{ old('deskripsi') }}</textarea>

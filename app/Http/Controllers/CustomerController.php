@@ -50,7 +50,7 @@ class CustomerController extends Controller
     public function detail_resto(Request $request)
     {
         $restaurant = Restaurant::with(['menus', 'tables'])
-            ->where('id', $request->restaurant_id)
+            ->where('id', $resto_id)
             ->where('status', 'active')
             ->firstOrFail();
 

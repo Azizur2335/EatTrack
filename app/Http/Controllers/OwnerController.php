@@ -40,11 +40,14 @@ class OwnerController extends Controller
         $reservasiDikonfirmasi = (clone $query)->where('status', 'confirmed')->count();
         $reservasiPending      = (clone $query)->where('status', 'pending')->count();
         $reservasiDibatalkan   = (clone $query)->where('status', 'cancelled')->count();
+        $reservasiSelesai      = (clone $query)->where('status', 'completed')->count();
+        $menungguKonfirmasi    = $reservasiPending;
 
         return view('Owner/beranda_owner', compact(
             'restaurant', 'periode',
             'totalReservasi', 'reservasiDikonfirmasi',
-            'reservasiPending', 'reservasiDibatalkan'
+            'reservasiPending', 'reservasiDibatalkan',
+            'reservasiSelesai', 'menungguKonfirmasi'
         ));
     }
 

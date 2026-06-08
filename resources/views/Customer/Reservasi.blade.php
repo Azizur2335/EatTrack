@@ -134,9 +134,9 @@
                         {{-- Tombol Batalkan (hanya untuk pending) --}}
                         @if($reservation->status === 'pending')
                         <div class="mt-5 border-t border-[#e0e0e0] pt-4">
-                            <form action="/reservasi/{{ $reservation->id }}/cancel" method="POST" onsubmit="return confirm('Yakin ingin membatalkan booking ini?')">
+                            <form action="/reservasi/{{ $reservation->id }}" method="POST" onsubmit="return confirm('Yakin ingin membatalkan booking ini?')">
                                 @csrf
-                                @method('PATCH')
+                                @method('DELETE')
                                 <button type="submit" class="w-full py-3 border-2 border-[#272727] rounded-[9.5px] text-[#B92C10] font-bold text-[18px] bg-transparent hover:bg-[#B92C10] hover:text-white hover:border-[#B92C10] transition-all duration-200 cursor-pointer">
                                     Batalkan Booking
                                 </button>
