@@ -12,6 +12,20 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
         h1 { font-family: 'Unbounded', sans-serif; }
+
+        #circle1-check {
+            display: none;
+            animation: popIn 0.3s ease;
+        }
+        @keyframes popIn {
+            0%   { transform: scale(0.5); opacity: 0; }
+            70%  { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .input-error {
+            border-color: #dc2626 !important;
+            background-color: #fff5f5 !important;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
@@ -20,7 +34,7 @@
 
     {{-- Logo --}}
     <div class="pb-4">
-        <img src="{{ asset('img/logoWEB.png') }}" alt="EatTrack" class="h-12">  
+        <img src="{{ asset('img/logoWEB.png') }}" alt="EatTrack" class="h-12">
     </div>
 
     <hr class="border-gray-300 mb-8">
@@ -32,7 +46,10 @@
     {{-- Step Indicator --}}
     <div class="flex items-center justify-center mb-6">
         <div class="flex items-center m-4">
-            <div id="circle1" class="flex items-center justify-center w-8 h-8 rounded-full bg-red-700 text-white text-sm font-bold">1</div>
+            <div id="circle1" class="flex items-center justify-center w-8 h-8 rounded-full bg-red-700 text-white text-sm font-bold">
+                <span id="circle1-number">1</span>
+                <span id="circle1-check"><i class="fa-solid fa-check text-xs"></i></span>
+            </div>
             <span id="label1" class="pl-4 font-bold text-red-700">Data Owner</span>
         </div>
         <div class="w-10 h-0.5 bg-gray-300"></div>
@@ -42,7 +59,7 @@
         </div>
     </div>
 
-    {{-- Error Messages --}}
+    {{-- Server-side errors --}}
     @if ($errors->any())
         <div class="bg-red-50 border border-red-300 rounded-lg px-4 py-3 mb-4">
             @foreach ($errors->all() as $error)
@@ -51,36 +68,47 @@
         </div>
     @endif
 
-    {{-- SATU FORM --}}
+    {{-- JS error box --}}
+    <div id="js-error-box" class="hidden bg-red-50 border border-red-300 rounded-lg px-4 py-3 mb-4">
+        <p id="js-error-msg" class="text-red-600 text-sm"></p>
+    </div>
+
     <form action="/register-owner" method="POST" enctype="multipart/form-data">
         @csrf
 
         {{-- ===== STEP 1: DATA OWNER ===== --}}
         <div id="step1">
             <label class="block text-sm font-bold text-gray-800 mb-2">Nama Lengkap</label>
-            <input type="text" name="name" value="{{ old('name') }}" required placeholder="Masukkan Nama Lengkap"
+            <input type="text" id="name" name="name" value="{{ old('name') }}" placeholder="Masukkan Nama Lengkap"
+                oninput="checkStep1()"
                 class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-red-400 bg-white mb-4">
 
             <label class="block text-sm font-bold text-gray-800 mb-2">Email</label>
-            <input type="email" name="email" value="{{ old('email') }}" required placeholder="Masukkan Email"
+            <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="Masukkan Email"
+                oninput="checkStep1()"
                 class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-red-400 bg-white mb-4">
 
             <label class="block text-sm font-bold text-gray-800 mb-2">Nomor HP</label>
-            <input type="text" name="phone" value="{{ old('phone') }}" required placeholder="Masukkan Nomor HP"
+            <input type="text" id="phone" name="phone" value="{{ old('phone') }}" placeholder="Masukkan Nomor HP"
+                oninput="checkStep1()"
                 class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-red-400 bg-white mb-4">
 
             <label class="block text-sm font-bold text-gray-800 mb-2">Password</label>
-            <input type="password" name="password" required placeholder="Minimal 8 karakter"
-                class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-red-400 bg-white mb-4">
+            <input type="password" id="password" name="password" placeholder="Minimal 8 karakter"
+                oninput="checkPasswordMatch(); checkStep1()"
+                class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-red-400 bg-white mb-1">
+            <p id="pw-length-hint" class="text-xs text-gray-400 mb-3">Minimal 8 karakter</p>
 
             <label class="block text-sm font-bold text-gray-800 mb-2">Konfirmasi Password</label>
-            <input type="password" name="password_confirmation" required placeholder="Ulangi Password"
-                class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-red-400 bg-white mb-4">
+            <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Ulangi Password"
+                oninput="checkPasswordMatch(); checkStep1()"
+                class="w-full px-4 py-3 rounded-lg border border-gray-300 text-sm text-gray-500 focus:outline-none focus:border-red-400 bg-white mb-1">
+            <p id="pw-match-hint" class="text-xs text-gray-400 mb-3">Ulangi password yang sama</p>
 
             <div class="flex justify-between mt-4">
                 <a href="/register_page" class="font-semibold text-sm text-gray-700">&lt; Kembali</a>
-                <button type="button" onclick="nextStep()"
-                    class="bg-red-700 hover:bg-red-900 text-white font-semibold text-sm px-8 py-3 rounded-xl cursor-pointer transition-colors">
+                <button type="button" id="btn-next" onclick="nextStep()" disabled
+                    class="bg-red-700 text-white font-semibold text-sm px-8 py-3 rounded-xl transition-colors opacity-50 cursor-not-allowed">
                     Lanjutkan
                 </button>
             </div>
@@ -163,25 +191,89 @@
 </div>
 
 <script>
-function nextStep() {
-    document.getElementById('step1').classList.add('hidden');
-    document.getElementById('step2').classList.remove('hidden');
+    function checkPasswordMatch() {
+        const pw    = document.getElementById('password');
+        const cpw   = document.getElementById('password_confirmation');
+        const hint  = document.getElementById('pw-match-hint');
+        const lHint = document.getElementById('pw-length-hint');
 
-    document.getElementById('circle2').classList.remove('bg-gray-300');
-    document.getElementById('circle2').classList.add('bg-red-700');
-    document.getElementById('label2').classList.remove('text-gray-400');
-    document.getElementById('label2').classList.add('font-bold', 'text-red-700');
-}
+        // Panjang password
+        if (pw.value.length > 0 && pw.value.length < 8) {
+            lHint.textContent = '⚠ Password minimal 8 karakter';
+            lHint.className = 'text-xs text-red-500 mb-3';
+        } else if (pw.value.length >= 8) {
+            lHint.textContent = '✓ Panjang password oke';
+            lHint.className = 'text-xs text-green-600 mb-3';
+        } else {
+            lHint.textContent = 'Minimal 8 karakter';
+            lHint.className = 'text-xs text-gray-400 mb-3';
+        }
 
-function prevStep() {
-    document.getElementById('step2').classList.add('hidden');
-    document.getElementById('step1').classList.remove('hidden');
+        // Kecocokan password
+        if (cpw.value.length === 0) {
+            hint.textContent = 'Ulangi password yang sama';
+            hint.className = 'text-xs text-gray-400 mb-3';
+            pw.classList.remove('input-error');
+            cpw.classList.remove('input-error');
+        } else if (pw.value === cpw.value) {
+            hint.textContent = '✓ Password cocok';
+            hint.className = 'text-xs text-green-600 mb-3';
+            pw.classList.remove('input-error');
+            cpw.classList.remove('input-error');
+        } else {
+            hint.textContent = '✗ Password tidak sama';
+            hint.className = 'text-xs text-red-500 mb-3';
+            pw.classList.add('input-error');
+            cpw.classList.add('input-error');
+        }
+    }
 
-    document.getElementById('circle2').classList.add('bg-gray-300');
-    document.getElementById('circle2').classList.remove('bg-red-700');
-    document.getElementById('label2').classList.add('text-gray-400');
-    document.getElementById('label2').classList.remove('font-bold', 'text-red-700');
-}
+    function checkStep1() {
+        const name  = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const pw    = document.getElementById('password').value;
+        const cpw   = document.getElementById('password_confirmation').value;
+
+        const valid = name && email && phone && pw.length >= 8 && pw === cpw;
+        const btn   = document.getElementById('btn-next');
+
+        if (valid) {
+            btn.disabled = false;
+            btn.className = 'bg-red-700 hover:bg-red-900 text-white font-semibold text-sm px-8 py-3 rounded-xl cursor-pointer transition-colors';
+        } else {
+            btn.disabled = true;
+            btn.className = 'bg-red-700 text-white font-semibold text-sm px-8 py-3 rounded-xl opacity-50 cursor-not-allowed transition-colors';
+        }
+    }
+
+    function nextStep() {
+        // Tampilkan centang di circle 1
+        document.getElementById('circle1-number').style.display = 'none';
+        document.getElementById('circle1-check').style.display  = 'flex';
+
+        // Aktifkan step 2
+        document.getElementById('circle2').classList.remove('bg-gray-300');
+        document.getElementById('circle2').classList.add('bg-red-700');
+        document.getElementById('label2').classList.remove('text-gray-400');
+        document.getElementById('label2').classList.add('font-bold', 'text-red-700');
+
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.remove('hidden');
+    }
+
+    function prevStep() {
+        document.getElementById('step2').classList.add('hidden');
+        document.getElementById('step1').classList.remove('hidden');
+
+        document.getElementById('circle2').classList.add('bg-gray-300');
+        document.getElementById('circle2').classList.remove('bg-red-700');
+        document.getElementById('label2').classList.add('text-gray-400');
+        document.getElementById('label2').classList.remove('font-bold', 'text-red-700');
+    }
+
+    // Inisialisasi saat halaman load
+    checkStep1();
 </script>
 
 </body>
