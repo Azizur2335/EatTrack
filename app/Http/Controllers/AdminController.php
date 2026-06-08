@@ -10,12 +10,27 @@ class AdminController extends Controller
 {
     public function beranda()
     {
-        $totalUsers       = User::count();
-        $totalRestaurants = Restaurant::count();
+        $totalUsers        = User::count();
+        $totalRestaurants  = Restaurant::count();
         $totalReservations = Reservation::count();
+        $newUsersThisMonth = User::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+        $newRestoThisMonth = Restaurant::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+        $newResvThisMonth  = Reservation::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+
+        // Data chart 6 bulan terakhir
+        $chartLabels = [];
+        $chartData   = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $chartLabels[] = now()->subMonths($i)->translatedFormat('M');
+            $chartData[]   = Reservation::whereMonth('created_at', now()->subMonths($i)->month)
+                                ->whereYear('created_at', now()->subMonths($i)->year)
+                                ->count();
+        }
 
         return view('Admin/beranda_admin', compact(
-            'totalUsers', 'totalRestaurants', 'totalReservations'
+            'totalUsers', 'totalRestaurants', 'totalReservations',
+            'newUsersThisMonth', 'newRestoThisMonth', 'newResvThisMonth',
+            'chartLabels', 'chartData'
         ));
     }
 
@@ -37,8 +52,25 @@ class AdminController extends Controller
         $totalRestaurants  = Restaurant::count();
         $totalReservations = Reservation::count();
 
+        $statusMap = [
+            'menunggu'     => 'pending',
+            'dikonfirmasi' => 'confirmed',
+            'ditolak'      => 'cancelled',
+            'selesai'      => 'completed',
+        ];
+
+        $filterLabel = request('status', 'semua');
+        $filterDb    = $statusMap[$filterLabel] ?? null;
+
+        $query = Reservation::with(['customer', 'restaurant', 'table'])->latest();
+        if ($filterDb) {
+            $query->where('status', $filterDb);
+        }
+
+        $reservasi = $query->get();
+
         return view('Admin/laporan', compact(
-            'totalUsers', 'totalRestaurants', 'totalReservations'
+            'totalUsers', 'totalRestaurants', 'totalReservations', 'reservasi'
         ));
     }
 

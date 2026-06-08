@@ -29,22 +29,22 @@
 				<div class="rounded-xl bg-white p-4">
 					<p class="text-sm mb-2">Total Pengguna</p>
 					<p class="unbound text-xl font-bold mb-2">{{ $totalUsers }}</p>
-					<p class="text-sm mb-2">+Pengguna Baru</p>
+					<p class="text-sm text-green-600 mb-2">+{{ $newUsersThisMonth }} bulan ini</p>
 				</div>
 				<div class="rounded-xl bg-white p-4">
 					<p class="text-sm mb-2">Total Restoran</p>
 					<p class="unbound text-xl font-bold mb-2">{{ $totalRestaurants }}</p>
-					<p class="text-sm mb-2">+Restoran Baru</p>
+					<p class="text-sm text-green-600 mb-2">+{{ $newRestoThisMonth }} bulan ini</p>
 				</div>
 				<div class="rounded-xl bg-white p-4">
 					<p class="text-sm mb-2">Total Reservasi</p>
 					<p class="unbound text-xl font-bold mb-2">{{ $totalReservations }}</p>
-					<p class="text-sm mb-2">+Reservasi Baru</p>
+					<p class="text-sm text-green-600 mb-2">+{{ $newResvThisMonth }} bulan ini</p>
 				</div>
 				<div class="rounded-xl bg-white p-4">
-					<p class="text-sm mb-2">Total Pengguna</p>
-					<p class="unbound text-xl font-bold mb-2">0</p>
-					<p class="text-sm mb-2">+Pengguna Baru</p>
+					<p class="text-sm mb-2">Total Promo Aktif</p>
+					<p class="unbound text-xl font-bold mb-2">{{ \App\Models\Promo::where('status','active')->where('end_date','>=',today())->count() }}</p>
+					<p class="text-sm text-gray-400 mb-2">saat ini</p>
 				</div>
 				<div class="col-span-4 rounded-xl bg-white p-6">
 					<h3 class="unbound text-lg mb-4">
@@ -63,17 +63,10 @@
 	new Chart(ctx, {
 		type: 'line',
 		data: {
-			labels: [
-				'Jan',
-				'Feb',
-				'Mar',
-				'Apr',
-				'Mei',
-				'Jun'
-			],
+			labels: {!! json_encode($chartLabels) !!},
 			datasets: [{
 				label: 'Jumlah Reservasi',
-				data: [12, 19, 8, 15, 22, 30],
+				data: {!! json_encode($chartData) !!},
 				borderWidth: 3,
 				tension: 0.4,
 				fill: false

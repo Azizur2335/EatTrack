@@ -32,8 +32,8 @@
         <!-- HEADER -->
         <div class="flex justify-between items-start mb-8">
           <div>
-            <h1 class="unbound text-3xl text-white">Selamat Pagi, <span class="font-bold">Owner</span></h1>
-            <p class="text-white/80 mt-1 text-sm">Kelola tempat makan anda</p>
+            <h1 class="unbound text-3xl text-white font-bold">Laporan Reservasi</h1>
+            <p class="text-white/80 mt-1 text-sm">Semua data reservasi dari seluruh restoran</p>
           </div>
 
           <!-- FILTER -->
@@ -77,18 +77,18 @@
                   @endif
                 </div>
                 <div>
-                  <p class="font-semibold text-gray-800">{{ $item->user?->name ?? 'Pengguna' }}</p>
-                  <p class="text-xs text-gray-400">{{ $item->user?->email ?? '-' }}</p>
+                  <p class="font-semibold text-gray-800">{{ $item->customer?->name ?? 'Pengguna' }}</p>
+                  <p class="text-xs text-gray-400">{{ $item->customer?->email ?? '-' }}</p>
                 </div>
               </div>
               <div class="flex items-center gap-2">
                 @php
                   $statusColor = match($item->status) {
-                    'menunggu'      => 'bg-yellow-100 text-yellow-600',
-                    'dikonfirmasi'  => 'bg-green-100 text-green-600',
-                    'ditolak'       => 'bg-red-100 text-red-500',
-                    'selesai'       => 'bg-blue-100 text-blue-500',
-                    default         => 'bg-gray-100 text-gray-500',
+                    'pending'   => 'bg-yellow-100 text-yellow-600',
+                    'confirmed' => 'bg-green-100 text-green-600',
+                    'cancelled' => 'bg-red-100 text-red-500',
+                    'completed' => 'bg-blue-100 text-blue-500',
+                    default     => 'bg-gray-100 text-gray-500',
                   };
                 @endphp
                 <span class="{{ $statusColor }} px-3 py-1 rounded-full text-xs font-medium capitalize">
@@ -104,6 +104,7 @@
             </div>
 
             <!-- Detail row -->
+            <p class="text-xs text-gray-400 mb-3">{{ $item->restaurant->name ?? '-' }}</p>
             <div class="grid grid-cols-4 gap-4 mb-5">
               <div>
                 <p class="text-xs text-gray-400 flex items-center gap-1 mb-1">
@@ -113,7 +114,7 @@
                   Tanggal
                 </p>
                 <p class="font-semibold text-sm text-gray-800">
-                  {{ \Carbon\Carbon::parse($item->tanggal)->format('j/n/Y') }}
+                  {{ \Carbon\Carbon::parse($item->date)->format('j/n/Y') }}
                 </p>
               </div>
               <div>
@@ -124,7 +125,7 @@
                   Waktu
                 </p>
                 <p class="font-semibold text-sm text-gray-800">
-                  {{ \Carbon\Carbon::parse($item->waktu)->format('H.i') }} WITA
+                  {{ \Carbon\Carbon::parse($item->time)->format('H.i') }} WITA
                 </p>
               </div>
               <div>
@@ -136,12 +137,12 @@
                   </svg>
                   Tamu
                 </p>
-                <p class="font-semibold text-sm text-gray-800">{{ $item->jumlah_tamu ?? 0 }} Orang</p>
+                <p class="font-semibold text-sm text-gray-800">{{ $item->guest_count ?? 0 }} Orang</p>
               </div>
               <div>
                 <p class="text-xs text-gray-400 mb-1">Meja</p>
                 <p class="font-semibold text-sm text-gray-800">
-                  No. {{ $item->nomor_meja ?? '-' }} ({{ $item->tipe_meja ?? 'Outdoor' }})
+                  {{ $item->table->table_number ?? '-' }}
                 </p>
               </div>
             </div>
