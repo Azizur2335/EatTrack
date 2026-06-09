@@ -20,6 +20,7 @@ class StoreReservationRequest extends FormRequest
             'time'          => 'required',
             'guest_count'   => 'required|integer|min:1',
             'notes'         => 'nullable|string',
+            'promo_id'      => 'nullable|exists:promos,id',
         ];
     }
 

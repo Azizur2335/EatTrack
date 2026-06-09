@@ -96,6 +96,8 @@
                     <img src="assets/icon_filter.png" alt="" class="w-6 h-6">
                 </button>
             </div>
+            </div>
+
 
             <div id="filterPanel" class="hidden mt-4 bg-[#1a0a07] rounded-[20px] p-5">
 
@@ -105,15 +107,6 @@
                 <button onclick="resetFilter()" class="text-[#aaa] text-[12px] border border-[#555] rounded-full px-3 py-1 cursor-pointer hover:text-white hover:border-white">
                 Reset semua
                 </button>
-            </div>
-
-            {{-- Status --}}
-            <div class="mb-5">
-                <p class="text-[#D9D9D9] text-[12px] font-medium uppercase tracking-widest mb-3">Status</p>
-                <div class="flex gap-2 flex-wrap">
-                <button class="fpill" data-group="status" data-val="buka">Buka Sekarang</button>
-                <button class="fpill" data-group="status" data-val="tutup">Tutup</button>
-                </div>
             </div>
 
             {{-- Kategori --}}
@@ -206,11 +199,24 @@
                             {{-- Gradient overlay bawah --}}
                             <div class="card-gradient absolute bottom-0 left-0 right-0 h-[120px]"></div>
 
-                            {{-- Badge Buka / Tutup --}}
+                            @php
+                                $now = now()->format('H:i:s');
+                                $isOpen = $restaurant->status === 'active'
+                                    && $restaurant->open_time
+                                    && $restaurant->close_time
+                                    && $now >= $restaurant->open_time
+                                    && $now <= $restaurant->close_time;
+                            @endphp
                             <div class="absolute top-3 right-3 flex items-center gap-1.5 bg-white rounded-full px-3 py-1 shadow">
-                                <div class="w-[13px] h-[13px] rounded-full {{ $restaurant->status === 'active' ? 'bg-[#47DC42]' : 'bg-[#B92C10]' }}"></div>
+                                <div class="w-[13px] h-[13px] rounded-full {{ $isOpen ? 'bg-[#47DC42]' : 'bg-[#B92C10]' }}"></div>
                                 <span class="text-[#474747] text-[13px] font-medium">
-                                    {{ $restaurant->status === 'active' ? 'Buka' : 'Tutup' }}
+                                    @if($isOpen)
+                                        Buka · tutup {{ \Carbon\Carbon::parse($restaurant->close_time)->format('H.i') }}
+                                    @elseif($restaurant->open_time)
+                                        Tutup · buka {{ \Carbon\Carbon::parse($restaurant->open_time)->format('H.i') }}
+                                    @else
+                                        Tutup
+                                    @endif
                                 </span>
                             </div>
                         </div>
@@ -238,7 +244,19 @@
                             </div>
 
                             {{-- Jarak --}}
-                            <p class="text-[#737373] text-[12px] font-medium mt-1.5">4,5 Km ....</p>
+                            <div class="flex items-center justify-between mt-1.5">
+                            <span class="text-[#737373] text-[12px] font-medium truncate">
+                                {{ $restaurant->city ?? Str::words($restaurant->address, 3, '...') }}
+                            </span>
+                            @if($restaurant->reviews->count() > 0)
+                                <span class="flex items-center gap-0.5 text-[12px] text-[#737373] font-medium flex-shrink-0 ml-2">
+                                    <svg class="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                    {{ number_format($restaurant->reviews->avg('rating'), 1) }}
+                                </span>
+                            @endif
+                        </div>
                         </div>
                     </a>
 
@@ -403,17 +421,36 @@
         }
 
         function applyFilter() {
-        const aktif = [...document.querySelectorAll('.fpill.active')].map(b => b.dataset.val);
-        const jarak = document.getElementById('distRange').value;
-        const rating = document.getElementById('ratingRange').value;
+            const kategoriPill = document.querySelector('.fpill[data-group="cat"].active');
+            const ratingMin    = document.getElementById('ratingRange').value;
+            const jarakMax     = document.getElementById('distRange').value;
 
-        // Kirim ke backend via URL params atau AJAX sesuai kebutuhan
-        const params = new URLSearchParams({
-            filter: aktif.join(','),
-            jarak_max: jarak,
-            rating_min: rating
-        });
-        window.location.href = '/katalog?' + params.toString();
+            const params = new URLSearchParams({ filter: 'terdekat' });
+            if (kategoriPill) params.set('kategori',  kategoriPill.dataset.val);
+            if (ratingMin > 1) params.set('rating_min', ratingMin);
+            params.set('jarak_max', jarakMax);
+
+            if (!navigator.geolocation) {
+                alert('Browser kamu tidak mendukung GPS.');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                pos => {
+                    params.set('lat', pos.coords.latitude);
+                    params.set('lng', pos.coords.longitude);
+                    window.location.href = '/beranda?' + params.toString();
+                },
+                () => {
+                    // GPS ditolak, tetap kirim filter lain tanpa jarak
+                    params.delete('jarak_max');
+                    params.set('filter', 'semua');
+                    window.location.href = '/beranda?' + params.toString();
+                    alert('Izin lokasi ditolak. Filter jarak tidak diterapkan.');
+                }
+            );
+
+            document.getElementById('filterPanel').classList.add('hidden');
         }
     </script>
 

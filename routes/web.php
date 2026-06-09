@@ -74,12 +74,12 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard_admin', [AdminController::class, 'beranda']);
     Route::get('/kelola_user', [AdminController::class, 'kelolaUser']);
-    Route::get('/laporan', [AdminController::class, 'laporan']);
+    Route::get('/laporan_admin', [AdminController::class, 'laporan']);
     Route::patch('/kelola_user/{id}/activate', [AdminController::class, 'activateUser']);
     Route::patch('/kelola_user/{id}/ban', [AdminController::class, 'banUser']);
     Route::delete('/kelola_user/{id}', [AdminController::class, 'destroyUser']);
     Route::delete('/kelola_user/{id}', [AdminController::class, 'destroyUser']);
-    Route::patch('/laporan/{id}/status', [AdminController::class, 'updateStatusLaporan']);
+    Route::patch('/laporan_admin/{id}/status', [AdminController::class, 'updateStatusLaporan']);
 });
 
 // API

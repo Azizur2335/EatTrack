@@ -87,7 +87,7 @@
                 @endif
 
                 <!-- UPDATE STATUS -->
-                <form method="POST" action="/laporan/{{ $report->id }}/status" class="flex gap-3 items-end">
+                <form method="POST" action="/laporan_admin/{{ $report->id }}/status" class="flex gap-3 items-end">
                     @csrf @method('PATCH')
                     <div class="flex-1">
                         <label class="block text-xs text-gray-500 mb-1">Catatan Admin</label>

@@ -226,6 +226,24 @@
 				</div>
 				</div>
 
+				<!-- VOUCHER PROMO -->
+				<div class="mb-4">
+					<label class="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
+						<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>
+						</svg>
+						Voucher Promo (Opsional)
+					</label>
+					<select name="promo_id" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 bg-gray-50 focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-200 transition-all duration-200">
+						<option value="">Tidak pakai promo</option>
+						@foreach($claimedPromos as $claimed)
+							<option value="{{ $claimed->promo_id }}">
+								{{ $claimed->promo->title }} — Diskon {{ $claimed->promo->discount }}%
+							</option>
+						@endforeach
+					</select>
+				</div>
+
 				<!-- BOOKING BUTTON -->
 				<button type="button" onclick="submitReservasi()" class="w-full bg-red-700 hover:bg-red-900 active:scale-[0.99] text-white font-semibold py-3.5 rounded-2xl text-sm tracking-wide shadow-lg shadow-red/30 hover:shadow-red/40 transition-all duration-200">
 				Booking

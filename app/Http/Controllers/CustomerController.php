@@ -23,7 +23,7 @@ class CustomerController extends Controller
         $filter = $request->query('filter', 'semua');
         $now = now()->format('H:i:s');
 
-        $query = Restaurant::where('status', 'active')->with('menus');
+        $query = Restaurant::where('status', 'active')->with('menus', 'reviews');
 
         if ($filter === 'terlaris') {
             $query->withCount('reservations')->orderByDesc('reservations_count');
@@ -36,13 +36,18 @@ class CustomerController extends Controller
         $restaurants = $query->get();
 
         if ($filter === 'terdekat' && $request->filled('lat') && $request->filled('lng')) {
-            $userLat = (float) $request->query('lat');
-            $userLng = (float) $request->query('lng');
-            $restaurants = $restaurants->sortBy(function ($r) use ($userLat, $userLng) {
-                $lat = $r->latitude ?? -8.583333;
-                $lng = $r->longitude ?? 116.116667;
-                return sqrt(pow($lat - $userLat, 2) + pow($lng - $userLng, 2));
-            })->values();
+            $userLat  = (float) $request->query('lat');
+            $userLng  = (float) $request->query('lng');
+            $jarakMax = (float) ($request->query('jarak_max', 999));
+
+            $restaurants = $restaurants->filter(function ($r) use ($userLat, $userLng, $jarakMax) {
+                $lat  = $r->latitude  ?? -8.583333;
+                $lng  = $r->longitude ?? 116.116667;
+                // Konversi derajat ke km (approx)
+                $km = sqrt(pow(($lat - $userLat) * 111, 2) + pow(($lng - $userLng) * 111, 2));
+                $r->jarak_km = round($km, 1);
+                return $km <= $jarakMax;
+            })->sortBy('jarak_km')->values();
         }
 
         $promos = \App\Models\Promo::where('status', 'active')
@@ -92,8 +97,18 @@ class CustomerController extends Controller
             ->where('status', 'active')
             ->firstOrFail();
 
-        return view('Customer/DetailResto', compact('restaurant'));
+        $claimedPromos = \App\Models\ClaimedPromo::where('customer_id', auth()->id())
+            ->whereHas('promo', function ($q) use ($resto_id) {
+                $q->where('restaurant_id', $resto_id)
+                  ->where('status', 'active')
+                  ->where('end_date', '>=', today());
+            })
+            ->with('promo')
+            ->get();
+
+        return view('Customer/DetailResto', compact('restaurant', 'claimedPromos'));
     }
+    
     public function showProfile()
     {
         $reservations = Reservation::where('customer_id', auth()->id())->latest()->get();
@@ -116,6 +131,7 @@ class CustomerController extends Controller
             'time'          => $request->time,
             'guest_count'   => $request->guest_count,
             'notes'         => $request->notes,
+            'promo_id'      => $request->promo_id ?? null,
             'status'        => 'pending',
         ]);
 
