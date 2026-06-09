@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>EatTrack</title>
 
     <!-- TAILWIND -->
@@ -113,12 +112,12 @@
       <!-- STATS -->
       <div class="flex justify-center gap-24 flex-wrap">
         <div class="text-center">
-          <span class="stat-num">77K</span>
+          <span class="stat-num">{{ $totalUsers}}</span>
           <span class="stat-label">Pengguna</span>
         </div>
 
         <div class="text-center">
-          <span class="stat-num">77K</span>
+          <span class="stat-num">{{ $totalRestaurants }}</span>
           <span class="stat-label">Tempat Makan</span>
         </div>
 
@@ -134,7 +133,7 @@
     <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
 
         <!-- Header -->
-        <div class="bg-orange-700 px-8 py-5">
+        <div class="bg-orange-900 px-8 py-5">
             <h1 class="text-2xl text-white font-bold">
                 Apa itu EatTrack?
             </h1>

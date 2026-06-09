@@ -5,16 +5,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\IndexController;
 
 // Public
 
-Route::get('/', function () {
-    return view('index');
-});
-
-Route::get('/kontak', function () {
-    return view('kontak');
-});
+Route::get('/', [IndexController::class, 'index']);
 
 // Auth
 Route::get('/loginPage', [AuthController::class, 'showLogin'])->name('login');
