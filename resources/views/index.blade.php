@@ -122,8 +122,8 @@
         </div>
 
         <div class="text-center">
-          <span class="stat-num">7,7</span>
-          <span class="stat-label">Rating</span>
+          <span class="stat-num">{{ $totalReservations }}</span>
+          <span class="stat-label">Reservasi</span>
         </div>
       </div>
     </section>
