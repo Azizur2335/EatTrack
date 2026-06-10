@@ -13,6 +13,7 @@ class IndexController extends Controller
 		return view('index', [
 			'totalUsers'       => User::count(),
 			'totalRestaurants' => Restaurant::count(),
+			'totalReservations' => Reservation::count(),
 		]);
 	}
 }
