@@ -26,8 +26,6 @@ Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->n
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
-Route::get('/about', function () {return view('about');})->middleware(['auth', 'role:customer']);
-
 
 // Customer
 Route::middleware(['auth', 'role:customer'])->group(function () {
@@ -72,7 +70,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/laporan_admin', [AdminController::class, 'laporan']);
     Route::patch('/kelola_user/{id}/activate', [AdminController::class, 'activateUser']);
     Route::patch('/kelola_user/{id}/ban', [AdminController::class, 'banUser']);
-    Route::delete('/kelola_user/{id}', [AdminController::class, 'destroyUser']);
     Route::delete('/kelola_user/{id}', [AdminController::class, 'destroyUser']);
     Route::patch('/laporan_admin/{id}/status', [AdminController::class, 'updateStatusLaporan']);
 });

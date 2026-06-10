@@ -57,12 +57,6 @@
                             <td class="p-3">{{ $user->phone ?? '-' }}</td>
                             <td class="p-3"><span class="px-2 w-fit rounded-full bg-yellow-400">{{ $user->role }}</span></td>
                             <td class="p-3 flex justify-center space-x-3 items-center">
-                                <form action="/kelola_user/{{ $user->id }}/activate" method="POST">@csrf @method('PATCH')
-                                    <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded text-xs">Aktifkan</button>
-                                </form>
-                                <form action="/kelola_user/{{ $user->id }}/ban" method="POST">@csrf @method('PATCH')
-                                    <button type="submit" class="bg-yellow-400 text-gray-800 px-2 py-1 rounded text-xs">Ban</button>
-                                </form>
                                 <form action="/kelola_user/{{ $user->id }}" method="POST">@csrf @method('DELETE')
                                     <button type="submit" class="text-red-700 px-2 py-1 rounded text-xs">Hapus</button>
                                 </form>

@@ -13,7 +13,7 @@
         .unbounded { font-family: 'Unbounded', sans-serif; }
     </style>
 </head>
-<body class="bg-red-700 min-h-screen m-0 p-0">
+<body class="bg-orange-700 min-h-screen m-0 p-0">
 
     <x-navbar></x-navbar>
 

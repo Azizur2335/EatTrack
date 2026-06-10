@@ -21,7 +21,7 @@ class CustomerController extends Controller
     public function beranda(Request $request)
     {
         $filter = $request->query('filter', 'semua');
-        $now = now()->format('H:i:s');
+        $now = now('Asia/Makassar')->format('H:i:s');
 
         $query = Restaurant::where('status', 'active')->with('menus', 'reviews');
 

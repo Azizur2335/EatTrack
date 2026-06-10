@@ -200,7 +200,7 @@
                             <div class="card-gradient absolute bottom-0 left-0 right-0 h-[120px]"></div>
 
                             @php
-                                $now = now()->format('H:i:s');
+                                $now = now('Asia/Makassar')->format('H:i:s');
                                 $isOpen = $restaurant->status === 'active'
                                     && $restaurant->open_time
                                     && $restaurant->close_time
