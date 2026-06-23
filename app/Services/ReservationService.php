@@ -6,13 +6,27 @@ use App\Models\Reservation;
 
 class ReservationService
 {
-    public function checkConflict($tableId, $date, $time): bool
+    public function checkConflict($tableId, $date, $time, $excludeReservationId = null): bool
     {
-        return Reservation::where('table_id', $tableId)
+        $targetDateTime = \Carbon\Carbon::parse("$date $time");
+        
+        $activeReservations = Reservation::where('table_id', $tableId)
             ->where('date', $date)
-            ->where('time', $time)
             ->whereIn('status', ['pending', 'confirmed'])
-            ->exists();
+            ->when($excludeReservationId, function($q) use ($excludeReservationId) {
+                $q->where('id', '!=', $excludeReservationId);
+            })
+            ->get();
+
+        foreach ($activeReservations as $res) {
+            $resDateTime = \Carbon\Carbon::parse("{$res->date} {$res->time}");
+            $diffInMinutes = abs($targetDateTime->diffInMinutes($resDateTime));
+            if ($diffInMinutes < 120) { // Bentrok dalam rentang 2 jam
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function store(array $data): Reservation

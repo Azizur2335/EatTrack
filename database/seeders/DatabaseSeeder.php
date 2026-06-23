@@ -55,10 +55,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Tables
+        $tableCapacities = [1 => 2, 2 => 4, 3 => 4, 4 => 6, 5 => 8];
         for ($i = 1; $i <= 5; $i++) {
             Table::firstOrCreate(
                 ['restaurant_id' => $restaurant->id, 'table_number' => 'Meja ' . $i],
-                ['capacity' => 4, 'status' => 'available']
+                ['capacity' => $tableCapacities[$i], 'status' => 'available']
             );
         }
 

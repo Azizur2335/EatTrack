@@ -42,10 +42,31 @@
 				<span class="text-white/60 text-sm">•</span>
 				<span class="text-white/80 text-sm">{{ $restaurant->reviews->count() }} Ulasan</span>
 			</div>
-			<span class="inline-flex items-center gap-2 bg-white/95 text-gray-800 text-xs font-medium px-3 py-1.5 rounded-full w-fit shadow-sm">
-				<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-				Buka {{ $restaurant->open_time ? \Carbon\Carbon::parse($restaurant->open_time)->format('H.i') : '-' }} - {{ $restaurant->close_time ? \Carbon\Carbon::parse($restaurant->close_time)->format('H.i') : '-' }} WITA
-			</span>
+			@php
+				$isOpen = false;
+				$now = now('Asia/Makassar');
+				$timeNow = $now->format('H:i:s');
+				$open = $restaurant->open_time;
+				$close = $restaurant->close_time;
+				if ($open && $close) {
+					if ($close >= $open) {
+						$isOpen = ($timeNow >= $open && $timeNow <= $close);
+					} else {
+						$isOpen = ($timeNow >= $open || $timeNow <= $close);
+					}
+				}
+			@endphp
+			@if($isOpen)
+				<span class="inline-flex items-center gap-2 bg-white/95 text-gray-800 text-xs font-medium px-3 py-1.5 rounded-full w-fit shadow-sm">
+					<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+					Buka • {{ $open ? \Carbon\Carbon::parse($open)->format('H.i') : '-' }} - {{ $close ? \Carbon\Carbon::parse($close)->format('H.i') : '-' }} WITA
+				</span>
+			@else
+				<span class="inline-flex items-center gap-2 bg-white/95 text-gray-800 text-xs font-medium px-3 py-1.5 rounded-full w-fit shadow-sm">
+					<span class="w-2 h-2 bg-red-500 rounded-full"></span>
+					Tutup • Buka {{ $open ? \Carbon\Carbon::parse($open)->format('H.i') : '-' }} - {{ $close ? \Carbon\Carbon::parse($close)->format('H.i') : '-' }} WITA
+				</span>
+			@endif
 		</div>
 	</div>
 
@@ -102,6 +123,18 @@
 				@endforelse
 			</div>
 
+			<!-- FOTO -->
+			<div id="content-foto" class="tab-content hidden">
+				<div class="bg-white rounded-2xl p-6 shadow-sm">
+					<h3 class="font-semibold text-lg mb-4">Galeri Foto</h3>
+					<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+						<img src="{{ $restaurant->image ? Storage::url($restaurant->image) : 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80' }}" class="w-full h-40 object-cover rounded-xl shadow-sm">
+						<img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80" class="w-full h-40 object-cover rounded-xl shadow-sm">
+						<img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=600&q=80" class="w-full h-40 object-cover rounded-xl shadow-sm">
+					</div>
+				</div>
+			</div>
+
 			<div id="content-ulasan" class="tab-content hidden">
 				@forelse($restaurant->reviews()->with('customer')->latest()->get() as $review)
 				<div class="bg-white p-4 rounded-2xl shadow-sm mb-3">
@@ -148,6 +181,17 @@
 		<div class="w-96 flex-shrink-0">
 			<div class="bg-white rounded-3xl shadow-md p-6">
 				<h2 class="font-display text-xl font-bold text-red mb-5">Reservasi Meja</h2>
+
+				@if ($errors->any())
+					<div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 text-xs rounded-2xl">
+						<ul class="list-disc pl-4 space-y-1">
+							@foreach ($errors->all() as $error)
+								<li>{{ $error }}</li>
+							@endforeach
+						</ul>
+					</div>
+				@endif
+
 				<form method="POST" action="/reservasi" id="reservasiForm">
 					@csrf
 					<input type="hidden" name="restaurant_id" value="{{ $restaurant->id }}">
@@ -244,6 +288,17 @@
 					</select>
 				</div>
 
+				<!-- CATATAN KHUSUS (NOTES) -->
+				<div class="mb-4">
+					<label class="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
+						<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+						</svg>
+						Catatan Khusus (Opsional)
+					</label>
+					<textarea name="notes" rows="2" placeholder="Contoh: Alergi kacang, kursi bayi, dll." class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 bg-gray-50 focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 font-body resize-none">{{ old('notes') }}</textarea>
+				</div>
+
 				<!-- BOOKING BUTTON -->
 				<button type="button" onclick="submitReservasi()" class="w-full bg-red-700 hover:bg-red-900 active:scale-[0.99] text-white font-semibold py-3.5 rounded-2xl text-sm tracking-wide shadow-lg shadow-red/30 hover:shadow-red/40 transition-all duration-200">
 				Booking
@@ -297,74 +352,130 @@
 		let guests = 2;
 
 		function renderCalendar() {
-		document.getElementById('monthLabel').textContent = MONTHS_ID[currentMonth] + ' ' + currentYear;
+			document.getElementById('monthLabel').textContent = MONTHS_ID[currentMonth] + ' ' + currentYear;
 
-		const grid = document.getElementById('calendarGrid');
-		grid.innerHTML = '';
+			const grid = document.getElementById('calendarGrid');
+			grid.innerHTML = '';
 
-		const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-		const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-		const prevDays = new Date(currentYear, currentMonth, 0).getDate();
+			const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+			const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+			const prevDays = new Date(currentYear, currentMonth, 0).getDate();
 
-		for (let i = 0; i < firstDay; i++) {
-			const d = document.createElement('div');
-			d.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-300 cursor-default';
-			d.textContent = prevDays - firstDay + 1 + i;
-			grid.appendChild(d);
-		}
-
-		for (let d = 1; d <= daysInMonth; d++) {
-			const el = document.createElement('div');
-			const isSelected = (d === selectedDay && currentMonth === today.getMonth() && currentYear === today.getFullYear());
-			const isToday = (d === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear());
-
-			if (isSelected) {
-			el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium bg-red-700 text-white cursor-pointer shadow-[0_4px_12px_rgba(185,28,28,0.35)]';
-			} else if (isToday) {
-			el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-bold text-red-700 cursor-pointer hover:bg-red-100 transition-colors';
-			} else {
-			el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-700 cursor-pointer hover:bg-red-50 hover:text-red transition-colors';
+			for (let i = 0; i < firstDay; i++) {
+				const d = document.createElement('div');
+				d.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-300 cursor-default';
+				d.textContent = prevDays - firstDay + 1 + i;
+				grid.appendChild(d);
 			}
 
-			el.textContent = d;
-			el.addEventListener('click', () => {
-			selectedDay = d;
-			renderCalendar();
-			const mm = String(currentMonth + 1).padStart(2, '0');
-			const dd = String(selectedDay).padStart(2, '0');
-			document.getElementById('selectedDate').value = currentYear + '-' + mm + '-' + dd;
-			});
-			grid.appendChild(el);
-		}
+			for (let d = 1; d <= daysInMonth; d++) {
+				const el = document.createElement('div');
+				const isSelected = (d === selectedDay && currentMonth === today.getMonth() && currentYear === today.getFullYear());
+				const isToday = (d === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear());
 
-		const total = firstDay + daysInMonth;
-		const remainder = total % 7 === 0 ? 0 : 7 - (total % 7);
-		for (let i = 1; i <= remainder; i++) {
-			const d = document.createElement('div');
-			d.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-300 cursor-default';
-			d.textContent = i;
-			grid.appendChild(d);
-		}
+				// Past date check
+				let isPast = false;
+				const dateToCheck = new Date(currentYear, currentMonth, d);
+				const todayCompare = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+				if (dateToCheck < todayCompare) {
+					isPast = true;
+				}
+
+				if (isPast) {
+					el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-300 cursor-not-allowed bg-gray-50';
+				} else if (isSelected) {
+					el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium bg-red-700 text-white cursor-pointer shadow-[0_4px_12px_rgba(185,28,28,0.35)]';
+				} else if (isToday) {
+					el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-bold text-red-700 cursor-pointer hover:bg-red-100 transition-colors';
+				} else {
+					el.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-700 cursor-pointer hover:bg-red-50 hover:text-red transition-colors';
+				}
+
+				el.textContent = d;
+				if (!isPast) {
+					el.addEventListener('click', () => {
+						selectedDay = d;
+						const mm = String(currentMonth + 1).padStart(2, '0');
+						const dd = String(selectedDay).padStart(2, '0');
+						document.getElementById('selectedDate').value = currentYear + '-' + mm + '-' + dd;
+						renderCalendar();
+						fetchAvailableTables();
+					});
+				}
+				grid.appendChild(el);
+			}
+
+			const total = firstDay + daysInMonth;
+			const remainder = total % 7 === 0 ? 0 : 7 - (total % 7);
+			for (let i = 1; i <= remainder; i++) {
+				const d = document.createElement('div');
+				d.className = 'w-10 h-10 flex items-center justify-center rounded-[10px] text-[0.9rem] font-medium text-gray-300 cursor-default';
+				d.textContent = i;
+				grid.appendChild(d);
+			}
 		}
 
 		function prevMonth() {
-		if (currentMonth === 0) { currentMonth = 11; currentYear--; } else currentMonth--;
-		renderCalendar();
+			if (currentYear === today.getFullYear() && currentMonth === today.getMonth()) {
+				return;
+			}
+			if (currentMonth === 0) { currentMonth = 11; currentYear--; } else currentMonth--;
+			renderCalendar();
 		}
 		function nextMonth() {
-		if (currentMonth === 11) { currentMonth = 0; currentYear++; } else currentMonth++;
-		renderCalendar();
+			if (currentMonth === 11) { currentMonth = 0; currentYear++; } else currentMonth++;
+			renderCalendar();
 		}
 		function increaseGuests() {
-		guests = Math.min(guests + 1, 20);
-		document.getElementById('guestCount').textContent = guests;
-		document.getElementById('guestCountInput').value = guests;
+			guests = Math.min(guests + 1, 20);
+			document.getElementById('guestCount').textContent = guests;
+			document.getElementById('guestCountInput').value = guests;
+			fetchAvailableTables();
 		}
 		function decreaseGuests() {
-		guests = Math.max(guests - 1, 1);
-		document.getElementById('guestCount').textContent = guests;
-		document.getElementById('guestCountInput').value = guests;
+			guests = Math.max(guests - 1, 1);
+			document.getElementById('guestCount').textContent = guests;
+			document.getElementById('guestCountInput').value = guests;
+			fetchAvailableTables();
 		}
+
+		async function fetchAvailableTables() {
+			const date = document.getElementById('selectedDate').value;
+			const time = document.getElementById('timeInput').value;
+			const guestCount = document.getElementById('guestCountInput').value;
+			const tableSelect = document.querySelector('select[name="table_id"]');
+
+			if (!date || !time) {
+				tableSelect.innerHTML = '<option value="">Pilih tanggal & waktu dahulu</option>';
+				return;
+			}
+
+			tableSelect.innerHTML = '<option value="">Loading meja...</option>';
+
+			try {
+				const response = await fetch(`/api/available-tables/{{ $restaurant->id }}?date=${date}&time=${time}&guest_count=${guestCount}`);
+				const data = await response.json();
+				
+				if (data.success) {
+					if (data.tables.length === 0) {
+						tableSelect.innerHTML = '<option value="">Tidak ada meja yang cocok/tersedia</option>';
+					} else {
+						let options = '<option value="">Pilih Meja</option>';
+						data.tables.forEach(table => {
+							options += `<option value="${table.id}">${table.table_number} (Kapasitas ${table.capacity})</option>`;
+						});
+						tableSelect.innerHTML = options;
+					}
+				} else {
+					tableSelect.innerHTML = '<option value="">Gagal memuat meja</option>';
+				}
+			} catch (error) {
+				console.error("Error fetching tables:", error);
+				tableSelect.innerHTML = '<option value="">Error memuat data meja</option>';
+			}
+		}
+
+		document.getElementById('timeInput').addEventListener('change', fetchAvailableTables);
 
 		renderCalendar();
 
@@ -372,6 +483,7 @@
 		const todayMm = String(today.getMonth() + 1).padStart(2, '0');
 		const todayDd = String(today.getDate()).padStart(2, '0');
 		document.getElementById('selectedDate').value = today.getFullYear() + '-' + todayMm + '-' + todayDd;
+		fetchAvailableTables();
 
 		function submitReservasi() {
 			if (!document.getElementById('selectedDate').value) {
@@ -383,7 +495,7 @@
 				return;
 			}
 			const tableSelect = document.querySelector('select[name="table_id"]');
-			if (!tableSelect.value) {
+			if (!tableSelect.value || tableSelect.value === "") {
 				alert('Pilih meja terlebih dahulu.');
 				return;
 			}

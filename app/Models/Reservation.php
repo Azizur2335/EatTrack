@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 #[Fillable([
     'customer_id', 'restaurant_id', 'table_id',
-    'date', 'time', 'guest_count', 'status', 'notes'
+    'date', 'time', 'guest_count', 'status', 'notes', 'promo_id'
 ])]
 class Reservation extends Model
 {
@@ -18,4 +18,5 @@ class Reservation extends Model
     public function restaurant() { return $this->belongsTo(Restaurant::class); }
     public function tableData() { return $this->belongsTo(Table::class, 'table_id'); }
     public function review() { return $this->hasOne(Review::class); }
+    public function promo() { return $this->belongsTo(Promo::class); }
 }

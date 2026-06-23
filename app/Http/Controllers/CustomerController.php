@@ -61,7 +61,7 @@ class CustomerController extends Controller
 
     public function map()
     {
-        $restaurants = Restaurant::where('status', 'active') -> select('id', 'name', 'address', 'latitude', 'longitude')->get();
+        $restaurants = Restaurant::where('status', 'active')->with('reviews')->get();
         return view('Customer/Map', compact('restaurants'));
     }
 
@@ -214,5 +214,43 @@ class CustomerController extends Controller
         $this->reservationService->cancel($reservation);
 
         return redirect('/reservasi')->with('success', 'Reservasi berhasil dibatalkan.');
+    }
+
+    public function availableTables(Request $request, $resto_id)
+    {
+        $request->validate([
+            'date' => 'required|date|after_or_equal:today',
+            'time' => 'required',
+            'guest_count' => 'required|integer|min:1',
+        ]);
+
+        $date = $request->query('date');
+        $time = $request->query('time');
+        $guestCount = (int)$request->query('guest_count');
+
+        $tables = \App\Models\Table::where('restaurant_id', $resto_id)->get();
+
+        $availableTables = [];
+        foreach ($tables as $table) {
+            if ($table->capacity < $guestCount) {
+                continue;
+            }
+
+            // Convert time H:i:s or H:i to H:i
+            $formattedTime = \Carbon\Carbon::parse($time)->format('H:i');
+            $hasConflict = $this->reservationService->checkConflict($table->id, $date, $formattedTime);
+            if (!$hasConflict) {
+                $availableTables[] = [
+                    'id' => $table->id,
+                    'table_number' => $table->table_number,
+                    'capacity' => $table->capacity,
+                ];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'tables' => $availableTables,
+        ]);
     }
 }

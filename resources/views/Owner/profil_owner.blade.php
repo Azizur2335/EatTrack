@@ -21,6 +21,8 @@
             <div class="px-20 py-10">
 
                 <!-- DATA OWNER -->
+                <form action="/profil_owner/user" method="POST" enctype="multipart/form-data" id="ownerForm">
+                    @csrf
                 <div class="bg-white rounded-xl p-8 shadow-lg mb-8">
 
                     <div class="flex justify-between items-center mb-6">
@@ -31,16 +33,49 @@
                         <button
                             type="button"
                             id="editBtn"
-                            class="px-5 py-2 bg-[#B92C10] text-white rounded-lg">
+                            class="px-5 py-2 bg-[#B92C10] text-white rounded-lg hover:bg-red-800 transition">
                             Edit Profil
                         </button>
                     </div>
 
-                    <div class="flex justify-center mb-8">
-                        <div class="w-32 h-32 rounded-full overflow-hidden bg-gray-200">
-                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}"
-                                class="w-full h-full object-cover">
+                    @if(session('success_user'))
+                        <div class="mb-4 px-4 py-3 bg-green-100 text-green-700 rounded-lg text-sm">
+                            {{ session('success_user') }}
                         </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="mb-4 px-4 py-3 bg-red-100 text-red-700 rounded-lg text-sm">
+                            <ul class="list-disc list-inside">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <div class="flex flex-col items-center mb-8">
+                        <div class="relative group">
+                            <div class="w-32 h-32 rounded-full overflow-hidden bg-gray-200 border-4 border-gray-100 shadow">
+                                @if($user->avatar)
+                                    <img id="avatarPreview" src="{{ asset('storage/' . $user->avatar) }}"
+                                        class="w-full h-full object-cover">
+                                @else
+                                    <img id="avatarPreview" src="" class="w-full h-full object-cover hidden">
+                                    <div id="avatarPlaceholder" class="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-red-500 text-white text-4xl font-bold">
+                                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                                    </div>
+                                @endif
+                            </div>
+                            <label id="avatarLabel" class="hidden absolute inset-0 rounded-full bg-black/40 flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <input type="file" name="avatar" id="avatarInput" accept="image/*" class="hidden">
+                            </label>
+                        </div>
+                        <p id="avatarHint" class="hidden text-xs text-gray-500 mt-2">Klik foto untuk mengganti (maks 2MB)</p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-5">
@@ -49,7 +84,8 @@
                             <label class="font-semibold text-sm">Nama Lengkap</label>
                             <input
                                 type="text"
-                                value="{{ auth()->user()->name }}"
+                                name="name"
+                                value="{{ $user->name }}"
                                 class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
                                 readonly>
                         </div>
@@ -58,25 +94,27 @@
                             <label class="font-semibold text-sm">Email</label>
                             <input
                                 type="email"
-                                value="{{ auth()->user()->email }}"
-                                class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
-                                readonly>
+                                value="{{ $user->email }}"
+                                class="w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100 text-gray-500 cursor-not-allowed"
+                                readonly disabled>
                         </div>
 
                         <div>
                             <label class="font-semibold text-sm">Nomor HP</label>
                             <input
                                 type="text"
-                                value="{{ auth()->user()->phone }}"
+                                name="phone"
+                                value="{{ $user->phone }}"
                                 class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
                                 readonly>
                         </div>
 
                         <div>
-                            <label class="font-semibold text-sm">Password</label>
+                            <label class="font-semibold text-sm">Password Baru</label>
                             <input
                                 type="password"
-                                value="password"
+                                name="password"
+                                placeholder="Kosongkan jika tidak ingin ganti"
                                 class="profile-input w-full mt-2 border rounded-lg px-4 py-3 bg-gray-100"
                                 readonly>
                         </div>
@@ -89,18 +127,19 @@
                         <button
                             type="button"
                             id="cancelBtn"
-                            class="px-6 py-3 border-2 border-red-600 text-red-600 rounded-lg hover:bg-red-50">
+                            class="px-6 py-3 border-2 border-red-600 text-red-600 rounded-lg hover:bg-red-50 transition">
                             Batal
                         </button>
 
                         <button
                             type="submit"
-                            class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                            class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
                             Simpan Perubahan
                         </button>
 
                     </div>
                 </div>
+                </form>
 
                 <!-- DATA RESTORAN -->
                 <div class="bg-white rounded-xl p-8 shadow-lg">
@@ -268,11 +307,16 @@
 
 <script>
     const editBtn = document.getElementById('editBtn');
-	const cancelBtn = document.getElementById('cancelBtn');
-	const inputs = document.querySelectorAll('.profile-input');
-	const actionButtons = document.getElementById('actionButtons');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const inputs = document.querySelectorAll('.profile-input');
+    const actionButtons = document.getElementById('actionButtons');
+    const avatarLabel = document.getElementById('avatarLabel');
+    const avatarHint = document.getElementById('avatarHint');
+    const avatarInput = document.getElementById('avatarInput');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const avatarPlaceholder = document.getElementById('avatarPlaceholder');
 
-	editBtn.addEventListener('click', () => {
+    editBtn.addEventListener('click', () => {
         inputs.forEach(input => {
             input.removeAttribute('readonly');
             input.classList.remove('bg-gray-100');
@@ -282,6 +326,13 @@
         actionButtons.classList.remove('hidden');
         actionButtons.classList.add('flex');
 
+        // Tampilkan avatar upload overlay & hint
+        if (avatarLabel) {
+            avatarLabel.classList.remove('hidden');
+            avatarLabel.classList.add('flex');
+        }
+        if (avatarHint) avatarHint.classList.remove('hidden');
+
         // Aktifkan juga form restoran
         document.querySelectorAll('.resto-action-buttons').forEach(el => {
             el.classList.remove('hidden');
@@ -289,6 +340,22 @@
 
         editBtn.classList.add('hidden');
     });
+
+    // Avatar preview on file select
+    if (avatarInput) {
+        avatarInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    avatarPreview.src = ev.target.result;
+                    avatarPreview.classList.remove('hidden');
+                    if (avatarPlaceholder) avatarPlaceholder.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 
     cancelBtn.addEventListener('click', () => {
         location.reload();

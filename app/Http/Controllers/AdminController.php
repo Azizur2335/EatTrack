@@ -103,4 +103,27 @@ class AdminController extends Controller
 
         return redirect('/kelola_user')->with('success', 'User berhasil dihapus.');
     }
+
+    public function storeUser(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|email|unique:users,email',
+            'phone'     => 'nullable|string|max:15',
+            'password'  => 'required|string|min:8',
+            'role'      => 'required|in:customer,owner,admin',
+            'is_active' => 'required|boolean',
+        ]);
+
+        User::create([
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'phone'     => $request->phone,
+            'password'  => \Illuminate\Support\Facades\Hash::make($request->password),
+            'role'      => $request->role,
+            'is_active' => $request->is_active,
+        ]);
+
+        return redirect('/kelola_user')->with('success', 'User berhasil ditambahkan.');
+    }
 }

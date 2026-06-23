@@ -57,6 +57,32 @@
                 <div class="bg-[#F1F1F1] rounded-[21px] p-3 flex flex-col gap-3">
 
                     @forelse($restaurants as $restaurant)
+                    @php
+                        // 1. Real-time Status Buka/Tutup
+                        $isOpen = false;
+                        $now = now('Asia/Makassar');
+                        $timeNow = $now->format('H:i:s');
+                        $open = $restaurant->open_time;
+                        $close = $restaurant->close_time;
+                        if ($open && $close) {
+                            if ($close >= $open) {
+                                $isOpen = ($timeNow >= $open && $timeNow <= $close);
+                            } else {
+                                $isOpen = ($timeNow >= $open || $timeNow <= $close);
+                            }
+                        }
+
+                        // 2. Jarak default dari pusat kota Mataram (-8.583333, 116.116667)
+                        $lat = $restaurant->latitude ?? -8.583333;
+                        $lng = $restaurant->longitude ?? 116.116667;
+                        $distance = sqrt(pow(($lat - (-8.583333)) * 111, 2) + pow(($lng - 116.116667) * 111, 2));
+                        $distanceStr = number_format($distance, 1, ',', '.') . ' Km';
+
+                        // 3. Rating
+                        $ratingStr = $restaurant->reviews->count() > 0 
+                            ? number_format($restaurant->reviews->avg('rating'), 1) 
+                            : '-';
+                    @endphp
                     <div
                         class="resto-card bg-[#F1F1F1] border border-[#737373] rounded-[21px] flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-200 transition"
                         data-lat="{{ $restaurant->latitude ?? '' }}"
@@ -83,7 +109,7 @@
                             <p class="text-[11px] text-[#737373] mt-1 line-clamp-2">{{ $restaurant->description ?? 'Tidak ada deskripsi' }}</p>
                             <div class="flex items-center gap-3 mt-2 flex-wrap">
                                 {{-- Status --}}
-                                @if($restaurant->status === 'active')
+                                @if($isOpen)
                                     <span class="bg-[#47DC42] rounded-[9.5px] px-3 py-[2px] text-[12px] font-medium text-[#272727]">Buka</span>
                                 @else
                                     <span class="bg-[#B92C10] rounded-[9.5px] px-3 py-[2px] text-[12px] font-medium text-[#F1F1F1]">Tutup</span>
@@ -93,14 +119,14 @@
                                     <svg class="w-3 h-3 text-[#737373]" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                                     </svg>
-                                    <span class="text-[12px] text-[#737373]">0,3 Km</span>
+                                    <span class="text-[12px] text-[#737373] distance-val">{{ $distanceStr }}</span>
                                 </div>
                                 {{-- Rating --}}
                                 <div class="flex items-center gap-1">
                                     <svg class="w-3 h-3 text-[#F3D042]" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                                     </svg>
-                                    <span class="text-[12px] text-[#272727]">4.5</span>
+                                    <span class="text-[12px] text-[#272727]">{{ $ratingStr }}</span>
                                 </div>
                             </div>
                         </div>
@@ -165,6 +191,30 @@
         // Simpan semua marker agar bisa disaring
         const markerMap = {};
 
+        function isRestoOpen(resto) {
+            if (!resto.open_time || !resto.close_time) return false;
+            
+            // Dapatkan waktu saat ini di Asia/Makassar (UTC+8)
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const makassarTime = new Date(utc + (3600000 * 8));
+            
+            const hours = String(makassarTime.getHours()).padStart(2, '0');
+            const minutes = String(makassarTime.getMinutes()).padStart(2, '0');
+            const seconds = String(makassarTime.getSeconds()).padStart(2, '0');
+            const timeNow = `${hours}:${minutes}:${seconds}`;
+            
+            const open = resto.open_time;
+            const close = resto.close_time;
+            
+            if (close >= open) {
+                return (timeNow >= open && timeNow <= close);
+            } else {
+                // Kasus buka melewati tengah malam
+                return (timeNow >= open || timeNow <= close);
+            }
+        }
+
         restaurants.forEach(function(resto) {
             let lat = parseFloat(resto.latitude);
             let lng = parseFloat(resto.longitude);
@@ -181,7 +231,7 @@
                     <div style="min-width:200px">
                         <b style="font-size:14px">${resto.name}</b><br>
                         <span style="font-size:12px;color:#737373">${resto.address ?? ''}</span><br>
-                        <span style="font-size:12px">${resto.status === 'active' ? '🟢 Buka' : '🔴 Tutup'}</span>
+                        <span style="font-size:12px">${isRestoOpen(resto) ? '🟢 Buka' : '🔴 Tutup'}</span>
                         <br><br>
                         <a href="/katalog/${resto.id}" style="background:#B92C10;color:white;padding:6px 12px;border-radius:8px;text-decoration:none;font-size:13px">
                             Lihat Menu & Booking
@@ -289,6 +339,53 @@
 
             panelOpen = !panelOpen;
             setTimeout(() => { map.invalidateSize(); }, 310);
+        }
+
+        // Kalkulasi jarak dinamis berdasarkan lokasi user
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius bumi dalam km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+
+                // Tambahkan marker posisi user dengan pin biru
+                L.marker([userLat, userLng], {
+                    icon: L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41]
+                    })
+                }).addTo(map).bindPopup('Lokasi Anda');
+
+                // Update jarak di panel sidebar secara real-time
+                restaurants.forEach(resto => {
+                    let lat = parseFloat(resto.latitude);
+                    let lng = parseFloat(resto.longitude);
+                    if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
+                        const fallback = getFallbackCoords(resto.id);
+                        lat = fallback.lat;
+                        lng = fallback.lng;
+                    }
+                    const distance = calculateDistance(userLat, userLng, lat, lng);
+                    const distEl = document.querySelector(`.resto-card[data-id="${resto.id}"] .distance-val`);
+                    if (distEl) {
+                        distEl.textContent = distance.toFixed(1).replace('.', ',') + ' Km';
+                    }
+                });
+            }, error => {
+                console.warn("Geolocation tidak diijinkan / error:", error);
+            });
         }
     </script>
 

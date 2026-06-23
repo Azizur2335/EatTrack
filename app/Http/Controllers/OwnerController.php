@@ -51,12 +51,37 @@ class OwnerController extends Controller
                 ->get()
             : collect();
 
+        // Data chart 6 bulan terakhir khusus restoran ini
+        $chartLabels = [];
+        $chartData   = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $chartLabels[] = now()->subMonths($i)->translatedFormat('M');
+            if ($restaurant) {
+                $chartData[] = Reservation::where('restaurant_id', $restaurant->id)
+                                    ->whereMonth('created_at', now()->subMonths($i)->month)
+                                    ->whereYear('created_at', now()->subMonths($i)->year)
+                                    ->count();
+            } else {
+                $chartData[] = 0;
+            }
+        }
+
+        // Promo Aktif
+        $promoAktif = $restaurant
+            ? Promo::where('restaurant_id', $restaurant->id)
+                ->where('status', 'active')
+                ->where('end_date', '>=', today()->toDateString())
+                ->latest()
+                ->take(5)
+                ->get()
+            : collect();
+
         return view('Owner/beranda_owner', compact(
             'restaurant', 'periode',
             'totalReservasi', 'reservasiDikonfirmasi',
             'reservasiPending', 'reservasiDibatalkan',
             'reservasiSelesai', 'menungguKonfirmasi',
-            'reservasiTerbaru'
+            'reservasiTerbaru', 'chartLabels', 'chartData', 'promoAktif'
         ));
     }
 
@@ -85,13 +110,13 @@ class OwnerController extends Controller
         $promos            = $query->get();
         $allPromos         = $restaurant ? Promo::where('restaurant_id', $restaurant->id)->get() : collect();
         $promoAktifCount   = $allPromos->where('status', 'active')->where('end_date', '>=', today()->toDateString())->count();
-        $promoBerakirCount = $allPromos->where('end_date', '<', today()->toDateString())->count();
+        $promoBerakhirCount = $allPromos->where('end_date', '<', today()->toDateString())->count();
         $totalPromo        = $allPromos->count();
         $totalDigunakan    = $allPromos->sum('kuota_terpakai');
 
         return view('Owner/promo_owner', compact(
             'restaurant', 'promos', 'tab',
-            'promoAktifCount', 'promoBerakirCount',
+            'promoAktifCount', 'promoBerakhirCount',
             'totalPromo', 'totalDigunakan'
         ));
     }
@@ -135,6 +160,37 @@ class OwnerController extends Controller
         return view('Owner/profil_owner', compact('user', 'restaurant'));
     }
 
+    public function updateUserProfil(Request $request)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'phone'    => 'nullable|string|max:15',
+            'avatar'   => 'nullable|image|max:2048',
+            'password' => 'nullable|string|min:8',
+        ]);
+
+        $avatarPath = $user->avatar;
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        }
+
+        $data = [
+            'name'   => $request->name,
+            'phone'  => $request->phone,
+            'avatar' => $avatarPath,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect('/profil_owner')->with('success_user', 'Profil berhasil diperbarui.');
+    }
+
     public function storeMenu(StoreMenuRequest $request)
     {
         $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
@@ -151,7 +207,7 @@ class OwnerController extends Controller
             'price'         => $request->price,
             'category'      => $request->category,
             'image'         => $imagePath,
-            'is_available'  => $request->has('is_available'),
+            'is_available'  => $request->has('is_available') ? $request->boolean('is_available') : true,
         ]);
 
         return redirect('/kelola_menu')->with('success', 'Menu berhasil ditambahkan.');
@@ -166,10 +222,11 @@ class OwnerController extends Controller
         abort_if($menu->restaurant_id !== $restaurant->id, 403);
 
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'price'    => 'required|numeric',
-            'category' => 'required|in:makanan,minuman,dessert,lainnya',
-            'image'    => 'nullable|image|max:2048',
+            'name'         => 'required|string|max:255',
+            'price'        => 'required|numeric',
+            'category'     => 'required|in:makanan,minuman,dessert,lainnya',
+            'image'        => 'nullable|image|max:2048',
+            'is_available' => 'nullable|in:0,1',
         ]);
 
         $imagePath = $menu->image;
@@ -183,10 +240,32 @@ class OwnerController extends Controller
             'price'        => $request->price,
             'category'     => $request->category,
             'image'        => $imagePath,
-            'is_available' => $request->has('is_available'),
+            'is_available' => $request->has('is_available') ? $request->boolean('is_available') : $menu->is_available,
         ]);
 
         return redirect('/kelola_menu')->with('success', 'Menu berhasil diupdate.');
+    }
+
+    public function activateMenu($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
+        abort_if($menu->restaurant_id !== $restaurant->id, 403);
+
+        $menu->update(['is_available' => true]);
+
+        return redirect('/kelola_menu')->with('success', 'Menu berhasil diaktifkan.');
+    }
+
+    public function deactivateMenu($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $restaurant = Restaurant::where('owner_id', auth()->id())->firstOrFail();
+        abort_if($menu->restaurant_id !== $restaurant->id, 403);
+
+        $menu->update(['is_available' => false]);
+
+        return redirect('/kelola_menu')->with('success', 'Menu berhasil dinonaktifkan.');
     }
 
     public function destroyMenu($id)

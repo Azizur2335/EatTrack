@@ -34,6 +34,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/reservasi', [CustomerController::class, 'reservasi']);
     Route::get('/promo', [CustomerController::class, 'promo']);
     Route::get('/katalog/{resto_id}', [CustomerController::class, 'detail_resto']);
+    Route::get('/api/available-tables/{resto_id}', [CustomerController::class, 'availableTables']);
     Route::post('/reservasi', [CustomerController::class, 'storeReservasi']);
     Route::get('/profile', [CustomerController::class, 'showProfile']);
     Route::delete('/reservasi/{id}', [CustomerController::class, 'cancelReservasi'])->name('reservasi.cancel');
@@ -49,6 +50,8 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::post('/kelola_menu', [OwnerController::class, 'storeMenu']);
     Route::put('/kelola_menu/{id}', [OwnerController::class, 'updateMenu']);
     Route::delete('/kelola_menu/{id}', [OwnerController::class, 'destroyMenu']);
+    Route::patch('/kelola_menu/{id}/activate', [OwnerController::class, 'activateMenu']);
+    Route::patch('/kelola_menu/{id}/deactivate', [OwnerController::class, 'deactivateMenu']);
     Route::get('/konfirmasi_book', [OwnerController::class, 'konfirmasiBook']);
     Route::get('/promo_owner', [OwnerController::class, 'promo']);
     Route::get('/tambah_promo', [OwnerController::class, 'tambah_promo']);
@@ -61,12 +64,14 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::patch('/promo_owner/{id}/nonaktifkan', [OwnerController::class, 'nonaktifkanPromo']);
     Route::delete('/promo_owner/{id}', [OwnerController::class, 'destroyPromo']);
     Route::post('/profil_owner', [OwnerController::class, 'updateProfil']);
+    Route::post('/profil_owner/user', [OwnerController::class, 'updateUserProfil']);
 });
 
 // ADMIN
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard_admin', [AdminController::class, 'beranda']);
     Route::get('/kelola_user', [AdminController::class, 'kelolaUser']);
+    Route::post('/kelola_user', [AdminController::class, 'storeUser']);
     Route::get('/laporan_admin', [AdminController::class, 'laporan']);
     Route::patch('/kelola_user/{id}/activate', [AdminController::class, 'activateUser']);
     Route::patch('/kelola_user/{id}/ban', [AdminController::class, 'banUser']);
