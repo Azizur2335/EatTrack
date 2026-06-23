@@ -8,8 +8,14 @@
 </style>
 <nav class="w-sm bg-white">
     <div class="flex px-6 py-2 mt-6 mb-12">
-        <div class="rounded-full overflow-hidden size-16">
-            <img src="img/profile.jpg" alt="" class="w-full h-full object-cover">
+        <div class="rounded-full overflow-hidden size-16 bg-gray-200">
+            @if(auth()->user()->avatar)
+                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
+            @else
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-red-500 text-white text-xl font-bold">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                </div>
+            @endif
         </div>
         <div class="px-6 py-2">
             <h3>{{ auth()->user()->name }}</h3>
@@ -19,7 +25,7 @@
     <ul>
         <li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/dashboard_admin">Dashboard</a></li>
         <li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/kelola_user">Kelola Pengguna</a></li>
-        <li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/laporan">Laporan</a></li>
+        <li class="p-6 text-black hover:text-red-700 hover:bg-red-200 hover:font-bold text-xl"><a href="/laporan_admin">Laporan</a></li>
     </ul>
     <form method="POST" action="/logout" class="px-6 mt-8">
         @csrf

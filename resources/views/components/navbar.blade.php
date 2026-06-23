@@ -21,7 +21,7 @@
             onclick="toggleDropdown()"
             class="w-10 h-10 rounded-full bg-[#D9D9D9] flex items-center justify-center hover:bg-gray-300 cursor-pointer transition"
         >
-            <img src="assets/icon_drop.png" alt="" id="dropdownChevron" class="w-5 h-5 text-[#272727] transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <img src="{{ asset('assets/icon_drop.png') }}" alt="" id="dropdownChevron" class="w-5 h-5 text-[#272727] transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         </button>
 
         {{-- Dropdown Menu --}}
@@ -32,19 +32,19 @@
         >
             {{-- Profile --}}
             <a href="/profile" class="flex items-center gap-3 px-5 py-3 text-[#272727] hover:bg-gray-200 transition text-sm">
-                <img src="assets/iconcustomer.png" alt="" class="h-5 w-5">
+                <img src="{{ asset('assets/iconcustomer.png') }}" alt="" class="h-5 w-5">
                 Profile
             </a>
 
             {{-- Laporan --}}
             <a href="/laporan" class="flex items-center gap-3 px-5 py-3 text-[#272727] hover:bg-gray-200 transition text-sm">
-                <img src="assets/icon_service.png" alt="" class="h-5 w-5">
+                <img src="{{ asset('assets/icon_service.png') }}" alt="" class="h-5 w-5">
                 Laporan
             </a>
 
             {{-- About --}}
             <a href="/about" class="flex items-center gap-3 px-5 py-3 text-[#272727] hover:bg-gray-200 transition text-sm">
-                <img src="assets/icon_about.png" alt="" class="h-5 w-5">
+                <img src="{{ asset('assets/icon_about.png') }}" alt="" class="h-5 w-5">
                 About
             </a>
 
@@ -55,7 +55,7 @@
             <form action="/logout" method="POST">
                 @csrf
                 <button type="submit" class="w-full flex items-center gap-3 px-5 py-3 text-[#B92C10] hover:bg-red-200 transition text-sm cursor-pointer">
-                    <img src="assets/icon_logout.png" alt="" class="h-5 w-5">
+                    <img src="{{ asset('assets/icon_logout.png') }}" alt="" class="h-5 w-5">
                     Logout
                 </button>
             </form>

@@ -170,7 +170,7 @@
                 name="description"
                 rows="4"
                 class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C52F0F]/30 focus:border-[#C52F0F] transition resize-none"
-                placeholder="Deskripsi singkat promo...">>{{ old('description', $promo->description ?? '') }}</textarea></textarea>
+                placeholder="Deskripsi singkat promo...">{{ old('description', $promo->description ?? '') }}</textarea>
               @error('deskripsi')
                 <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
               @enderror
@@ -193,7 +193,7 @@
 
             <!-- Tombol Aksi -->
             <div class="flex gap-4">
-              <a href="../../promo_owner"
+              <a href="/promo_owner"
                 class="flex-1 text-center py-3.5 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition">
                 Batal
               </a>

@@ -115,7 +115,7 @@
 							<h3 class="unbound text-base font-bold text-slate-800">Laporan Terbaru</h3>
 							<p class="text-xs text-slate-400 mt-0.5">Keluhan & Bug masuk dari Customer</p>
 						</div>
-						<a href="/laporan" class="text-red-600 hover:text-red-800 font-semibold text-xs transition font-bold">Lihat Semua</a>
+						<a href="/laporan_admin" class="text-red-600 hover:text-red-800 font-semibold text-xs transition font-bold">Lihat Semua</a>
 					</div>
 					
 					<div class="space-y-4 overflow-y-auto max-h-80 flex-1 pr-1">

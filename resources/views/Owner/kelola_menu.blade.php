@@ -18,7 +18,7 @@
 	</style>
 </head>
 <body>
-	<main class="flex min-h-screen">
+	<div class="flex min-h-screen">
 		<x-sidebar></x-sidebar>
 		<main class="flex-1 p-8 bg-red-700 min-h-screen">
 			<div class="unbound text-2xl text-white py-6">
@@ -110,7 +110,7 @@
                 </table>
 			</div>
 		</main>
-	</main>
+	</div>
 
     <!-- MODAL TAMBAH MENU -->
 	<div id="modalTambahMenu" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
