@@ -117,8 +117,6 @@ Untuk menggunakan EatTrack ini, anda harus menginstall dan konfigurasi berikut:
 |---|---|---|
 | ![Beranda Customer](./screenshots/beranda_customer.png) | ![Detail Restoran](./screenshots/detail_resto.png) | ![Konfirmasi Booking](./screenshots/konfirmasi_book.png) |
 
-> *Placeholder — ganti file di folder `screenshots/` dengan tangkapan layar asli sebelum submit.*
-
 ## Bug Log
 
 ### Bug 1 — API restaurants & reservations error (500)
@@ -155,3 +153,16 @@ Untuk menggunakan EatTrack ini, anda harus menginstall dan konfigurasi berikut:
 3) **Hipotesis penyebab**: `StoreReservationRequest::rules()` hanya memvalidasi `date` (harus `after_or_equal:today`) dan `time` (cuma `required`, tanpa format/range), tidak pernah membandingkan `time` yang diinput dengan `open_time`/`close_time` milik `restaurant_id` yang dipilih.
 4) **Fix (apa yang diubah)**: Tambahkan custom validation rule (lewat `withValidator()` di `StoreReservationRequest` atau cek tambahan di `ReservationService::checkConflict()`) yang mengambil `Restaurant::find($request->restaurant_id)` lalu memastikan `time` berada di antara `open_time` dan `close_time` restoran tersebut sebelum reservasi disimpan; tampilkan pesan error "Restoran tutup pada jam yang dipilih" jika gagal.
 5) **Bukti**: `app/Http/Requests/StoreReservationRequest.php` (`rules()` tidak menyentuh `open_time`/`close_time`); kolom `open_time`/`close_time` ada di `database/migrations/2026_05_29_061746_create_restaurants_table.php` tapi tidak pernah dipakai saat validasi reservasi.
+
+## AI Usage Statement (wajib)
+1) **Tool**: Claude (Anthropic) dalam mode chat.
+
+2) **Untuk apa**: Membantu menelusuri source code Laravel dan menganalisis kemungkinan bug pada alur reservasi, validasi data, serta relasi antar komponen.
+
+3) **2 prompt utama**:
+   - "Analisis kemungkinan race condition atau inkonsistensi data pada proses reservasi ketika banyak request masuk bersamaan."
+   - "Periksa apakah ada validasi yang terlewat atau alur yang dapat menyebabkan data tidak konsisten."
+
+4) **Bagian output AI yang dipakai**: Referensi analisis terkait kemungkinan konflik reservasi dan pemeriksaan validasi pada beberapa fitur.
+
+5) **Bagian yang saya ubah + alasan**: Hasil analisis AI saya verifikasi kembali secara manual pada source code dan disesuaikan dengan struktur project agar sesuai dengan implementasi sebenarnya.
