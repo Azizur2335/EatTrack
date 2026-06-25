@@ -167,3 +167,96 @@ Untuk menggunakan EatTrack ini, anda harus menginstall dan konfigurasi berikut:
 4) **Bagian output AI yang dipakai**: Referensi analisis terkait kemungkinan konflik reservasi dan pemeriksaan validasi pada beberapa fitur.
 
 5) **Bagian yang saya ubah + alasan**: Hasil analisis AI saya verifikasi kembali secara manual pada source code dan disesuaikan dengan struktur project agar sesuai dengan implementasi sebenarnya.
+
+## Cara Menjalankan Project
+
+### Requirement
+- PHP >= 8.1
+- Composer
+- MySQL / MariaDB
+- Node.js & NPM (buat compile asset)
+- Git
+
+### Langkah-langkah
+
+1. **Clone repository**
+```bash
+   git clone https://github.com/username/eattrack.git
+   cd eattrack
+```
+
+2. **Install dependency PHP**
+```bash
+   composer install
+```
+
+3. **Install dependency JS**
+```bash
+   npm install
+```
+
+4. **Copy file environment**
+```bash
+   cp .env.example .env
+```
+
+5. **Generate application key**
+```bash
+   php artisan key:generate
+```
+
+6. **Konfigurasi database**
+
+   Buka file `.env`, sesuaikan bagian ini dengan database lokal kamu (XAMPP/Laragon):
+```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=eattrack
+   DB_USERNAME=root
+   DB_PASSWORD=
+```
+
+   Jangan lupa buat database `eattrack` dulu di phpMyAdmin/MySQL Workbench.
+
+7. **Jalankan migration & seeder**
+```bash
+   php artisan migrate --seed
+```
+
+8. **Buat symbolic link storage** (untuk upload gambar/file)
+```bash
+   php artisan storage:link
+```
+
+9. **Compile asset frontend**
+```bash
+   npm run dev
+```
+   atau untuk production:
+```bash
+   npm run build
+```
+
+10. **Jalankan server lokal**
+```bash
+    php artisan serve
+```
+
+    Project bisa diakses di `http://127.0.0.1:8000`
+
+### Akun Default (jika ada seeder)
+| Role     | Email                  | Password |
+|----------|-------------------------|----------|
+| Admin    | admin@eattrack.com     | password |
+| Owner    | owner@eattrack.com     | password |
+| Customer | customer@eattrack.com  | password |
+
+> Catatan: sesuaikan tabel akun ini dengan seeder yang sebenarnya ada di project.
+
+### Troubleshooting
+- Kalau error `Class not found`, jalankan `composer dump-autoload`.
+- Kalau error permission folder `storage` atau `bootstrap/cache`, jalankan:
+```bash
+  chmod -R 775 storage bootstrap/cache
+```
