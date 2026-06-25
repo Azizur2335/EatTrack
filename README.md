@@ -113,12 +113,14 @@ Untuk menggunakan EatTrack ini, anda harus menginstall dan konfigurasi berikut:
 
 ## Screenshot Aplikasi
 
-| Landing Page | Dashboard Owner | Login |
-|---|---|---|
-| ![Landing Page](<img width="496" height="508" alt="Landing-page" src="https://github.com/user-attachments/assets/bc8bf69c-eb81-440d-88ad-c1657f2c4721" />
-) | ![Dashboard Owner](<img width="668" height="476" alt="Dashboard-owner" src="https://github.com/user-attachments/assets/3ac2d812-88e6-4dad-9077-89f81ed9bde4" />
-) | ![Login](<img width="605" height="432" alt="Login" src="https://github.com/user-attachments/assets/5ccb5c1c-5096-4a9f-8a32-bcf12e0e73e8" />
-) |
+### Landing Page
+<img width="496" height="508" alt="Landing-page" src="https://github.com/user-attachments/assets/2263dd46-b510-4084-95ef-f074d487df80" />
+
+### Login
+<img width="605" height="432" alt="Login" src="https://github.com/user-attachments/assets/7395896f-d29e-43ec-beee-2743cd9215d6" />
+
+### Dashboard Owner
+<img width="668" height="476" alt="Dashboard-owner" src="https://github.com/user-attachments/assets/53511af2-568f-4516-9ca9-a7bf127e1ab6" />
 
 ## Bug Log
 
