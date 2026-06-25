@@ -113,9 +113,9 @@ Untuk menggunakan EatTrack ini, anda harus menginstall dan konfigurasi berikut:
 
 ## Screenshot Aplikasi
 
-| Beranda Customer | Detail Restoran | Konfirmasi Booking (Owner) |
+| Landing Page | Dashboard Owner | Login |
 |---|---|---|
-| ![Beranda Customer](./screenshots/beranda_customer.png) | ![Detail Restoran](./screenshots/detail_resto.png) | ![Konfirmasi Booking](./screenshots/konfirmasi_book.png) |
+| ![Landing Page](./screenshots/Landing-page.png) | ![Dashboard Owner](./screenshots/Dashboard-owner.png) | ![Login](./screenshots/Login.png) |
 
 ## Bug Log
 
