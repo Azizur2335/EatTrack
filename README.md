@@ -129,7 +129,8 @@ Untuk menggunakan EatTrack ini, anda harus menginstall dan konfigurasi berikut:
 2) **Langkah reproduksi**: Login customer → klik restoran → redirect `/katalog/{id}` → error.
 3) **Hipotesis penyebab**: Method `detail_resto()` tidak punya parameter `$resto_id` di signature, padahal dipakai di body.
 4) **Fix**: Ubah signature jadi `detail_resto(Request $request, $resto_id)`.
-5) **Bukti**: <img width="676" height="358" alt="Screenshot 2026-06-25 190713" src="https://github.com/user-attachments/assets/7f601b7f-942e-4240-bf8b-86554a6a44f3" />
+5) **Bukti**:
+   <img width="676" height="358" alt="Screenshot 2026-06-25 190713" src="https://github.com/user-attachments/assets/7f601b7f-942e-4240-bf8b-86554a6a44f3" />
 
 
 
@@ -138,7 +139,8 @@ Untuk menggunakan EatTrack ini, anda harus menginstall dan konfigurasi berikut:
 2) **Langkah reproduksi**: Dua user submit reservasi meja & jam sama hampir bersamaan → keduanya berhasil tersimpan.
 3) **Hipotesis penyebab**: `checkConflict()` dan `store()` jalan terpisah tanpa transaction/locking — classic check-then-act race condition, gak ada unique constraint di DB.
 4) **Fix**: Bungkus dalam `DB::transaction()` + `lockForUpdate()`, tambah migration unique constraint (`table_id`, `date`, `time`).
-5) **Bukti**: <img width="875" height="527" alt="Screenshot 2026-06-25 185041" src="https://github.com/user-attachments/assets/191f1ba2-013a-48d7-9a2c-c309afefa4ce" />
+5) **Bukti**:
+   <img width="875" height="527" alt="Screenshot 2026-06-25 185041" src="https://github.com/user-attachments/assets/191f1ba2-013a-48d7-9a2c-c309afefa4ce" />
 
 
 ### Bug 3 — Reservasi bisa dibuat di luar jam operasional
@@ -146,7 +148,8 @@ Untuk menggunakan EatTrack ini, anda harus menginstall dan konfigurasi berikut:
 2) **Langkah reproduksi**: Buka restoran buka jam 08:00–22:00 → isi reservasi jam 02:00 → submit berhasil tanpa error.
 3) **Hipotesis penyebab**: `StoreReservationRequest` cuma validasi `date` & `time` ada isinya, gak dibandingkan ke `open_time`/`close_time`.
 4) **Fix**: Tambah custom validation cek `time` vs `open_time`/`close_time` restoran sebelum simpan.
-5) **Bukti**: <img width="820" height="742" alt="Screenshot 2026-06-25 190335" src="https://github.com/user-attachments/assets/abc19121-21b1-4032-9d26-5780d6d0e465" />
+5) **Bukti**:
+   <img width="820" height="742" alt="Screenshot 2026-06-25 190335" src="https://github.com/user-attachments/assets/abc19121-21b1-4032-9d26-5780d6d0e465" />
 
 
 ## AI Usage Statement (wajib)
